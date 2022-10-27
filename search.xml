@@ -4,11 +4,11 @@
   
     
     <entry>
-      <title>浅析jamp指令的原理</title>
+      <title>浅析jump指令的原理</title>
       <link href="/2022/10/27/%E6%B5%85%E6%9E%90jamp%E6%8C%87%E4%BB%A4%E7%9A%84%E5%8E%9F%E7%90%86/"/>
       <url>/2022/10/27/%E6%B5%85%E6%9E%90jamp%E6%8C%87%E4%BB%A4%E7%9A%84%E5%8E%9F%E7%90%86/</url>
       
-        <content type="html"><![CDATA[<p>搭建博客以来一直很少更新，从这篇开始会加快更新进度。<br>以下是对《汇编语言》中的八实验的解析：</p><p>一.先对内存空间进行查看：<br><img src="/%E6%B5%85%E6%9E%90jamp%E6%8C%87%E4%BB%A4%E7%9A%84%E5%8E%9F%E7%90%86%5C1.png" alt="1"></p>]]></content>
+        <content type="html"><![CDATA[<p>搭建博客以来一直很少更新，从这篇开始会加快更新进度。<br>以下是对《汇编语言》中的八实验的解析：</p><p>一.先对内存空间进行查看：<br><img src="/images/1.png" alt="1"><br>二.</p>]]></content>
       
       
       
