@@ -464,13 +464,8 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>搭建博客以来一直很少更新，从这篇开始会加快更新进度。<br>以下是对《汇编语言》中的八实验的解析：<br>assume cs:codesg<br> codesg segment<br>                mov ax,4c00h<br>                int 21h<br>        start:        mov ax,0<br>                s:      nop<br>                        nop</p>
-<pre><code>                    mov di,offset s
-                    mov si,offset s2
-                    mov ax,cs:[si]
-                    mov cs:[di],ax
-           
-            s0:        jmp short s
+                <p>搭建博客以来一直很少更新，从这篇开始会加快更新进度。<br>以下是对《汇编语言》中的八实验的解析：<br>assume cs:codesg<br> codesg segment<br>                mov ax,4c00h<br>                int 21h<br>        start:        mov ax,0<br>                s:      nop<br>                        nop<br>                        mov di,offset s<br>                        mov si,offset s2<br>                        mov ax,cs:[si]<br>                        mov cs:[di],ax</p>
+<pre><code>            s0:        jmp short s
            
             s1:        mov ax,0                        
                     int 21h
