@@ -457,7 +457,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    363
+                    387
                 </div>
                 
 
@@ -498,19 +498,9 @@
 <td>将ax-bx的值存在ax中</td>
 </tr>
 <tr>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-</tr>
-<tr>
 <td>inc</td>
 <td>inc bx</td>
 <td>将bx的值加1,不影响flag寄存器相关位置</td>
-</tr>
-<tr>
-<td>—</td>
-<td>—</td>
-<td>—</td>
 </tr>
 <tr>
 <td>dec</td>
@@ -518,19 +508,9 @@
 <td>将bx的值减1，……</td>
 </tr>
 <tr>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-</tr>
-<tr>
 <td>mul</td>
 <td>mul ax,bx</td>
 <td>将ax*bx的值存在ax中，如果是32位乘法则要将高位字节储存与dx中，低位储存于ax中,16位大差不差</td>
-</tr>
-<tr>
-<td>—</td>
-<td>—</td>
-<td>—</td>
 </tr>
 <tr>
 <td>div</td>
@@ -543,49 +523,34 @@
 <td>(ah）&#x3D;（bh）+（ah）+ CF</td>
 </tr>
 <tr>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-</tr>
-<tr>
 <td>sbb</td>
 <td>sbb ax,bx</td>
 <td>（ax）&#x3D;（ax）-（bx）- CF</td>
-</tr>
-<tr>
-<td>—</td>
-<td>—</td>
-<td>—</td>
 </tr>
 <tr>
 <td>cmp</td>
 <td>cmp ax,bx</td>
 <td>将ax-bx但不储存在任何地方只影响flag寄存器的相关位置，用于判断两数大小</td>
 </tr>
-<tr>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-</tr>
 </tbody></table>
 <h2 id="二-逻辑运算指令"><a href="#二-逻辑运算指令" class="headerlink" title="二.逻辑运算指令"></a>二.逻辑运算指令</h2><p>|—|—|—|</p>
 <table>
 <thead>
 <tr>
-<th>and</th>
-<th>and ax,bx</th>
-<th>用于定向更改二进制数的某位，如字母的大小写变换，只有两边同为1时结果为1</th>
+<th>指令</th>
+<th>模板</th>
+<th>具体作用</th>
 </tr>
 </thead>
 <tbody><tr>
+<td>and</td>
+<td>and ax,bx</td>
+<td>用于定向更改二进制数的某位，如字母的大小写变换，只有两边同为1时结果为1</td>
+</tr>
+<tr>
 <td>or</td>
 <td>or ax,bx</td>
 <td>只有两边都为0时结果为0，其它为1</td>
-</tr>
-<tr>
-<td>—</td>
-<td>—</td>
-<td>—</td>
 </tr>
 <tr>
 <td>xor</td>
@@ -593,79 +558,59 @@
 <td>同为1或0结果为0或者为1</td>
 </tr>
 <tr>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-</tr>
-<tr>
 <td>not</td>
 <td>not al</td>
 <td>取al值的反码</td>
-</tr>
-<tr>
-<td>—</td>
-<td>—</td>
-<td>—</td>
 </tr>
 </tbody></table>
 <h2 id="三-目的地址传送指令"><a href="#三-目的地址传送指令" class="headerlink" title="三.目的地址传送指令"></a>三.目的地址传送指令</h2><p>|—|—|—|</p>
 <table>
 <thead>
 <tr>
-<th>lea</th>
-<th>lea bx,dx:[98H]</th>
-<th>把偏移地址存到dx，相当于C语言中的&amp;符号</th>
+<th>指令</th>
+<th>模板</th>
+<th>具体作用</th>
 </tr>
 </thead>
 <tbody><tr>
+<td>lea</td>
+<td>lea bx,dx:[98H]</td>
+<td>把偏移地址存到dx，相当于C语言中的&amp;符号</td>
+</tr>
+<tr>
 <td>lds</td>
 <td>lds si,string</td>
 <td>把段地址：偏移地址存到ds:si中</td>
-</tr>
-<tr>
-<td>—</td>
-<td>—</td>
-<td>—</td>
 </tr>
 <tr>
 <td>les，lfs，lgs，lss</td>
 <td>……</td>
 <td>……</td>
 </tr>
-<tr>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-</tr>
 </tbody></table>
 <h2 id="四-通用数据传送指令"><a href="#四-通用数据传送指令" class="headerlink" title="四.通用数据传送指令"></a>四.通用数据传送指令</h2><p>|—|—|—|</p>
 <table>
 <thead>
 <tr>
-<th>mov</th>
-<th>mov ax,bx</th>
-<th>将bx中的数据覆盖到ax中</th>
+<th>指令</th>
+<th>模板</th>
+<th>具体作用</th>
 </tr>
 </thead>
 <tbody><tr>
+<td>mov</td>
+<td>mov ax,bx</td>
+<td>将bx中的数据覆盖到ax中</td>
+</tr>
+<tr>
 <td>push</td>
 <td>push ax</td>
 <td>将ax中的值压入栈中</td>
 </tr>
 <tr>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-</tr>
-<tr>
 <td>pop</td>
 <td>pop ax</td>
 <td>将栈中的值取出进ax中</td>
-</tr>
-<tr>
-<td>—</td>
-<td>—</td>
-<td>—</td>
 </tr>
 </tbody></table>
 
