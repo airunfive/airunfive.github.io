@@ -4,6 +4,19 @@
   
     
     <entry>
+      <title>汇编指令小结</title>
+      <link href="/2022/11/01/%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4%E5%B0%8F%E7%BB%93/"/>
+      <url>/2022/11/01/%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4%E5%B0%8F%E7%BB%93/</url>
+      
+        <content type="html"><![CDATA[<h1 id="一-算术运算指令"><a href="#一-算术运算指令" class="headerlink" title="一.算术运算指令"></a>一.算术运算指令</h1><table><thead><tr><th>指令</th><th>模板</th><th>具体作用</th></tr></thead><tbody><tr><td>add</td><td>add ax bx</td><td>将bx+ax的值并储存在ax中</td></tr></tbody></table>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>浅析jump指令的原理</title>
       <link href="/2022/10/27/%E6%B5%85%E6%9E%90jamp%E6%8C%87%E4%BB%A4%E7%9A%84%E5%8E%9F%E7%90%86/"/>
       <url>/2022/10/27/%E6%B5%85%E6%9E%90jamp%E6%8C%87%E4%BB%A4%E7%9A%84%E5%8E%9F%E7%90%86/</url>
