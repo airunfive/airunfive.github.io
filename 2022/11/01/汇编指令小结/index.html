@@ -450,21 +450,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2022-11-01
+                    2022-11-02
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    387
+                    576
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    2 分
                 </div>
                 
 
@@ -608,6 +608,93 @@
 <td>pop</td>
 <td>pop ax</td>
 <td>将栈中的值取出进ax中</td>
+</tr>
+</tbody></table>
+<h2 id="五-程序转移指令（长转移）"><a href="#五-程序转移指令（长转移）" class="headerlink" title="五.程序转移指令（长转移）"></a>五.程序转移指令（长转移）</h2><table>
+<thead>
+<tr>
+<th>指令</th>
+<th>模板</th>
+<th>具体作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>jmp</td>
+<td>jmp ax,bx</td>
+<td>无条件跳转指令，根据偏移量进行跳转</td>
+</tr>
+<tr>
+<td>call</td>
+<td>call s</td>
+<td>将当前地址推入栈中，并跳转到s处</td>
+</tr>
+<tr>
+<td>ret</td>
+<td>ret</td>
+<td>将栈中地址弹出至ds：ip并跳转</td>
+</tr>
+</tbody></table>
+<h4 id="条件转移指令（短转移）"><a href="#条件转移指令（短转移）" class="headerlink" title="条件转移指令（短转移）"></a>条件转移指令（短转移）</h4><table>
+<thead>
+<tr>
+<th>指令</th>
+<th>模板</th>
+<th>具体作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>je&#x2F;jz</td>
+<td>je&#x2F;jz s</td>
+<td>若相等则跳转</td>
+</tr>
+<tr>
+<td>jne&#x2F;jnz</td>
+<td>……</td>
+<td>若不相等则跳转</td>
+</tr>
+<tr>
+<td>jb&#x2F;jl</td>
+<td>……</td>
+<td>若小于则跳转</td>
+</tr>
+<tr>
+<td>ja&#x2F;jg</td>
+<td>……</td>
+<td>若大于则跳转</td>
+</tr>
+<tr>
+<td>jge</td>
+<td>……</td>
+<td>若大于等于则跳转</td>
+</tr>
+<tr>
+<td>jle</td>
+<td>……</td>
+<td>若小于等于则跳转</td>
+</tr>
+</tbody></table>
+<h4 id="循环控制指令"><a href="#循环控制指令" class="headerlink" title="循环控制指令"></a>循环控制指令</h4><table>
+<thead>
+<tr>
+<th>指令</th>
+<th>模板</th>
+<th>具体作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>loop</td>
+<td>loop s</td>
+<td>消耗cx中的值，并跳转至s处</td>
+</tr>
+<tr>
+<td>jcxz</td>
+<td>jcxz s</td>
+<td>当cx中值为0时跳转至s</td>
+</tr>
+<tr>
+<td>jecxz</td>
+<td>……</td>
+<td>……</td>
 </tr>
 </tbody></table>
 
@@ -884,13 +971,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/10/27/%E6%B5%85%E6%9E%90jump%E6%8C%87%E4%BB%A4%E7%9A%84%E5%8E%9F%E7%90%86/">
+                <a href="/2022/10/27/%E6%B5%85%E6%9E%90jmp%E6%8C%87%E4%BB%A4%E7%9A%84%E5%8E%9F%E7%90%86/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="浅析jump指令的原理">
+                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="浅析jmp指令的原理">
                         
-                        <span class="card-title">浅析jump指令的原理</span>
+                        <span class="card-title">浅析jmp指令的原理</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -1110,7 +1197,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">1.2k</span>&nbsp;字
+                class="white-color">1.4k</span>&nbsp;字
             
             
             
