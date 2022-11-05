@@ -486,23 +486,23 @@
 <h4 id="文件描述符"><a href="#文件描述符" class="headerlink" title="文件描述符"></a>文件描述符</h4><p>linux系统中，把一切都看做是文件，当进程打开现有文件或创建新文件时，内核向进程返<br>回一个文件描述符，文件描述符就是内核为了高效管理已被打开的文件所创建的索引，用来<br>指向被打开的文件，所有的i&#x2F;o操作的系统调用都会通过文件描述符。<br>每个文件描述符会与一个打开的文件相对应，不同的文件描述符也可能指向同一个文件。<br>相同的文件可以被不同的进程打开，也可以在同一个进程被多次打开。</p>
 <h4 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h4><p>栈是一种LIFO（先进后出）的数据结构。栈的基本操作有两种：<strong>push（压栈）</strong>和<strong>pop（弹栈）</strong>。<br>由于函数的调用顺序也是LIFO，所以绝大多数系统都是通过栈这一数据结构来维护函数调用关系的。<br>在Linux系统中，系统为每一个进程都安排了一个栈，进程中每一个调用的函数都有自己独立的栈帧。<br><strong>栈是由高地址向低地址生长的。高地址为栈底，低地址为栈顶。</strong><br>很多算法都是用栈实现的。以递归的形式实现一些算法在本质上来说也是利用栈结构。只不过没有在程序<br>中另外申请一个栈，而是利用函数调用栈。</p>
 <h4 id="函数的调用流程"><a href="#函数的调用流程" class="headerlink" title="函数的调用流程"></a>函数的调用流程</h4><p>以一下代码为例：</p>
-<pre><code>void func_a()
-&#123;
-    //do sth.
-    return;
-&#125;
-void func_b()
-&#123;
-    func_a();
-    int c=1;
-    return;
-&#125;
-int main()
-&#123;
-    func_b();
-    int a=2;
-    return 0;
-&#125;
+<pre class=" language-c"><code class="language-c"><span class="token keyword">void</span> <span class="token function">func_a</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">//do sth.</span>
+    <span class="token keyword">return</span><span class="token punctuation">;</span>
+<span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+<span class="token keyword">void</span> <span class="token function">func_b</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+    <span class="token function">func_a</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> c<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span><span class="token punctuation">;</span>
+<span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+    <span class="token function">func_b</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> a<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
 </code></pre>
 <p>main函数调用func_b,func_b调用func_a。<br>我们从main函数开始，逐步分析栈帧变化。<br>当运行到call func_b时main函数的栈帧如下：<br><img src="/images/%E5%87%BD%E6%95%B0%E7%9A%84%E8%B0%83%E7%94%A8%E5%92%8C%E7%BA%A6%E5%AE%9A/3.png"><br>rbp指向栈底，rsp指向栈顶，这些栈帧存放了一些main的局部变量。<br>main函数要调用func_b，main只要call func_b，也就是</p>
 <pre><code>push rip；
