@@ -29,7 +29,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 6.3.0"><link rel="stylesheet" href="/css/prism.css" type="text/css"></head>
+<meta name="generator" content="Hexo 6.3.0"></head>
 
 
 
@@ -457,7 +457,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.2k
+                    1.3k
                 </div>
                 
 
@@ -474,6 +474,9 @@
         <hr class="clearfix">
 
         
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
 
         
 
@@ -486,47 +489,41 @@
 <h4 id="文件描述符"><a href="#文件描述符" class="headerlink" title="文件描述符"></a>文件描述符</h4><p>linux系统中，把一切都看做是文件，当进程打开现有文件或创建新文件时，内核向进程返<br>回一个文件描述符，文件描述符就是内核为了高效管理已被打开的文件所创建的索引，用来<br>指向被打开的文件，所有的i&#x2F;o操作的系统调用都会通过文件描述符。<br>每个文件描述符会与一个打开的文件相对应，不同的文件描述符也可能指向同一个文件。<br>相同的文件可以被不同的进程打开，也可以在同一个进程被多次打开。</p>
 <h4 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h4><p>栈是一种LIFO（先进后出）的数据结构。栈的基本操作有两种：<strong>push（压栈）</strong>和<strong>pop（弹栈）</strong>。<br>由于函数的调用顺序也是LIFO，所以绝大多数系统都是通过栈这一数据结构来维护函数调用关系的。<br>在Linux系统中，系统为每一个进程都安排了一个栈，进程中每一个调用的函数都有自己独立的栈帧。<br><strong>栈是由高地址向低地址生长的。高地址为栈底，低地址为栈顶。</strong><br>很多算法都是用栈实现的。以递归的形式实现一些算法在本质上来说也是利用栈结构。只不过没有在程序<br>中另外申请一个栈，而是利用函数调用栈。</p>
 <h4 id="函数的调用流程"><a href="#函数的调用流程" class="headerlink" title="函数的调用流程"></a>函数的调用流程</h4><p>以一下代码为例：</p>
-<pre class=" language-c"><code class="language-c"><span class="token keyword">void</span> <span class="token function">func_a</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">//do sth.</span>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">void</span> <span class="token function">func_a</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token comment">//do sth.</span>
     <span class="token keyword">return</span><span class="token punctuation">;</span>
-<span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
 <span class="token keyword">void</span> <span class="token function">func_b</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#123;</span>
     <span class="token function">func_a</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">int</span> c<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span>
     <span class="token keyword">return</span><span class="token punctuation">;</span>
-<span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
 <span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#123;</span>
     <span class="token function">func_b</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">int</span> a<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">;</span>
     <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-<span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
-</code></pre>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>main函数调用func_b,func_b调用func_a。<br>我们从main函数开始，逐步分析栈帧变化。<br>当运行到call func_b时main函数的栈帧如下：<br><img src="/images/%E5%87%BD%E6%95%B0%E7%9A%84%E8%B0%83%E7%94%A8%E5%92%8C%E7%BA%A6%E5%AE%9A/3.png"><br>rbp指向栈底，rsp指向栈顶，这些栈帧存放了一些main的局部变量。<br>main函数要调用func_b，main只要call func_b，也就是</p>
-<pre><code>push rip；
-mov rip func_b；
-</code></pre>
+<pre class="line-numbers language-none"><code class="language-none">push rip；
+mov rip func_b；<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p><strong>当然被调用的函数还要维护栈帧。（用rsp与rbp开辟空间）</strong><br>如下</p>
-<pre><code>push rbp;  /*将调用函数的栈底指针保存*/
-mov rbp rsp;  /*将栈底指针指向现在的栈顶*/
-sub rsp xxx;  /*开辟被调用函数的栈帧，此时上一步的rbp就指向栈帧的底*/
-</code></pre>
+<pre class="line-numbers language-none"><code class="language-none">push rbp;  &#x2F;*将调用函数的栈底指针保存*&#x2F;
+mov rbp rsp;  &#x2F;*将栈底指针指向现在的栈顶*&#x2F;
+sub rsp xxx;  &#x2F;*开辟被调用函数的栈帧，此时上一步的rbp就指向栈帧的底*&#x2F;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <p><img src="/images/%E5%87%BD%E6%95%B0%E7%9A%84%E8%B0%83%E7%94%A8%E5%92%8C%E7%BA%A6%E5%AE%9A/4.png"><br>同理根据以上步骤调用func_a也是一样的<br>如图：<br><img src="/images/%E5%87%BD%E6%95%B0%E7%9A%84%E8%B0%83%E7%94%A8%E5%92%8C%E7%BA%A6%E5%AE%9A/5.png"><br>在函数执行结束后返回时，会执行leave；ret；<br>也就是：</p>
-<pre><code>mov rsp rbp；/*将栈顶指针指向栈底*/
-pop rbp；/*将栈底指针弹出*/（其实就是改变rsp的值个人认为）
-pop rip；/*将fun_b的下一行地址弹出到rip*/
-</code></pre>
+<pre class="line-numbers language-none"><code class="language-none">mov rsp rbp；&#x2F;*将栈顶指针指向栈底*&#x2F;
+pop rbp；&#x2F;*将栈底指针弹出*&#x2F;（其实就是改变rsp的值个人认为）
+pop rip；&#x2F;*将fun_b的下一行地址弹出到rip*&#x2F;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <p>栈布局如图：<br><img src="/images/%E5%87%BD%E6%95%B0%E7%9A%84%E8%B0%83%E7%94%A8%E5%92%8C%E7%BA%A6%E5%AE%9A/4.png"><br>直到结束函数释放栈空间。<br>总结如下：<br><strong>调用函数：将rip压栈，然后将rip赋值为被调用函数的起始地址。这一操作被隐性地内置在call指令中。</strong><br><strong>被调用函数：先保存调用函数的rbp指针，将自己的rbp指针指向栈顶，然后开辟栈空间自用，此时rbp就成了被调用函数的栈底。</strong><br><strong>函数返回：恢复栈帧，返回调用函数的返回地址。</strong></p>
 <h2 id="调用约定"><a href="#调用约定" class="headerlink" title="调用约定"></a>调用约定</h2><p>一般来说，一个函数的返回值会存储到<strong>rax寄存器</strong>。<br>x86-64下函数的调用约定为：<br>从左至右参数依次传递给<strong>rdi，rsi，rdx，rcx，r8，r9</strong>。<br>如果一个函数的参数大于六个，则<strong>从右至左</strong>压入栈中传递。（因为栈LIFO）<br>syscall指令用于调用系统函数，调用时需要指明系统调用号。系统调用号存在rax寄存器中。之后布置好参数，执行syscall即可。<br>系统调用的常用调用号码如下：<br><img src="/images/%E5%87%BD%E6%95%B0%E7%9A%84%E8%B0%83%E7%94%A8%E5%92%8C%E7%BA%A6%E5%AE%9A/6.png"><br>如调用read（0，buf，size）：</p>
-<pre><code>mov rax,0    /*read&#39;s syscall number.*/
-mov rdi,0    /*first arg*/
-mov rsi,buf   /*second arg.*/
-mov rdx,size  /*third arg.*/
-syscall    /*excute read(0,buf,size)*/
-</code></pre>
-
+<pre class="line-numbers language-none"><code class="language-none">mov rax,0    &#x2F;*read&#39;s syscall number.*&#x2F;
+mov rdi,0    &#x2F;*first arg*&#x2F;
+mov rsi,buf   &#x2F;*second arg.*&#x2F;
+mov rdx,size  &#x2F;*third arg.*&#x2F;
+syscall    &#x2F;*excute read(0,buf,size)*&#x2F;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
                 
             </div>
             <hr/>

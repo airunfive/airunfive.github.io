@@ -29,7 +29,7 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 6.3.0"><link rel="stylesheet" href="/css/prism.css" type="text/css"></head>
+<meta name="generator" content="Hexo 6.3.0"></head>
 
 
 
@@ -474,37 +474,39 @@
         <hr class="clearfix">
 
         
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
 
         
 
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <p>搭建博客以来一直很少更新，从这篇开始会加快更新进度。<br>以下是对《汇编语言》中的八实验的解析：</p>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><pre><code> assume cs:codesg
- codesg segment
-               
-                mov ax,4c00h
-                int 21h
-        start:        mov ax,0
-               
-                s:      nop
-                        nop
-                        mov di,offset s
-                        mov si,offset s2
-                        mov ax,cs:[si]
-                        mov cs:[di],ax
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><pre class="line-numbers language-none"><code class="language-none">assume cs:codesg
+codesg segment
               
-               s0:        jmp short s
-               
-                s1:        mov ax,0                        
-                        int 21h
-                        mov ax,0
-                       
-                s2:     jmp short s1
-                        nop
-        codesg ends
-        end start
-</code></pre>
+               mov ax,4c00h
+               int 21h
+       start:        mov ax,0
+              
+               s:      nop
+                       nop
+                       mov di,offset s
+                       mov si,offset s2
+                       mov ax,cs:[si]
+                       mov cs:[di],ax
+             
+              s0:        jmp short s
+              
+               s1:        mov ax,0                        
+                       int 21h
+                       mov ax,0
+                      
+               s2:     jmp short s1
+                       nop
+       codesg ends
+       end start<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h2 id="猜想"><a href="#猜想" class="headerlink" title="猜想"></a>猜想</h2><p>通过代码解读:它首先用offset指令取s的地址存在di中，后取s2的地址存在si中通过mov ax,cs[si]与 mov cs:[di],ax<br>将s2地址的储存单元中的指令搬到了s地址的储存单元中并执行，执行后应该跳到s1处进入死循环。</p>
 <h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>实际却非如此：</p>
 <p>一.先对内存空间进行查看：<br><img src="/images/%E6%B5%85%E6%9E%90jmp%E6%8C%87%E4%BB%A4%E7%9A%84%E5%8E%9F%E7%90%86/1.png" alt="1"><br>二.单步进行输入“t”查看运行<br><img src="/images/%E6%B5%85%E6%9E%90jmp%E6%8C%87%E4%BB%A4%E7%9A%84%E5%8E%9F%E7%90%86/2.png" alt="2"><br><img src="/images/%E6%B5%85%E6%9E%90jmp%E6%8C%87%E4%BB%A4%E7%9A%84%E5%8E%9F%E7%90%86/3.png" alt="3"><br> 这里jump  0008就是到s的地址，在之前s的内存已经被s2覆盖于是cs ip指向s2代表的代码，于是执行后cs ip指向下一指令也就是0010到0011的数<br>据储存，将其作为代码执行。<br>那么问题来了，为什么变成了jmp 0000了？<br><img src="/images/%E6%B5%85%E6%9E%90jmp%E6%8C%87%E4%BB%A4%E7%9A%84%E5%8E%9F%E7%90%86/4.png" alt="4"><br>如图：<br>因为jmp指令是根据s2到s1的标号偏移量决定的，在还没执行前就已经定好了即决定了偏移量为F6，而F6作为补码<br>储存，作用为-10，也就是减10个字节。也就从0010减到了0000 也就是开始的代码<br>mov ax,4c00h<br>int 21h<br>最终结束。<br>总结：jmp并不是随意跳跃的，是在开始就决定好的偏移量，如果如上题转换位置也只会按原来规定的偏移量进行，并不能换到我们目标位置。</p>
