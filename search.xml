@@ -4,6 +4,19 @@
   
     
     <entry>
+      <title>函数的调用和约定</title>
+      <link href="/2022/11/05/%E5%87%BD%E6%95%B0%E7%9A%84%E8%B0%83%E7%94%A8%E5%92%8C%E7%BA%A6%E5%AE%9A/"/>
+      <url>/2022/11/05/%E5%87%BD%E6%95%B0%E7%9A%84%E8%B0%83%E7%94%A8%E5%92%8C%E7%BA%A6%E5%AE%9A/</url>
+      
+        <content type="html"><![CDATA[<h2 id="函数的调用"><a href="#函数的调用" class="headerlink" title="函数的调用"></a>函数的调用</h2><h5 id="计算机内部的数据存储形式"><a href="#计算机内部的数据存储形式" class="headerlink" title="计算机内部的数据存储形式"></a>计算机内部的数据存储形式</h5><p>计算机内部有两种存储形式，分为大端序、小端序。<br>######大端序：<br>大端序的原则：<br>以0123456789abcdef为例，数据最高位01存储在低位，最低位ef存储在高位<br><img src="/1.png" alt="大端序"><br>将此数据按照字符串输出，得到的为：x01\x23\x34\x45\x56\x67\x78\x89\xab\xcd\xef</p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>汇编指令小结</title>
       <link href="/2022/11/01/%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4%E5%B0%8F%E7%BB%93/"/>
       <url>/2022/11/01/%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4%E5%B0%8F%E7%BB%93/</url>
