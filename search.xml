@@ -47,7 +47,7 @@
       <link href="/2022/09/25/%E7%99%BE%E5%BA%A6%E6%98%AF%E4%B8%AA%E5%A5%BD%E4%B8%9C%E8%A5%BF/"/>
       <url>/2022/09/25/%E7%99%BE%E5%BA%A6%E6%98%AF%E4%B8%AA%E5%A5%BD%E4%B8%9C%E8%A5%BF/</url>
       
-        <content type="html"><![CDATA[<p>今儿修改博客主题时又碰到了该死的hexo d出错，我貌似跟这玩意特别有缘，（可能是我删了什么东西……）委实不好评价我这个冤大头，一个字作！<br>于是我又去麻烦了学长，最终在学长的英明指导下在百度解决了问题。<br>问题如下：<br>Error: <code>prism_plugin</code> options should be added to _config.yml file<br>解决方法：<br>在blog目录下的conj.yml中打开，将以下代码放在最后即可，重新启动生成部署<br>prism_plugin:<br>  mode: ‘preprocess’ # realtime&#x2F;preprocess<br>  theme: ‘default’<br>  line_number: false # default false<br>所以百度是个好东西！！！<br>（希望学长大大别对我感到厌烦）</p>]]></content>
+        <content type="html"><![CDATA[<p>今儿修改博客主题时又碰到了该死的hexo d出错，我貌似跟这玩意特别有缘，（可能是我删了什么东西……）委实不好评价我这个冤大头，一个字作！<br>于是我又去麻烦了学长，最终在学长的英明指导下在百度解决了问题。<br>问题如下：<br>Error: <code>prism_plugin</code> options should be added to _config.yml file<br>解决方法：<br>在blog目录下的conj.yml中打开，将以下代码放在最后即可，重新启动生成部署</p><pre class="line-numbers language-none"><code class="language-none">prism_plugin:  mode: &#39;preprocess&#39; # realtime&#x2F;preprocess  theme: &#39;default&#39;  line_number: false # default false<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre><p>所以百度是个好东西！！！<br>（希望学长大大别对我感到厌烦）</p>]]></content>
       
       
       
