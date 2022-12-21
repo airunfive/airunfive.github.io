@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="百度是个好东西, 矢坕个人博客">
+    <meta name="keywords" content="栈溢出、rop链、shellcode原理解析, 矢坕个人博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>百度是个好东西 | 矢坕个人博客</title>
+    <title>栈溢出、rop链、shellcode原理解析 | 矢坕个人博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/13.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/4.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">百度是个好东西</h1>
+                    <h1 class="description center-align post-title">栈溢出、rop链、shellcode原理解析</h1>
                 </div>
             </div>
         </div>
@@ -443,28 +443,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-09-25
+                    2022-12-21
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2022-11-24
+                    2022-12-21
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    171
+                    710
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    2 分
                 </div>
                 
 
@@ -482,12 +482,11 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>今儿修改博客主题时又碰到了该死的hexo d出错，我貌似跟这玩意特别有缘，（可能是我删了什么东西……）委实不好评价我这个冤大头，一个字作！<br>于是我又去麻烦了学长，最终在学长的英明指导下在百度解决了问题。<br>问题如下：<br>Error: <code>prism_plugin</code> options should be added to _config.yml file<br>解决方法：<br>在blog目录下的conj.yml中打开，将以下代码放在最后即可，重新启动生成部署</p>
-<pre class="line-numbers language-none"><code class="language-none">prism_plugin:
-  mode: &#39;preprocess&#39; # realtime&#x2F;preprocess
-  theme: &#39;default&#39;
-  line_number: false # default false<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
-<p>所以百度是个好东西！！！<br>（希望学长大大别对我感到厌烦）</p>
+                <p>#shellcode原理：<br>    shellcode通常使用机器语言编写，是一段用于利用软件漏洞而执行的代码其目的常常让攻击者获得目标机器的命令行shell而得名。<br>    shellcode根据他是攻击者控制他所运行的机器，还是通过网络控制另一台机器，可以分为本地和远程两种类型有时攻击者注入目标进程中的字节数是被限制的，因此可以将shellcode分阶段进行，由前一阶段比较简短的shellcode将后一阶段比较复杂的shellcode下载并执行。</p>
+<h1 id="栈溢出原理："><a href="#栈溢出原理：" class="headerlink" title="栈溢出原理："></a>栈溢出原理：</h1><pre><code>    由于C语言对数组引用不做任何边界的检查，从而导致缓冲区溢出（*buffer overflow*）成为一种常见的漏洞。根据溢出发生的内存位置，通常可以分为栈溢出和堆溢出。由于栈上保存着局部变量和一些状态信息，一旦发生严重的溢出，攻击者就可以通过复盖返回地址来执行任意代码，利用方法包括shellcode注入、ret2libc、rop等。
+在之前的博客中有提到，**函数以栈的形式调用**，在每个栈的底部有rbp指针和我们的返回地址，如果溢出**足够多**的字节，就可以将rbp指针和返回地址给**覆盖**，当函数执行到返回地址时就可以按照我们所设计好的地址**跳跃**到目标函数继续执行获得shell。
+</code></pre>
+<p>#rop链原理：<br>    对于rop原理我学得磕磕碰碰，（老师讲得有点模糊）主要是一个地方没讲好，希望后来人别被卡住。<br>    最开始要利用栈溢出，只需要将返回地址覆盖为jmp esp的指令地址，并在后面添加shellcode就可以执行 后来引入了NX缓解机制，数据的所在内存页被标记为不可执行此时再执行shellcode就会抛出异常，所以注入新的代码并不可行，那么就复用程序中已有的代码。<br>于是rop链技术就诞生了使用rop链就要先扫描文件，提取出可用的gadget片段（通常以ret指令结尾）<strong>的地址</strong>（划重点），然后将这些gadget根据需要的功能进行组合达到攻击者的目的（刚开始老师没讲清楚是<strong>地址</strong>，导致我一直在自己猜想怎么拼接的）。<br>这里附一张图更好理解：<br><img src="/images/%E6%A0%88%E6%BA%A2%E5%87%BA%E3%80%81rop%E9%93%BE%E3%80%81shellcode%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/1.webp" alt="1"><br>也就是覆盖返回地址为gadget的地址，跳到gadget片段上执行在此gadget的地址下附上另一个gadget的地址，以此类推连成rop链。<br>如图pop rdi完rsp向下跳一格，并继续执行return指令实现&#x2F;bin&#x2F;sh_的函数调用获取shell。</p>
 
                 
             </div>
@@ -514,7 +513,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://airunfive.github.io/2022/09/25/%E7%99%BE%E5%BA%A6%E6%98%AF%E4%B8%AA%E5%A5%BD%E4%B8%9C%E8%A5%BF/">http://airunfive.github.io/2022/09/25/%E7%99%BE%E5%BA%A6%E6%98%AF%E4%B8%AA%E5%A5%BD%E4%B8%9C%E8%A5%BF/</a>
+                    <a href="http://airunfive.github.io/2022/12/21/%E6%A0%88%E6%BA%A2%E5%87%BA%E3%80%81rop%E9%93%BE%E3%80%81shellcode%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/">http://airunfive.github.io/2022/12/21/%E6%A0%88%E6%BA%A2%E5%87%BA%E3%80%81rop%E9%93%BE%E3%80%81shellcode%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -719,54 +718,18 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2022/10/27/%E6%B5%85%E6%9E%90jmp%E6%8C%87%E4%BB%A4%E7%9A%84%E5%8E%9F%E7%90%86/">
+                <a href="/2022/12/21/%E6%A0%88%E6%BA%A2%E5%87%BA%E3%80%81rop%E9%93%BE%E3%80%81shellcode%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="浅析jmp指令的原理">
+                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="栈溢出、rop链、shellcode原理解析">
                         
-                        <span class="card-title">浅析jmp指令的原理</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-10-27
-                        </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-user fa-fw"></i>
-                            矢坕
-                            
-                        </span>
-                    </div>
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/2022/09/20/%E5%8D%83%E4%B8%87%E8%A6%81%E6%B3%A8%E6%84%8F%E4%B8%AD%E8%8B%B1%E6%96%87%EF%BC%81%E5%95%8A%EF%BC%81%E5%95%8A%EF%BC%81/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/16.jpg" class="responsive-img" alt="千万要注意中英文！啊！啊！">
-                        
-                        <span class="card-title">千万要注意中英文！啊！啊！</span>
+                        <span class="card-title">栈溢出、rop链、shellcode原理解析</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -777,7 +740,45 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-09-20
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-12-21
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            矢坕
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2022/11/05/%E5%87%BD%E6%95%B0%E7%9A%84%E8%B0%83%E7%94%A8%E5%92%8C%E7%BA%A6%E5%AE%9A/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="函数的调用和约定">
+                        
+                        <span class="card-title">函数的调用和约定</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-11-05
                             </span>
                         <span class="publish-author">
                             
