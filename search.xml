@@ -4,6 +4,19 @@
   
     
     <entry>
+      <title>栈转移原理</title>
+      <link href="/2022/12/23/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86/"/>
+      <url>/2022/12/23/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86/</url>
+      
+        <content type="html"><![CDATA[<h1 id="栈转移原理"><a href="#栈转移原理" class="headerlink" title="栈转移原理"></a>栈转移原理</h1><h1 id="第一种方式："><a href="#第一种方式：" class="headerlink" title="第一种方式："></a>第一种方式：</h1><p>rop构成如下：<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86/1.png"><br>接法：首先将函数返回地址覆盖为pop rbp；ret；的地址通过函数自带的ret跳转至此garget，在返回地址的下面接上栈转移目标的<strong>栈顶指针地址</strong>（实际应该是目标栈下级函数的rbp地址），在下面再接上leave ret的garget地址<br>需要注意理解的是leave的功能（不懂的要去看函数调用约定）在leave时相当于执行move rsp ,rbp; pop rbp，通过rbp的值控制rsp的值使rsp跳转到目标地址将rsp的值弹出给rbp<strong>使rbp下移</strong>（容易以为rbp和rsp重合没有改变）从而实现栈转移至目标函数执行或继续执行garget</p><h1 id="第二种方式："><a href="#第二种方式：" class="headerlink" title="第二种方式："></a>第二种方式：</h1><p>rop构成如下：<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86/2.png"><br>接法原理一致，就不进行过多描述，不一样的就是溢出的时候将目标的地址<strong>覆盖到rbp指针</strong>（也就是返回地址的上面）就可以<br>栈转移原理是rop链的进阶用法，实现在溢出字节被限制的情况下的攻击</p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>栈溢出、rop链、shellcode原理解析</title>
       <link href="/2022/12/21/%E6%A0%88%E6%BA%A2%E5%87%BA%E3%80%81rop%E9%93%BE%E3%80%81shellcode%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/"/>
       <url>/2022/12/21/%E6%A0%88%E6%BA%A2%E5%87%BA%E3%80%81rop%E9%93%BE%E3%80%81shellcode%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/</url>
