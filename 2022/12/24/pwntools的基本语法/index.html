@@ -457,7 +457,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    367
+                    359
                 </div>
                 
 
@@ -487,18 +487,51 @@
 <span class="token comment">#exp code</span>
 r<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">#取得shell后可将commant传到terminal上</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
-<h2 id="连接本地程序"><a href="#连接本地程序" class="headerlink" title="连接本地程序"></a>连接本地程序</h2><p>p &#x3D; process(‘.&#x2F;demo’) #usage:process(‘binary’,env)<br>context.terminal &#x3D; [‘tmux’,’splitw’,’-h’] #在tmux下可以切出视窗跑gdb<br>gdb.attach(p) #attach到gdb<br>#exp code<br>p.interactive()</p>
-<h2 id="recv"><a href="#recv" class="headerlink" title="recv"></a>recv</h2><p>r.recv() #接收一个字节<br>r.recvline() #接受一行<br>r.recvlines(num) #接收(num)行<br>r.recvuntil(str) #一直接收直到碰到(str)</p>
-<h2 id="send"><a href="#send" class="headerlink" title="send"></a>send</h2><p>r.sned(payload) #发送payload<br>r.sendline(payload) #再最后面加上空字符</p>
-<h2 id="pack-amp-unpack"><a href="#pack-amp-unpack" class="headerlink" title="pack&amp;unpack"></a>pack&amp;unpack</h2><p>p32(0xdeadbeef) #b’\xef\xbe\xad\xde’<br>p64(0xdeadbeef) #b’\xef\xbe\xad\xde\x00\x00\x00\x00’</p>
-<p>hex(u32(‘\xef\xbe\xad\xde’)) #’0xdeadbeef’<br>hex(u64(‘\xef\xbe\xad\xde\x00\x00\x00\x00’)) #’0xdeadbeef’</p>
-<h2 id="payload用flat-连接"><a href="#payload用flat-连接" class="headerlink" title="payload用flat()连接"></a>payload用flat()连接</h2><p>flat([‘A’* 5,0xdeadbeef]) #b’AAAAA\xef\xbe\xad\xde’<br>#在flat()函数中，不用使用b’A’的形式</p>
-<h2 id="context-架构"><a href="#context-架构" class="headerlink" title="context(架构)"></a>context(架构)</h2><p>context.arch &#x3D; ‘amd64’<br>context.os &#x3D; ‘Linux’<br>context.endian &#x3D; ‘little’ #小端序<br>context.log_level &#x3D; ‘debug’</p>
-<h2 id="shellcode-amp-asm"><a href="#shellcode-amp-asm" class="headerlink" title="shellcode &amp; asm"></a>shellcode &amp; asm</h2><p>asm(shellcraft.sh())<br>shellcraft.i386.mov(‘eax’,0x20)<br>pwnlib.shellcraft.i386.linux.cat(“flag”, fd&#x3D;1) #读取flag并输出，可以使用asm()包裹</p>
-<h2 id="ELF"><a href="#ELF" class="headerlink" title="ELF"></a>ELF</h2><p>e &#x3D; ELF(‘elf_file’) #寻找elf文件中的function<br>e.got[‘puts’] #puts在got表的地址<br>e.plt[‘puts’] #puts在plt表中的地址</p>
-<h2 id="libc"><a href="#libc" class="headerlink" title="libc"></a>libc</h2><p>lib  &#x3D; ELF(‘libc.so.6’) #寻找libc中的function<br>lib.symbols[‘system’] #寻找system的offset<br>lib.search(‘&#x2F;bin&#x2F;sh’) #找&#x2F;bin&#x2F;sh的offset</p>
-<h2 id="ROP"><a href="#ROP" class="headerlink" title="ROP"></a>ROP</h2><p>rop &#x3D; ROP(‘elf_file’) #会产生一个空的rop链<br>rop.chain() #打印出当前的chain<br>rop.dump() #dump出chain在stack的样子<br>rop.raad(0,elf.bss(0x80)) #如果存在可以组成read(0,.bss+0x80)的gadgets，就加入rop chain<br>rop.raw(‘&#x2F;bin&#x2F;sh’) #将&#x2F;bin&#x2F;sh字符串直接加入rop chain</p>
+<h2 id="连接本地程序"><a href="#连接本地程序" class="headerlink" title="连接本地程序"></a>连接本地程序</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python">p <span class="token operator">=</span> process<span class="token punctuation">(</span><span class="token string">'./demo'</span><span class="token punctuation">)</span> <span class="token comment">#usage:process('binary',env)</span>
+context<span class="token punctuation">.</span>terminal <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'tmux'</span><span class="token punctuation">,</span><span class="token string">'splitw'</span><span class="token punctuation">,</span><span class="token string">'-h'</span><span class="token punctuation">]</span> <span class="token comment">#在tmux下可以切出视窗跑gdb</span>
+gdb<span class="token punctuation">.</span>attach<span class="token punctuation">(</span>p<span class="token punctuation">)</span> <span class="token comment">#attach到gdb</span>
+<span class="token comment">#exp code</span>
+p<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
+<h2 id="recv"><a href="#recv" class="headerlink" title="recv"></a>recv</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python">r<span class="token punctuation">.</span>recv<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">#接收一个字节</span>
+r<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">#接受一行</span>
+r<span class="token punctuation">.</span>recvlines<span class="token punctuation">(</span>num<span class="token punctuation">)</span> <span class="token comment">#接收(num)行</span>
+r<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token builtin">str</span><span class="token punctuation">)</span> <span class="token comment">#一直接收直到碰到(str)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="send"><a href="#send" class="headerlink" title="send"></a>send</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python">r<span class="token punctuation">.</span>sned<span class="token punctuation">(</span>payload<span class="token punctuation">)</span> <span class="token comment">#发送payload</span>
+r<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span> <span class="token comment">#再最后面加上空字符</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h2 id="pack-amp-unpack"><a href="#pack-amp-unpack" class="headerlink" title="pack&amp;unpack"></a>pack&amp;unpack</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python">p32<span class="token punctuation">(</span><span class="token number">0xdeadbeef</span><span class="token punctuation">)</span> <span class="token comment">#b'\xef\xbe\xad\xde'</span>
+p64<span class="token punctuation">(</span><span class="token number">0xdeadbeef</span><span class="token punctuation">)</span> <span class="token comment">#b'\xef\xbe\xad\xde\x00\x00\x00\x00'</span>
+
+<span class="token builtin">hex</span><span class="token punctuation">(</span>u32<span class="token punctuation">(</span><span class="token string">'\xef\xbe\xad\xde'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">#'0xdeadbeef'</span>
+<span class="token builtin">hex</span><span class="token punctuation">(</span>u64<span class="token punctuation">(</span><span class="token string">'\xef\xbe\xad\xde\x00\x00\x00\x00'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">#'0xdeadbeef'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="payload用flat-连接"><a href="#payload用flat-连接" class="headerlink" title="payload用flat()连接"></a>payload用flat()连接</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python">flat<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'A'</span><span class="token operator">*</span> <span class="token number">5</span><span class="token punctuation">,</span><span class="token number">0xdeadbeef</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token comment">#b'AAAAA\xef\xbe\xad\xde'</span>
+<span class="token comment">#在flat()函数中，不用使用b'A'的形式</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h2 id="context-架构"><a href="#context-架构" class="headerlink" title="context(架构)"></a>context(架构)</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python">context<span class="token punctuation">.</span>arch <span class="token operator">=</span> <span class="token string">'amd64'</span>
+context<span class="token punctuation">.</span>os <span class="token operator">=</span> <span class="token string">'Linux'</span>
+context<span class="token punctuation">.</span>endian <span class="token operator">=</span> <span class="token string">'little'</span> <span class="token comment">#小端序</span>
+context<span class="token punctuation">.</span>log_level <span class="token operator">=</span> <span class="token string">'debug'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="shellcode-amp-asm"><a href="#shellcode-amp-asm" class="headerlink" title="shellcode &amp; asm"></a>shellcode &amp; asm</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python">asm<span class="token punctuation">(</span>shellcraft<span class="token punctuation">.</span>sh<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+shellcraft<span class="token punctuation">.</span>i386<span class="token punctuation">.</span>mov<span class="token punctuation">(</span><span class="token string">'eax'</span><span class="token punctuation">,</span><span class="token number">0x20</span><span class="token punctuation">)</span>
+pwnlib<span class="token punctuation">.</span>shellcraft<span class="token punctuation">.</span>i386<span class="token punctuation">.</span>linux<span class="token punctuation">.</span>cat<span class="token punctuation">(</span><span class="token string">"flag"</span><span class="token punctuation">,</span> fd<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token comment">#读取flag并输出，可以使用asm()包裹</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="ELF"><a href="#ELF" class="headerlink" title="ELF"></a>ELF</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python">e <span class="token operator">=</span> ELF<span class="token punctuation">(</span><span class="token string">'elf_file'</span><span class="token punctuation">)</span> <span class="token comment">#寻找elf文件中的function</span>
+e<span class="token punctuation">.</span>got<span class="token punctuation">[</span><span class="token string">'puts'</span><span class="token punctuation">]</span> <span class="token comment">#puts在got表的地址</span>
+e<span class="token punctuation">.</span>plt<span class="token punctuation">[</span><span class="token string">'puts'</span><span class="token punctuation">]</span> <span class="token comment">#puts在plt表中的地址</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="libc"><a href="#libc" class="headerlink" title="libc"></a>libc</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python">lib  <span class="token operator">=</span> ELF<span class="token punctuation">(</span><span class="token string">'libc.so.6'</span><span class="token punctuation">)</span> <span class="token comment">#寻找libc中的function</span>
+lib<span class="token punctuation">.</span>symbols<span class="token punctuation">[</span><span class="token string">'system'</span><span class="token punctuation">]</span> <span class="token comment">#寻找system的offset</span>
+lib<span class="token punctuation">.</span>search<span class="token punctuation">(</span><span class="token string">'/bin/sh'</span><span class="token punctuation">)</span> <span class="token comment">#找/bin/sh的offset</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="ROP"><a href="#ROP" class="headerlink" title="ROP"></a>ROP</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python">rop <span class="token operator">=</span> ROP<span class="token punctuation">(</span><span class="token string">'elf_file'</span><span class="token punctuation">)</span> <span class="token comment">#会产生一个空的rop链</span>
+rop<span class="token punctuation">.</span>chain<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">#打印出当前的chain</span>
+rop<span class="token punctuation">.</span>dump<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">#dump出chain在stack的样子</span>
+rop<span class="token punctuation">.</span>raad<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span>elf<span class="token punctuation">.</span>bss<span class="token punctuation">(</span><span class="token number">0x80</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">#如果存在可以组成read(0,.bss+0x80)的gadgets，就加入rop chain</span>
+rop<span class="token punctuation">.</span>raw<span class="token punctuation">(</span><span class="token string">'/bin/sh'</span><span class="token punctuation">)</span> <span class="token comment">#将/bin/sh字符串直接加入rop chain</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
                 
             </div>
             <hr/>
