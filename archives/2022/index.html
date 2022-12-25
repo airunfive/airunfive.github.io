@@ -465,22 +465,19 @@
             <article class="cd-timeline-content" data-aos="fade-up">
                 <div class="article col s12 m6">
                     <div class="card">
-                        <a href="/2022/12/25/hello_pwn%20wp/">
+                        <a href="/2022/12/25/hello-pwn/">
                             <div class="card-image">
                                 
                                 
-                                <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="">
+                                <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="hello_pwn">
                                 
-                                <span class="card-title"></span>
+                                <span class="card-title">hello_pwn</span>
                             </div>
                         </a>
                         <div class="card-content article-content">
                             <div class="summary block-with-text">
                                 
-                                    
-title: hello_pwn wpdate: 2022-12-25 20:39:06tags:
-
-hello_pwn先将其在终端中checksec下：![](&#x2F;images&#x2F;hello_pwn wp&#x2F;1.
+                                    hello_pwn先将其在终端中checksec下：只开了NX保护，推断是个栈溢出问题。拖进IDA查看：发现有个read函数可溢出16个字节。对其中函数分析发现sub_400686()函数可直接调用system函数抓取flag：目标明确！要
                                 
                             </div>
                             <div class="publish-info">
@@ -1088,7 +1085,7 @@ codesg segment
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">4.5k</span>&nbsp;字
+                class="white-color">4.4k</span>&nbsp;字
             
             
             
