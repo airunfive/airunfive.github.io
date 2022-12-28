@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="栈转移原理与通用rop的使用, 矢坕个人博客">
+    <meta name="keywords" content="栈转移原理与通用garget的使用, 矢坕个人博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>栈转移原理与通用rop的使用 | 矢坕个人博客</title>
+    <title>栈转移原理与通用garget的使用 | 矢坕个人博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/9.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">栈转移原理与通用rop的使用</h1>
+                    <h1 class="description center-align post-title">栈转移原理与通用garget的使用</h1>
                 </div>
             </div>
         </div>
@@ -457,7 +457,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    600
+                    594
                 </div>
                 
 
@@ -489,7 +489,7 @@ pop  rbp<span aria-hidden="true" class="line-numbers-rows"><span></span><span></
 <p>ret指令相当于：</p>
 <pre class="line-numbers language-none"><code class="language-none">pop rip<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>因此将rbp的值先覆盖成目标地址，利用函数自带的leave指令先将rbp控制，接下另一段leave ret的garget的地址就可以实现rsp的控制实现栈转移，至于转移后rbp的值并不重要<br>leave;ret;地址：<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/5.png"></p>
-<h3 id="通用garget原理"><a href="#通用garget原理" class="headerlink" title="通用garget原理"></a>通用garget原理</h3><p>已经把栈转移到了grobe_buf去了，接下来设置该区域的rop链，我们用通用garget<br>在ida中我们点击这个函数<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/6.png"><br>跳到这里<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/7.png"><br>可以发现这里的garget是不是很齐全，只要调用了这里几乎哪里都能call，这里分为两个garget分别记下地址<br>这里说一下怎么查看execv函数got表地址：<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/8.png"><br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/9.png"><br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/10.png"><br>接下来上exp：</p>
+<h3 id="通用garget原理"><a href="#通用garget原理" class="headerlink" title="通用garget原理"></a>通用garget原理</h3><p>已经把栈转移到了grobe_buf去了，接下来设置该区域的rop链，我们用通用garget<br>我们点开_libc_csu_init这个函数<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/7.png"><br>可以发现这里的garget是不是很齐全，只要调用了这里几乎哪里都能call，这里分为两个garget分别记下地址<br>这里说一下怎么查看execv函数got表地址：<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/9.png"><br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/10.png"><br>接下来上exp：</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span><span class="token operator">*</span>
 io<span class="token operator">=</span>process<span class="token punctuation">(</span><span class="token string">'./advanced'</span><span class="token punctuation">)</span>
 payload1<span class="token operator">=</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">80</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">0x404080</span><span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">0x4011fb</span><span class="token punctuation">)</span><span class="token comment">#leave ret的地址</span>
@@ -749,9 +749,9 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="栈转移原理与通用rop的使用">
+                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="栈转移原理与通用garget的使用">
                         
-                        <span class="card-title">栈转移原理与通用rop的使用</span>
+                        <span class="card-title">栈转移原理与通用garget的使用</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
