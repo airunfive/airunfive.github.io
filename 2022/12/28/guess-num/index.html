@@ -482,7 +482,7 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="guess-num-wp"><a href="#guess-num-wp" class="headerlink" title="guess_num wp"></a>guess_num wp</h2><p>为什么写这题呢？感觉这题很有代表性（学到的东西挺多），以后很多的问题可以提前解决，所以写一篇博客记录一下。<br>先checksec一下：<br><img src="/images/guess_num/1.png"><br>吓死本菜鸡了！竟然三个保护机制全开了！<br>我们拖入IDA查看：<br><img src="/images/guess_num/2.png"><br>代码还有点小长……<del>当场决定放弃</del>咳咳，这题着实吓到我了，看一下有没有威胁函数，发现gets函数可以无限输入<br>硬着头皮查看每个函数，发现：<br><img src="/images/guess_num/3.png"><br>sub_C3E函数里可以直接抓取flag，回去看一眼这个函数的位置，在最底部，中间有个循环判断而且有个exit（0）想要运行sub_C3E必须要绕过他（从判断脱离出来）<br>但我又不知道srand()函数和rand()函数有什么作用……去网上查一查发现这两个函数要配合使用srand()函数为rand()函数初始化，srand()里的参数不同对应rand()的产生的随机数也不同<br>但只要srand()里的数是固定的，那么rand产生的随机数也是固定的。<br>那么就要自己写个程序：</p>
+                <h2 id="guess-num-wp"><a href="#guess-num-wp" class="headerlink" title="guess_num wp"></a>guess_num wp</h2><p>为什么写这题呢？感觉这题很有代表性（学到的东西挺多），以后很多的问题可以提前解决，所以写一篇博客记录一下。<br>先checksec一下：<br><img src="/images/guess_num/1.png"><br>吓死本菜鸡了！竟然三个保护机制全开了！<br>我们拖入IDA查看：<br><img src="/images/guess_num/2.png"><br>代码还有点小长……<del>当场决定放弃</del>咳咳，这题着实吓到我了，看一下有没有威胁函数，发现gets函数可以无限输入<br>硬着头皮查看每个函数，发现：<br><img src="/images/guess_num/03.png"><br>sub_C3E函数里可以直接抓取flag，回去看一眼这个函数的位置，在最底部，中间有个循环判断而且有个exit（0）想要运行sub_C3E必须要绕过他（从判断脱离出来）<br>但我又不知道srand()函数和rand()函数有什么作用……去网上查一查发现这两个函数要配合使用srand()函数为rand()函数初始化，srand()里的参数不同对应rand()的产生的随机数也不同<br>但只要srand()里的数是固定的，那么rand产生的随机数也是固定的。<br>那么就要自己写个程序：</p>
 <pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span><span class="token string">&lt;stdio.h></span></span>
 <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span><span class="token string">&lt;stdlib.h></span></span>
 <span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
@@ -495,7 +495,7 @@
 	<span class="token punctuation">&#125;</span>
 	<span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>运行去查看它产生的随机数，这里我们选择0<del>（方便）</del><br>又涉及到一个冷知识同一串程序在linux和windows中产生的随机数是不一样的！<del>好吧，摊牌了我看了wp，哈哈</del>咳咳，<br>结果把cpp文件拖到虚拟机里运行又出了问题……<br><img src="/images/guess_num/4.png"><br>这里要改一下进行以下操作：</p>
+<p>运行去查看它产生的随机数，这里我们选择0<del>（方便）</del><br>又涉及到一个冷知识同一串程序在linux和windows中产生的随机数是不一样的！<del>好吧，摊牌了我看了wp，哈哈</del>咳咳，<br>结果把cpp文件拖到虚拟机里运行又出了问题……<br><img src="/images/guess_num/04.png"><br>这里要改一下进行以下操作：</p>
 <pre class="line-numbers language-none"><code class="language-none">1.  cc c.cpp（原来的名字） -o 1c（想改的文件名）
 
 2.  .&#x2F;1c  #运行<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
