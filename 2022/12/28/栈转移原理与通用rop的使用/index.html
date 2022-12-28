@@ -457,7 +457,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    594
+                    605
                 </div>
                 
 
@@ -482,7 +482,7 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="栈转移原理与通用rop的使用"><a href="#栈转移原理与通用rop的使用" class="headerlink" title="栈转移原理与通用rop的使用"></a>栈转移原理与通用rop的使用</h1><p>这里我们通过一题pwn题边解边说：<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/1.png"><br>可以看到，这题讲解示范没有开任何保护。<br>拖入ida查看：<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/2.png"><br>虽然打印出来了execv的地址和system的地址，但不知道为什么和~~ 实际差挺多的  ~~……如下：<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/3.png"><br>查看vul函数发现有溢出点但是字节有限只能溢出24个字节，而此题没有现成的system或execv函数可用，直接溢出并不现实<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/4.png"></p>
+                <h1 id="栈转移原理与通用rop的使用"><a href="#栈转移原理与通用rop的使用" class="headerlink" title="栈转移原理与通用rop的使用"></a>栈转移原理与通用rop的使用</h1><p>此题下载链接：<br><a href="/download/advanced">点击下载</a><br>这里我们通过一题pwn题边解边说：<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/1.png"><br>可以看到，这题讲解示范没有开任何保护。<br>拖入ida查看：<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/2.png"><br>虽然打印出来了execv的地址和system的地址，但不知道为什么和~~ 实际差挺多的  ~~……如下：<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/3.png"><br>查看vul函数发现有溢出点但是字节有限只能溢出24个字节，而此题没有现成的system或execv函数可用，直接溢出并不现实<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/4.png"></p>
 <h3 id="栈转移原理"><a href="#栈转移原理" class="headerlink" title="栈转移原理"></a>栈转移原理</h3><p>现在介绍一个新的方法：<strong>栈转移</strong><br>当碰到这种题目时，因为溢出字节不够，要转移到别的栈段上运行已准备好的rop<br>栈是由rbp和rsp决定的，尤其是后者rsp在哪，栈就在哪。因此，我们只需要想办法把rsp指针转移到我们需要的地方即可。而想要改变rsp的值，可以先通过改变rbp的值，再把rbp的值传递给rsp就可以达到栈转移到目的。<br>实际方法用leave ret指令可以做到<br>我们知道leave指令相当于</p>
 <pre class="line-numbers language-none"><code class="language-none">move rsp, rbp
 pop  rbp<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
