@@ -4,6 +4,19 @@
   
     
     <entry>
+      <title>攻防世界——monkey</title>
+      <link href="/2023/01/08/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E2%80%94%E2%80%94monkey/"/>
+      <url>/2023/01/08/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E2%80%94%E2%80%94monkey/</url>
+      
+        <content type="html"><![CDATA[<h1 id="这是一种很新的monkey……"><a href="#这是一种很新的monkey……" class="headerlink" title="这是一种很新的monkey……"></a>这是一种很新的monkey……</h1><p>本来不打算写这题的博客的，<del>也不知道要这么写</del>  但还是想记录一下，毕竟是新题型，不知道常不常见……<br>checksec一下：<br><img src="/images/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E2%80%94%E2%80%94monkey/1.png"><br>发现没什么异常，估计是栈溢出。<br>但是拖进IDA查看时，人麻了，IDA解析了半天给出了长长的函数块，main函数里更别说了……<br>又是在做一种很新的题目，分析不了怎么办……只能求助带佬了</p><h2 id="javascript解释器"><a href="#javascript解释器" class="headerlink" title="javascript解释器"></a>javascript解释器</h2><p>带佬说这是个javascript解释器（js解释器），这题就相当于一个终端，可以直接输入命令，获取回应，如果直接输入system（“&#x2F;bin&#x2F;sh”）就会直接执行获取shell。<br>这里带入网上的解释：<br>JavaScript解释器又名js引擎。</p><p>JavaScript是解释型语言，这就是说它无需编译，直接由JavaScript引擎直接执行。</p><p>既然说到了解释型语言，那么我们就来分别以下解释型语言和编译型语言的差别：</p><p>编译型语言：程序在执行之前需要一个专门的编译过程，把程序编译成为机器语言的文件（即exe文件），运行时不需要重新编译，直接用编译后的文件（exe文件）就行了。<br>优点：执行效率高<br>缺点：跨平台性差<br>解释型语言：程序不需要编译，程序在运行的过程中才用解释器编译成机器语言，边编译边执行（没有exe文件）。<br>优点：跨平台性好<br>缺点：执行效率低<br>其中程序无需编译，不是说真的不需要编译了，直接执行脚本字符串。而是说不需要在运行之前先编译程序成为exe文件，而是在运行的过程中边运行边执行。</p><h2 id="os-system-“-x2F-bin-x2F-sh”"><a href="#os-system-“-x2F-bin-x2F-sh”" class="headerlink" title="os.system(“&#x2F;bin&#x2F;sh”)"></a>os.system(“&#x2F;bin&#x2F;sh”)</h2><p><img src="/images/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E2%80%94%E2%80%94monkey/2.png"><br>直接输入system(“&#x2F;bin&#x2F;sh”)会发现不会有任何回应，看带佬们用了os.system，这里我就不说了去网上查查吧（我也不清楚，本人太菜了）<br>所以连最终连exp都不用写直接操作就行：<br><img src="/images/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E2%80%94%E2%80%94monkey/3.png"><br>结束</p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>高级rop-retlibc3心得</title>
       <link href="/2023/01/06/%E9%AB%98%E7%BA%A7rop-retlibc3%E5%BF%83%E5%BE%97/"/>
       <url>/2023/01/06/%E9%AB%98%E7%BA%A7rop-retlibc3%E5%BF%83%E5%BE%97/</url>
