@@ -461,7 +461,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    960
+                    941
                 </div>
                 
 
@@ -487,7 +487,7 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h1 id="攻防世界Recho"><a href="#攻防世界Recho" class="headerlink" title="攻防世界Recho"></a>攻防世界Recho</h1><p>对于这题有两个知识点要讲1、got表劫持2、pwntools的shutdown用法场景<br>先checksec一下：<br><img src="/images/got%E8%A1%A8%E5%8A%AB%E6%8C%81%E5%AE%9E%E6%88%98%E8%AE%B2%E8%A7%A3/1.png"><br>开了NX保护机制看起来还行，但作为进阶pwn应该不会太简单。<br>拖进IDA查看：<br><img src="/images/got%E8%A1%A8%E5%8A%AB%E6%8C%81%E5%AE%9E%E6%88%98%E8%AE%B2%E8%A7%A3/2.png"><br>代码不会花里胡哨，没有调用杂七杂八的函数，同样没有后门函数。<br>这里溢出点非常简单，只要读入nptr，**v7 &#x3D; atoi(nptr)**会自动将读入的nptr进行整型转换，atoi函数自行去网上搜，这里不作过多赘述。<br><strong>v6 &#x3D; read(0, buf, v7)</strong>;只要v7足够大，那么buf就可以无限读入实现溢出。但难点在于如何结束循环，因为不管怎样read只要有读入返回值就一定不会是0。</p>
-<h2 id="0x01-pwntools-shutdown方法"><a href="#0x01-pwntools-shutdown方法" class="headerlink" title="0x01 pwntools shutdown方法"></a>0x01 pwntools shutdown方法</h2><p>如果是在linux终端上直接运行，我们可以用Ctrl+D，然而，pwn远程，就无法处理这种信号。幸运的是pwntools提供了一个shutdown功能，<strong>该功能可以关闭流，如果我们关闭输入流,这个循环就结束了。但是我们别想再次ROP到主函数获取输入，因为关闭后就不能打开，除非重新运行</strong>，那么之前的工作不都白费了吗。因此，我们必须一次性完成所有操作。<br>一次性要完成所有操作，那么暴露地址的方式肯定不能完成，幸运的是，我们可以使用系统调用(syscall)。对于有些系统,system也可以用系统调用,而对于有些系统则不行，<strong>并且这里也没有给出system函数，没有泄露调用不了</strong>，因此，我们这里<strong>不再geshell，我们直接读取flag，然后打印出来</strong>。<del>这样rop链会非常的长……</del></p>
+<h2 id="0x01-pwntools-shutdown方法"><a href="#0x01-pwntools-shutdown方法" class="headerlink" title="0x01 pwntools shutdown方法"></a>0x01 pwntools shutdown方法</h2><p>如果是在linux终端上直接运行，我们可以用Ctrl+D，然而，pwn远程，就无法处理这种信号。幸运的是pwntools提供了一个shutdown功能，<strong>该功能可以关闭流，如果我们关闭输入流,这个循环就结束了。但是我们别想再次ROP到主函数获取输入，因为关闭后就不能打开，除非重新运行</strong>，那么之前的工作不都白费了吗。因此，我们必须一次性完成所有操作。<br>一次性要完成所有操作，那么暴露地址的方式肯定不能完成，幸运的是，我们可以使用系统调用(syscall)。对于有些系统,system也可以用系统调用,而对于有些系统则不行，因此，我们这里<strong>不再get shell，我们直接读取flag，然后打印出来</strong>。<del>这样rop链会非常的长……</del></p>
 <h2 id="0x02-got表劫持"><a href="#0x02-got表劫持" class="headerlink" title="0x02 got表劫持"></a>0x02 got表劫持</h2><p>为了实现以上想法我们想要构造这样的一条链：</p>
 <pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">int</span> fd <span class="token operator">=</span> <span class="token function">open</span><span class="token punctuation">(</span><span class="token string">"flag"</span><span class="token punctuation">,</span>READONLY<span class="token punctuation">)</span><span class="token punctuation">;</span>  
 <span class="token function">read</span><span class="token punctuation">(</span>fd<span class="token punctuation">,</span>buf<span class="token punctuation">,</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
@@ -523,7 +523,7 @@ payload<span class="token operator">=</span>payload<span class="token punctuatio
 io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
 io<span class="token punctuation">.</span>shutdown<span class="token punctuation">(</span><span class="token string">'write'</span><span class="token punctuation">)</span>
 io<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>获得shell：<br><img src="/images/got%E8%A1%A8%E5%8A%AB%E6%8C%81%E5%AE%9E%E6%88%98%E8%AE%B2%E8%A7%A3/7.png"></p>
+<p>获得flag：<br><img src="/images/got%E8%A1%A8%E5%8A%AB%E6%8C%81%E5%AE%9E%E6%88%98%E8%AE%B2%E8%A7%A3/7.png"></p>
 
                 
             </div>
