@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>buuctf_babyheap_0ctf_2017</title>
+      <link href="/2023/01/27/buuctf-babyheap-0ctf-2017/"/>
+      <url>/2023/01/27/buuctf-babyheap-0ctf-2017/</url>
+      
+        <content type="html"><![CDATA[<h1 id="0x01-buuctf-babyheap-0ctf-2017"><a href="#0x01-buuctf-babyheap-0ctf-2017" class="headerlink" title="0x01 buuctf_babyheap_0ctf_2017"></a>0x01 buuctf_babyheap_0ctf_2017</h1><hr><p>牢骚：第一次做堆题，改exp改了特别长时间，结合别的师傅的wp才做出来的，心累……<br>如果对基础知识不太懂的看看这篇博客，这里不作过多赘述：<a href="https://blog.csdn.net/weixin_43847969/article/details/104897249">知识补充</a></p><hr><p>本题涉及到几个知识点：</p><ul><li>堆溢出</li><li>堆块重叠</li><li>fastbin attack</li><li>double free</li><li>堆泄露libc地址</li><li>pwndbg如何快速找到fake chunk</li><li>__malloc_hook函数的利用<br>环境：Ubuntu16.04</li></ul><hr><h2 id="malloc-hook函数攻击原理："><a href="#malloc-hook函数攻击原理：" class="headerlink" title="__malloc_hook函数攻击原理："></a>__malloc_hook函数攻击原理：</h2><hr><ul><li>像malloc、free、realloc这类函数在执行前会先检查对应的hook函数，如果hook函数为空，则继续执行对应的函数，如果不为空，则跳转到hook中的值对应的地址位置执行。（例如hook函数中如果存的是one_gatget的地址则执行one_gatget）<br>堆题的保护机制一般是全开的，如下：<br><img src="/images/buuctf-babyheap-0ctf-2017/1.png"></li></ul>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> pwn原理讲解 pwn-write-up </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>linux动态内存管理</title>
       <link href="/2023/01/16/linux%E5%8A%A8%E6%80%81%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/"/>
       <url>/2023/01/16/linux%E5%8A%A8%E6%80%81%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/</url>

