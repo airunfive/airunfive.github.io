@@ -454,7 +454,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-01-30
+                    2023-01-31
                 </div>
                 
 
@@ -491,7 +491,7 @@
 <li>offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出一个字节的时候使用。</li>
 </ul>
 <hr>
-<h2 id="0x01-offbyone原理分析"><a href="#0x01-offbyone原理分析" class="headerlink" title="0x01 offbyone原理分析"></a>0x01 offbyone原理分析</h2><p><img src="/images/%E5%A0%86%E6%BC%8F%E6%B4%9Eoffbyone/1.png"><br>假如题目存在offbyone漏洞，堆中有ABCD四个已经被分配的大小为0x70的chunk，现在都是使用状态。然后A是我们进行offbyone的chunk，我们目的是将B的size改掉。我们在<br>chunk A中输入我们输入**’A’*0x68 + ‘\xe1’**将左图改为右图，可以看到B的size被改大了，正好覆盖到了C的末尾。<br><img src="/images/%E5%A0%86%E6%BC%8F%E6%B4%9Eoffbyone/2.png"><br>这时候我们将Cfree掉，他会进入fastbin。我们再将B free掉，B+C这一段区域会进入unsorted bin。我们再次申请一个大小为0xd0的堆块，也就是说B+C这段内存又被我们控<br>制了，此时我们就可以控制C的fd字段，就可以进行fastbinattack了。</p>
+<h2 id="0x01-offbyone原理分析"><a href="#0x01-offbyone原理分析" class="headerlink" title="0x01 offbyone原理分析"></a>0x01 offbyone原理分析</h2><p><img src="/images/%E5%A0%86%E6%BC%8F%E6%B4%9Eoffbyone/1.png"><br>假如题目存在offbyone漏洞，堆中有ABCD四个已经被分配的大小为0x70的chunk，现在都是使用状态。然后A是我们进行offbyone的chunk，我们目的是将B的size改掉。我们在chunk A中输入我们输入**’A’*0x68 + ‘\xe1’**将左图改为右图，可以看到B的size被改大了，正好覆盖到了C的末尾。<br><img src="/images/%E5%A0%86%E6%BC%8F%E6%B4%9Eoffbyone/2.png"><br>这时候我们将Cfree掉，他会进入fastbin。我们再将B free掉，B+C这一段区域会进入unsorted bin。我们再次申请一个大小为0xd0的堆块，也就是说B+C这段内存又被我们控制了，此时我们就可以控制C的fd字段，就可以进行fastbinattack了。</p>
 <hr>
 <h2 id="0x02-offbyone例题讲解"><a href="#0x02-offbyone例题讲解" class="headerlink" title="0x02 offbyone例题讲解"></a>0x02 offbyone例题讲解</h2><hr>
 <p>环境：本地 Ubuntu16.04<br>例题：<a href="/download/offbyone">offbyone</a></p>
@@ -784,18 +784,17 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;本篇
-            </div>
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2023/01/30/%E5%A0%86%E6%BC%8F%E6%B4%9Eoffbyone/">
+                <a href="/2023/01/31/%E5%A0%86%E6%BC%8F%E6%B4%9Eoffbynull/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="堆漏洞offbyone">
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="堆漏洞offbynull">
                         
-                        <span class="card-title">堆漏洞offbyone</span>
+                        <span class="card-title">堆漏洞offbynull</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -805,9 +804,9 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-30
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2023-01-31
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -816,7 +815,6 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
@@ -1069,7 +1067,7 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">16.2k</span>&nbsp;字
+                class="white-color">17k</span>&nbsp;字
             
             
             
