@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>unsortbin-attach</title>
+      <link href="/2023/03/12/unsortbin-attach/"/>
+      <url>/2023/03/12/unsortbin-attach/</url>
+      
+        <content type="html"><![CDATA[<h2 id="unsortbin-attach攻击原理"><a href="#unsortbin-attach攻击原理" class="headerlink" title="unsortbin-attach攻击原理"></a>unsortbin-attach攻击原理</h2><hr><p>这篇博客当初不想写的，当初不太理解，但后面好像挺常用到的还是记录一下。同时这也是时隔一个月的博客更新，恢复下进度，同时庆祝熬过了艰难的考试周。</p><hr><p>这里再次看看unsortbin的结构：<br><img src="/images/unsortbin-attach/1.png"><br>堆漏洞利用中第二常用的攻击手法。最简单的攻击手法，<strong>前提条件是UAF</strong>。任意内存地址写一个<strong>不确定</strong>的非常大的数（libc地址）。通常，我们利用unsortedbin attack来修改一些类似于<strong>修改次数限制、上限信息、伪造堆头、配合局部写</strong>等等，十分好用。</p><hr><p>unsortbin的链入链出的顺序和其他bin不一样，它是先进先出的，<strong>从头插入，从尾取出</strong>：<br><img src="/images/unsortbin-attach/2.jpg"></p><hr><p>我们要修改unsortedbin中的BK字段为target addr - 0x10（不是0x18，因为指向的是size段，这张图没画出来），当取出victim时会发生一下步骤：<br><img src="/images/unsortbin-attach/4.png"><br>fake chunk的fd、bk指针会指向unsortbin_chunks(av)的地址，这里就泄露了libc的某处地址<br>如下图是变化的全过程：<br><img src="/images/unsortbin-attach/3.jpg"></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> pwn原理讲解 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>堆漏洞offbynull</title>
       <link href="/2023/01/31/%E5%A0%86%E6%BC%8F%E6%B4%9Eoffbynull/"/>
       <url>/2023/01/31/%E5%A0%86%E6%BC%8F%E6%B4%9Eoffbynull/</url>
