@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="函数的调用和约定, 矢坕个人博客">
+    <meta name="keywords" content="sqli_labs_1~4, 矢坕个人博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>函数的调用和约定 | 矢坕个人博客</title>
+    <title>sqli_labs_1~4 | 矢坕个人博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/2.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/10.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">函数的调用和约定</h1>
+                    <h1 class="description center-align post-title">sqli_labs_1~4</h1>
                 </div>
             </div>
         </div>
@@ -431,8 +431,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
-                                <span class="chip bg-color">pwn原理讲解</span>
+                            <a href="/tags/web%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                                <span class="chip bg-color">web原理讲解</span>
                             </a>
                         
                     </div>
@@ -447,28 +447,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-11-05
+                    2023-03-25
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-01-08
+                    2023-03-25
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.3k
+                    469
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    4 分
+                    1 分
                 </div>
                 
 
@@ -486,48 +486,21 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="函数的调用"><a href="#函数的调用" class="headerlink" title="函数的调用"></a>函数的调用</h2><h4 id="计算机内部的数据存储形式"><a href="#计算机内部的数据存储形式" class="headerlink" title="计算机内部的数据存储形式"></a>计算机内部的数据存储形式</h4><p>计算机内部有两种存储形式，分为大端序、小端序。</p>
-<h6 id="大端序："><a href="#大端序：" class="headerlink" title="大端序："></a>大端序：</h6><p>以0123456789abcdef为例，数据最高位01存储在低位，最低位ef存储在高位。<br>如图：<br><img src="/images/%E5%87%BD%E6%95%B0%E7%9A%84%E8%B0%83%E7%94%A8%E5%92%8C%E7%BA%A6%E5%AE%9A/1.png"><br>将此数据按照字符串输出，得到的为：\x01\x23\x45\x67\x89\xab\xcd\xef</p>
-<h6 id="小端序："><a href="#小端序：" class="headerlink" title="小端序："></a>小端序：</h6><p>一0123456789abcdef为例，数据最高位01存储在高位，最低位ef存储在低位。<br>如图：<br><img src="/images/%E5%87%BD%E6%95%B0%E7%9A%84%E8%B0%83%E7%94%A8%E5%92%8C%E7%BA%A6%E5%AE%9A/2.png"><br>将此数据按照字符串输出，得到的为：\xef\xcd\xab\x89\67\x45\x23\x01</p>
-<h6 id="两种方式比较"><a href="#两种方式比较" class="headerlink" title="两种方式比较"></a>两种方式比较</h6><p>从输出结果来看，大端序符合人类阅读习惯。<br>从存储逻辑、数学运算规律，小端序更正常。<br>总结为<strong>“大端序：高低低高，小端序：高高低低”</strong><br>对于linux而言，是以小端序存储，所以我们以字符串的形式输入一个数字时，要注意格式。<br>比如输入0xdeadbeef这个字符串，输入就是”\xef\xbe\xad\xde”传入程序。<br>但我们有pwntools，p32即可完成自动转换。</p>
-<h4 id="文件描述符"><a href="#文件描述符" class="headerlink" title="文件描述符"></a>文件描述符</h4><p>linux系统中，把一切都看做是文件，当进程打开现有文件或创建新文件时，内核向进程返<br>回一个文件描述符，文件描述符就是内核为了高效管理已被打开的文件所创建的索引，用来<br>指向被打开的文件，所有的i&#x2F;o操作的系统调用都会通过文件描述符。<br>每个文件描述符会与一个打开的文件相对应，不同的文件描述符也可能指向同一个文件。<br>相同的文件可以被不同的进程打开，也可以在同一个进程被多次打开。</p>
-<h4 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h4><p>栈是一种LIFO（先进后出）的数据结构。栈的基本操作有两种：<strong>push（压栈）</strong>和<strong>pop（弹栈）</strong>。<br>由于函数的调用顺序也是LIFO，所以绝大多数系统都是通过栈这一数据结构来维护函数调用关系的。<br>在Linux系统中，系统为每一个进程都安排了一个栈，进程中每一个调用的函数都有自己独立的栈帧。<br><strong>栈是由高地址向低地址生长的。高地址为栈底，低地址为栈顶。</strong><br>很多算法都是用栈实现的。以递归的形式实现一些算法在本质上来说也是利用栈结构。只不过没有在程序<br>中另外申请一个栈，而是利用函数调用栈。</p>
-<h4 id="函数的调用流程"><a href="#函数的调用流程" class="headerlink" title="函数的调用流程"></a>函数的调用流程</h4><p>以一下代码为例：</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">void</span> <span class="token function">func_a</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token comment">//do sth.</span>
-    <span class="token keyword">return</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
-<span class="token keyword">void</span> <span class="token function">func_b</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token function">func_a</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">int</span> c<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span>
-    <span class="token keyword">return</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token function">func_b</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">int</span> a<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">;</span>
-    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>main函数调用func_b,func_b调用func_a。<br>我们从main函数开始，逐步分析栈帧变化。<br>当运行到call func_b时main函数的栈帧如下：<br><img src="/images/%E5%87%BD%E6%95%B0%E7%9A%84%E8%B0%83%E7%94%A8%E5%92%8C%E7%BA%A6%E5%AE%9A/3.png"><br>rbp指向栈底，rsp指向栈顶，这些栈帧存放了一些main的局部变量。<br>main函数要调用func_b，main只要call func_b，也就是</p>
-<pre class="line-numbers language-none"><code class="language-none">push rip；
-mov rip func_b；<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<p><strong>当然被调用的函数还要维护栈帧。（用rsp与rbp开辟空间）</strong><br>如下</p>
-<pre class="line-numbers language-none"><code class="language-none">push rbp;  &#x2F;*将调用函数的栈底指针保存*&#x2F;
-mov rbp rsp;  &#x2F;*将栈底指针指向现在的栈顶*&#x2F;
-sub rsp xxx;  &#x2F;*开辟被调用函数的栈帧，此时上一步的rbp就指向栈帧的底*&#x2F;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-<p><img src="/images/%E5%87%BD%E6%95%B0%E7%9A%84%E8%B0%83%E7%94%A8%E5%92%8C%E7%BA%A6%E5%AE%9A/4.png"><br>同理根据以上步骤调用func_a也是一样的<br>如图：<br><img src="/images/%E5%87%BD%E6%95%B0%E7%9A%84%E8%B0%83%E7%94%A8%E5%92%8C%E7%BA%A6%E5%AE%9A/5.png"><br>在函数执行结束后返回时，会执行leave；ret；<br>也就是：</p>
-<pre class="line-numbers language-none"><code class="language-none">mov rsp rbp；&#x2F;*将栈顶指针指向栈底*&#x2F;
-pop rbp；&#x2F;*将栈底指针弹出*&#x2F;（其实就是改变rsp的值个人认为）
-pop rip；&#x2F;*将fun_b的下一行地址弹出到rip*&#x2F;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-<p>栈布局如图：<br><img src="/images/%E5%87%BD%E6%95%B0%E7%9A%84%E8%B0%83%E7%94%A8%E5%92%8C%E7%BA%A6%E5%AE%9A/4.png"><br>直到结束函数释放栈空间。<br>总结如下：<br><strong>调用函数：将rip压栈，然后将rip赋值为被调用函数的起始地址。这一操作被隐性地内置在call指令中。</strong><br><strong>被调用函数：先保存调用函数的rbp指针，将自己的rbp指针指向栈顶，然后开辟栈空间自用，此时rbp就成了被调用函数的栈底。</strong><br><strong>函数返回：恢复栈帧，返回调用函数的返回地址。</strong></p>
-<h2 id="调用约定"><a href="#调用约定" class="headerlink" title="调用约定"></a>调用约定</h2><p>一般来说，一个函数的返回值会存储到<strong>rax寄存器</strong>。<br>x86-64下函数的调用约定为：<br>从左至右参数依次传递给<strong>rdi，rsi，rdx，rcx，r8，r9</strong>。<br>如果一个函数的参数大于六个，则<strong>从右至左</strong>压入栈中传递。（因为栈LIFO）<br>syscall指令用于调用系统函数，调用时需要指明系统调用号。系统调用号存在rax寄存器中。之后布置好参数，执行syscall即可。<br>系统调用的常用调用号码如下：<br><img src="/images/%E5%87%BD%E6%95%B0%E7%9A%84%E8%B0%83%E7%94%A8%E5%92%8C%E7%BA%A6%E5%AE%9A/6.png"><br>如调用read（0，buf，size）：</p>
-<pre class="line-numbers language-none"><code class="language-none">mov rax,0    &#x2F;*read&#39;s syscall number.*&#x2F;
-mov rdi,0    &#x2F;*first arg*&#x2F;
-mov rsi,buf   &#x2F;*second arg.*&#x2F;
-mov rdx,size  &#x2F;*third arg.*&#x2F;
-syscall    &#x2F;*excute read(0,buf,size)*&#x2F;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+                <h1 id="web靶场-sqli-labs-1-4"><a href="#web靶场-sqli-labs-1-4" class="headerlink" title="web靶场 sqli_labs 1~4"></a>web靶场 sqli_labs 1~4</h1><hr>
+<h4 id="0x01-转方向感言："><a href="#0x01-转方向感言：" class="headerlink" title="0x01 转方向感言："></a>0x01 转方向感言：</h4><ul>
+<li>很遗憾学了pwn那么久，因为福州没有pwn的就业，本人不想出省，老实说很扎心，改方向这个决定做的很艰难，但决定了要改就会一定要改下去，而且要做的更好，希望后面的学弟继续坚持。这篇博客作为一座里程碑，记录我web的成长和pwn的逝去。</li>
+</ul>
+<hr>
+<p>sqli注入的基本知识具体看b站的这个视频<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1HT411E7bH?p=7&vd_source=6b56c0a6f7c42ccbc63f5ce49fb71500">2022b站最详细的sql注入 从入门到进阶</a></p>
+<hr>
+<h2 id="0x02-less-1-4-做题的一些总结"><a href="#0x02-less-1-4-做题的一些总结" class="headerlink" title="0x02 less 1~4 做题的一些总结"></a>0x02 less 1~4 做题的一些总结</h2><p>这篇博客以sqli-labs less4为例：<br><img src="/images/sqli_labs_1~4/1.png"><br>输入?id&#x3D;1：<br><img src="/images/sqli_labs_1~4/2.png"><br>由于是新手，我们看看源码（这里将1~4的源码都放上去比对一下）：</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token variable">$sql</span><span class="token operator">=</span><span class="token string double-quoted-string">"SELECT * FROM users WHERE id='<span class="token interpolation"><span class="token variable">$id</span></span>' LIMIT 0,1"</span><span class="token punctuation">;</span><span class="token comment">#less1</span>
+<span class="token variable">$sql</span><span class="token operator">=</span><span class="token string double-quoted-string">"SELECT * FROM users WHERE id=<span class="token interpolation"><span class="token variable">$id</span></span> LIMIT 0,1"</span><span class="token punctuation">;</span><span class="token comment">#less2</span>
+<span class="token variable">$sql</span><span class="token operator">=</span><span class="token string double-quoted-string">"SELECT * FROM users WHERE id=('<span class="token interpolation"><span class="token variable">$id</span></span>') LIMIT 0,1"</span><span class="token punctuation">;</span><span class="token comment">#less3</span>
+<span class="token variable">$id</span> <span class="token operator">=</span> <span class="token string single-quoted-string">'"'</span> <span class="token operator">.</span> <span class="token variable">$id</span> <span class="token operator">.</span> <span class="token string single-quoted-string">'"'</span><span class="token punctuation">;</span><span class="token comment">#less4，下面也是less4</span>
+<span class="token variable">$sql</span><span class="token operator">=</span><span class="token string double-quoted-string">"SELECT * FROM users WHERE id=(<span class="token interpolation"><span class="token variable">$id</span></span>) LIMIT 0,1"</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>可以看到’$id’、$id、(‘$id’)、(“$id”)四个区别<br>很明显less4要输入<strong>”）</strong>来截断：<br><img src="/images/sqli_labs_1~4/3.png"><br>如图页面有反应，这是没有查询结果的界面<br>接着测试有几个字段：<br><img src="/images/sqli_labs_1~4/4.png"><br><strong>union的作用是将前面的语句和后面的语句化为同一句代码</strong><br>要使union前面的代码没有输出结果，要将id改为-1，目的是输出后面我们的目的代码，如上图：输出2,3<br>将2改为database(),泄露库名为security：<br><img src="/images/sqli_labs_1~4/5.png"><br>用库名泄露表名：将3改为<br><code>table_name from information_schema.tables where table_schema=‘security’ limit 3,1--+</code><br><img src="/images/sqli_labs_1~4/6.png"><br>limit n，m是取n+1行开始的m个数据<br>也可以这么写,则可以输出全部的表名：<br><code>group_concat(table_name)%20from%20information_schema.tables%20where%20table_schema=%27security%27%20--+</code><br><img src="/images/sqli_labs_1~4/7.png"><br>最后查看user的列名：<br><code>1,database(),group_concat(username),from information_schema.columns where table_schema=&#39;security&#39; and table_name=&#39;users&#39; --+</code><br><img src="/images/sqli_labs_1~4/8.png"><br>最后读取用户名和密码：<br><code>1,group_concat(username),group_concat(password) from security.users --+</code><br>结束</p>
+
                 
             </div>
             <hr/>
@@ -553,7 +526,7 @@ syscall    &#x2F;*excute read(0,buf,size)*&#x2F;<span aria-hidden="true" class="
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://airunfive.github.io/2022/11/05/%E5%87%BD%E6%95%B0%E7%9A%84%E8%B0%83%E7%94%A8%E5%92%8C%E7%BA%A6%E5%AE%9A/">http://airunfive.github.io/2022/11/05/%E5%87%BD%E6%95%B0%E7%9A%84%E8%B0%83%E7%94%A8%E5%92%8C%E7%BA%A6%E5%AE%9A/</a>
+                    <a href="http://airunfive.github.io/2023/03/25/sqli-labs-1-4/">http://airunfive.github.io/2023/03/25/sqli-labs-1-4/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -591,8 +564,8 @@ syscall    &#x2F;*excute read(0,buf,size)*&#x2F;<span aria-hidden="true" class="
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
-                                    <span class="chip bg-color">pwn原理讲解</span>
+                                <a href="/tags/web%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                                    <span class="chip bg-color">web原理讲解</span>
                                 </a>
                             
                         </div>
@@ -762,17 +735,18 @@ syscall    &#x2F;*excute read(0,buf,size)*&#x2F;<span aria-hidden="true" class="
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2022/12/21/%E6%A0%88%E6%BA%A2%E5%87%BA%E3%80%81rop%E9%93%BE%E3%80%81shellcode%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/">
+                <a href="/2023/03/25/sqli-labs-1-4/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="栈溢出、rop链、shellcode原理解析">
+                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="sqli_labs_1~4">
                         
-                        <span class="card-title">栈溢出、rop链、shellcode原理解析</span>
+                        <span class="card-title">sqli_labs_1~4</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -782,9 +756,9 @@ syscall    &#x2F;*excute read(0,buf,size)*&#x2F;<span aria-hidden="true" class="
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-12-21
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-03-25
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -793,11 +767,12 @@ syscall    &#x2F;*excute read(0,buf,size)*&#x2F;<span aria-hidden="true" class="
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
-                        <span class="chip bg-color">pwn原理讲解</span>
+                    <a href="/tags/web%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                        <span class="chip bg-color">web原理讲解</span>
                     </a>
                     
                 </div>
@@ -811,13 +786,13 @@ syscall    &#x2F;*excute read(0,buf,size)*&#x2F;<span aria-hidden="true" class="
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/11/01/%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4%E5%B0%8F%E7%BB%93/">
+                <a href="/2023/03/21/Tcache%E6%9C%BA%E5%88%B6%E8%AE%B2%E8%A7%A3%E5%92%8C%E5%88%A9%E7%94%A8/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/16.jpg" class="responsive-img" alt="汇编指令小结">
+                        <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="Tcache机制讲解和利用">
                         
-                        <span class="card-title">汇编指令小结</span>
+                        <span class="card-title">Tcache机制讲解和利用</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -828,7 +803,7 @@ syscall    &#x2F;*excute read(0,buf,size)*&#x2F;<span aria-hidden="true" class="
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-11-01
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-03-21
                             </span>
                         <span class="publish-author">
                             
@@ -841,8 +816,8 @@ syscall    &#x2F;*excute read(0,buf,size)*&#x2F;<span aria-hidden="true" class="
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/">
-                        <span class="chip bg-color">汇编语言</span>
+                    <a href="/tags/pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                        <span class="chip bg-color">pwn原理讲解</span>
                     </a>
                     
                 </div>
