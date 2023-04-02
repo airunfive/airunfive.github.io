@@ -454,21 +454,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-03-31
+                    2023-04-02
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    367
+                    1.3k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    4 分
                 </div>
                 
 
@@ -486,8 +486,10 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="sqli-labs-less-18-19"><a href="#sqli-labs-less-18-19" class="headerlink" title="sqli-labs less-18~19"></a>sqli-labs less-18~19</h1><hr>
-<h2 id="新的考点"><a href="#新的考点" class="headerlink" title="新的考点"></a>新的考点</h2><hr>
+                <h1 id="sqli-labs-less-18-22"><a href="#sqli-labs-less-18-22" class="headerlink" title="sqli-labs less-18~22"></a>sqli-labs less-18~22</h1><hr>
+<h2 id="HTTP头注入原理"><a href="#HTTP头注入原理" class="headerlink" title="HTTP头注入原理"></a>HTTP头注入原理</h2><hr>
+<p>HTTP（HyperTextTransferProtocol）是超文本传输协议的缩写，它用于传送WWW方式的数据，关于HTTP 协议的详细内容请参考RFC2616。HTTP协议采用了请求&#x2F;响应模型。客户端向服务器发送一个请求，请求头包含请求的方法、URI、协议版本、以及包含请求修饰符、客户信息和内容的类似于MIME的消息结构。服务器以一个状态行作为响应，相应的内容包括消息协议的版本，成功或者错误编码加上包含服务器信息、实体元信息以及可能的实体内容。<br>通常HTTP消息包括客户机向服务器的请求消息和服务器向客户机的响应消息。这两种类型的消息由一个起始行，一个或者多个头域，一个只是头域结束的空行和可选的消息体组成。HTTP的头域包括通用头，请求头，响应头和实体头四个部分。每个头域由一个域名，冒号（:）和域值三部分组成。域名是大小写无关的，域值前可以添加任何数量的空格符，头域可以被扩展为多行，在每行开始处，使用至少一个空格或制表符。<br>有时候，后台开发人员为了验证客户端HTTP Header（比如常用的Cookie验证等)或者通过HTTP Header头信息获取客户端的一些信息(比如 User-Agent.Accept字段等),会对客户端HTTP Header进行获取并使用SQL语句进行处理，如果此时没有足够的安全考虑，就可能导致基于HTTP Header的注入漏洞。常见的HTTP Header注入类型包括Cookie注入、Referer注入、User-Agent注入、XFF注入等。这里我们讲其中的<em><strong>Cookie注入、Referer注入、User-Agent注入</strong></em></p>
+<h2 id="sqli-labs-less-18"><a href="#sqli-labs-less-18" class="headerlink" title="sqli-labs less-18"></a>sqli-labs less-18</h2><h3 id="新的考点"><a href="#新的考点" class="headerlink" title="新的考点"></a>新的考点</h3><hr>
 <p>这题和之前的关卡都不一样，不管输入什么都没有任何回显，这是因为用户名与密码的获取方式是post,而且采用了check_input处理，所以在这两个地方注入不行,源码如下：</p>
 <pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token keyword">if</span><span class="token punctuation">(</span><span class="token keyword">isset</span><span class="token punctuation">(</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'uname'</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token keyword">isset</span><span class="token punctuation">(</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'passwd'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 
@@ -500,7 +502,24 @@
 <span class="token variable">$insert</span><span class="token operator">=</span><span class="token string double-quoted-string">"INSERT INTO `security`.`uagents` (`uagent`, `ip_address`, `username`) VALUES ('<span class="token interpolation"><span class="token variable">$uagent</span></span>', '<span class="token interpolation"><span class="token variable">$IP</span></span>', <span class="token interpolation"><span class="token variable">$uname</span></span>)"</span><span class="token punctuation">;</span><span class="token comment">#这是负责插入uagent的地方</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <p>insert……values……看这篇<a target="_blank" rel="noopener" href="https://www.w3school.com.cn/sql/sql_insert.asp">文章</a></p>
 <h2 id="bp抓包初体验"><a href="#bp抓包初体验" class="headerlink" title="bp抓包初体验"></a>bp抓包初体验</h2><hr>
-<p>我们先抓取登录时的包：<br><img src="/images/bp%E5%88%9D%E4%BD%93%E9%AA%8Csqli-18/2.png"><br>我们将User Agent的值给改了，改成我们的报错注入语句<code>&#39; and updatexml(1,concat(0x7e,(select database()),0x7e),1),1,1) -- q</code>，再放包就可以看到报错出我们想要的信息了<br><img src="/images/bp%E5%88%9D%E4%BD%93%E9%AA%8Csqli-18/3.png"><br>这里网上有些说注释– q、-+、#用不了，不是这个原因，这里是因为原来要传入’$uagent’, ‘$IP’, $uname三个值，如果提前在，‘1,1）’前注释了后面两个值就没了，和insert……values……函数格式不符，因此不能回显，我们加上‘1,1）’就是为了回应前面的格式并且用）将‘VALUES (’这里的刮号给闭合并且将后面注释掉就可以了，剩下的就是更换语句就不列举了</p>
+<p>我们先抓取登录时的包：<br><img src="/images/bp%E5%88%9D%E4%BD%93%E9%AA%8Csqli-18/2.png"><br>我们将User Agent的值给改了，改成我们的报错注入语句<code>&#39; or updatexml(1,concat(0x7e,(select database()),0x7e),1) or&#39; ，再放包就可以看到报错出我们想要的信息了，**注：这里再updatexml前面用or，如果用and虽然不会出现注入错误，但是不知道为什么改了其他语句后我们的报错回显不出来，但是用or就行，有待考究** ![](/images/bp初体验sqli-18/3.png) 这里网上有些说注释-- q、-+、#用不了，不是这个原因，这里是因为原来要传入&#39;$uagent&#39;, &#39;$IP&#39;, $uname三个值，如果提前在，‘1,1）’前注释了后面两个值就没了，和insert……values……函数格式不符，因此不能回显，我们加上or&#39;将后面一个参数的第一个&#39;给闭合了，这样就形成了在&#39;$uagent&#39;与 &#39;$IP&#39;之间插入了我们要的注入语句相当于</code>‘$uagent’ and updatexml(1,concat(0x7e,(select database()),0x7e),1) or’$IP’, $uname&#96;，别将后面的两个参数给注释了，剩下的就是更换语句就不列举了</p>
+<h2 id="sqli-labs-less-19"><a href="#sqli-labs-less-19" class="headerlink" title="sqli-labs less-19"></a>sqli-labs less-19</h2><hr>
+<p>第19关和第18关一样，只是注入点变成了reference，换一个注入点即可，不多说</p>
+<h2 id="cookie注入：less-20-22"><a href="#cookie注入：less-20-22" class="headerlink" title="cookie注入：less-20~22"></a>cookie注入：less-20~22</h2><hr>
+<h3 id="less-20"><a href="#less-20" class="headerlink" title="less-20"></a>less-20</h3><p>cookie注入原理看这篇<a target="_blank" rel="noopener" href="https://blog.csdn.net/k1k5cn/article/details/109581308">文章</a><br>先登入：<br><img src="/images/bp%E5%88%9D%E4%BD%93%E9%AA%8Csqli-18/4.png"><br>我们先看源码：</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token variable">$cookee</span> <span class="token operator">=</span> <span class="token variable">$_COOKIE</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'uname'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+……
+<span class="token variable">$sql</span><span class="token operator">=</span><span class="token string double-quoted-string">"SELECT * FROM users WHERE username='<span class="token interpolation"><span class="token variable">$cookee</span></span>' LIMIT 0,1"</span><span class="token punctuation">;</span>
+……
+<span class="token keyword">echo</span> <span class="token string double-quoted-string">"YOUR COOKIE : uname = <span class="token interpolation"><span class="token variable">$cookee</span></span> and expires: "</span> <span class="token operator">.</span> <span class="token function">date</span><span class="token punctuation">(</span><span class="token variable">$format</span><span class="token punctuation">,</span> <span class="token variable">$timestamp</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>上面三句话可以看到这里uname就是用cookie进行传参，并且打印cookie，我们只要在第二句话将我们的报错注入语句加入进去，就可以在进行这句话时爆出我们想要的信息<br>试出闭合：<br><code>admin&#39;</code>发现会报错，加入<code>admin&#39; -- q</code>正常回显却确定单引号闭合<br>这里我只查库名<code>admin&#39; or updatexml(1,concat(0x7e,(select database()),0x7e),1)-- q</code><br><img src="/images/bp%E5%88%9D%E4%BD%93%E9%AA%8Csqli-18/5.png"><br>可以看到爆出来了，接下来改改语句即可</p>
+<h3 id="less-21"><a href="#less-21" class="headerlink" title="less-21"></a>less-21</h3><p><img src="/images/bp%E5%88%9D%E4%BD%93%E9%AA%8Csqli-18/6.png"><br>第21关稍有不同，他的cookie进行了base64加密，源码如下：</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php">cookee <span class="token operator">=</span> <span class="token variable">$_COOKIE</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'uname'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token variable">$cookee</span> <span class="token operator">=</span> <span class="token function">base64_decode</span><span class="token punctuation">(</span><span class="token variable">$cookee</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+……
+<span class="token variable">$sql</span><span class="token operator">=</span><span class="token string double-quoted-string">"SELECT * FROM users WHERE username=('<span class="token interpolation"><span class="token variable">$cookee</span></span>') LIMIT 0,1"</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>我们只需在网上找到base64的编码器将我们的语句进行编码，再向20题那样放入就行，试错和上面的方法是一样的结果为**’)**闭合<br>例如<code>admin&#39;) or updatexml(1,concat(0x7e,(select database()),0x7e),1)-- q</code>的编码是<code>YWRtaW4nKSBvciB1cGRhdGV4bWwoMSxjb25jYXQoMHg3ZSwoc2VsZWN0IGRhdGFiYXNlKCkpLDB4N2UpLDEpLS0gcQ==</code><br><img src="/images/bp%E5%88%9D%E4%BD%93%E9%AA%8Csqli-18/7.png"></p>
+<h3 id="less-22"><a href="#less-22" class="headerlink" title="less-22"></a>less-22</h3><p>和less-21几乎一样只是闭合换成了**”**</p>
 
                 
             </div>
@@ -527,7 +546,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://airunfive.github.io/2023/03/31/bp%E5%88%9D%E4%BD%93%E9%AA%8Csqli-18/">http://airunfive.github.io/2023/03/31/bp%E5%88%9D%E4%BD%93%E9%AA%8Csqli-18/</a>
+                    <a href="http://airunfive.github.io/2023/03/31/bp%E6%8A%93%E5%8C%85%E4%B8%8Ehttp%E5%A4%B4%E6%B3%A8%E5%85%A5-sqli-18~22/">http://airunfive.github.io/2023/03/31/bp%E6%8A%93%E5%8C%85%E4%B8%8Ehttp%E5%A4%B4%E6%B3%A8%E5%85%A5-sqli-18~22/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -741,7 +760,7 @@
                 <i class="far fa-dot-circle"></i>&nbsp;本篇
             </div>
             <div class="card">
-                <a href="/2023/03/31/bp%E5%88%9D%E4%BD%93%E9%AA%8Csqli-18/">
+                <a href="/2023/03/31/bp%E6%8A%93%E5%8C%85%E4%B8%8Ehttp%E5%A4%B4%E6%B3%A8%E5%85%A5-sqli-18~22/">
                     <div class="card-image">
                         
                         
@@ -1021,7 +1040,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">22.8k</span>&nbsp;字
+                class="white-color">23.8k</span>&nbsp;字
             
             
             
