@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="unsortbin-attach, 矢坕个人博客">
+    <meta name="keywords" content="二次注入less-24, 矢坕个人博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>unsortbin-attach | 矢坕个人博客</title>
+    <title>二次注入less-24 | 矢坕个人博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/18.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/20.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">unsortbin-attach</h1>
+                    <h1 class="description center-align post-title">二次注入less-24</h1>
                 </div>
             </div>
         </div>
@@ -431,8 +431,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
-                                <span class="chip bg-color">pwn原理讲解</span>
+                            <a href="/tags/web%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                                <span class="chip bg-color">web原理讲解</span>
                             </a>
                         
                     </div>
@@ -447,28 +447,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2023-03-12
+                    2023-04-02
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-03-12
+                    2023-04-02
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    280
+                    535
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    2 分
                 </div>
                 
 
@@ -486,14 +486,35 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="unsortbin-attach攻击原理"><a href="#unsortbin-attach攻击原理" class="headerlink" title="unsortbin-attach攻击原理"></a>unsortbin-attach攻击原理</h2><hr>
-<p>这篇博客当初不想写的，当初不太理解，但后面好像挺常用到的还是记录一下。同时这也是时隔一个月的博客更新，恢复下进度，同时庆祝熬过了艰难的考试周。</p>
-<hr>
-<p>这里再次看看unsortbin的结构：<br><img src="/images/unsortbin-attach/1.png"><br>堆漏洞利用中第二常用的攻击手法。最简单的攻击手法，<strong>前提条件是UAF</strong>。任意内存地址写一个<strong>不确定</strong>的非常大的数（libc地址）。通常，我们利用unsortedbin attack来修改一些类似于<strong>修改次数限制、上限信息、伪造堆头、配合局部写</strong>等等，十分好用。</p>
-<hr>
-<p>unsortbin的链入链出的顺序和其他bin不一样，它是先进先出的，<strong>从头插入，从尾取出</strong>：<br><img src="/images/unsortbin-attach/2.jpg"></p>
-<hr>
-<p>我们要修改unsortedbin中的BK字段为target addr - 0x10（不是0x18，因为指向的是size段，这张图没画出来），当取出victim时会发生一下步骤：<br><img src="/images/unsortbin-attach/4.png"><br>fake chunk的fd、bk指针会指向unsortbin_chunks(av)的地址，这里就泄露了libc的某处地址<br>如下图是变化的全过程：<br><img src="/images/unsortbin-attach/3.jpg"></p>
+                <h1 id="sqli-labs-less-24"><a href="#sqli-labs-less-24" class="headerlink" title="sqli-labs less-24"></a>sqli-labs less-24</h1><h2 id="二次注入原理"><a href="#二次注入原理" class="headerlink" title="二次注入原理"></a>二次注入原理</h2><hr>
+<ul>
+<li>定义：二次注入是指已存储（数据库、文件）的用户输入被读取后再次进入到 SQL 查询语句中导致的注入。二次注入是sql注入的一种，但是比普通sql注入利用更加困难，利用门槛更高。普通注入数据直接进入到 SQL 查询中，而二次注入则是输入数据经处理后存储，取出后，再次进入到 SQL 查询。</li>
+<li>原理：在第一次进行数据库插入数据的时候，仅仅只是使用了 addslashes 或者是借助 get_magic_quotes_gpc 对其中的特殊字符进行了转义，在后端代码中可能会被转义，但在存入数据库时还是原来的数据，数据中一般带有单引号和＃号，然后下次使用在拼凑SQL中，所以就形成了二次注入。</li>
+</ul>
+<h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><p>先看它的登入源码(截取有效部分)：</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token keyword">function</span> <span class="token function-definition function">sqllogin</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+
+   <span class="token variable">$username</span> <span class="token operator">=</span> <span class="token function">mysql_real_escape_string</span><span class="token punctuation">(</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string double-quoted-string">"login_user"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token variable">$password</span> <span class="token operator">=</span> <span class="token function">mysql_real_escape_string</span><span class="token punctuation">(</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string double-quoted-string">"login_password"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token variable">$sql</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"SELECT * FROM users WHERE username='<span class="token interpolation"><span class="token variable">$username</span></span>' and password='<span class="token interpolation"><span class="token variable">$password</span></span>'"</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>mysql_real_escape_string函数对下列字符受影响：</p>
+<ul>
+<li>\x00</li>
+<li>\n</li>
+<li>\r</li>
+<li>\</li>
+<li>‘</li>
+<li>“</li>
+<li>\x1a<br>如果成功，则该函数返回被转义的字符串。如果失败，则返回 false。<br>也就是会对传入的username和password进行转码，使它注入无效，但在存入数据库时还是原来的数据<br>再看改密码源码：<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">isset</span><span class="token punctuation">(</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'submit'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>	
+	<span class="token comment"># Validating the user input........</span>
+	<span class="token variable">$username</span><span class="token operator">=</span> <span class="token variable">$_SESSION</span><span class="token punctuation">[</span><span class="token string double-quoted-string">"username"</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+	<span class="token variable">$curr_pass</span><span class="token operator">=</span> <span class="token function">mysql_real_escape_string</span><span class="token punctuation">(</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'current_password'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token variable">$pass</span><span class="token operator">=</span> <span class="token function">mysql_real_escape_string</span><span class="token punctuation">(</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'password'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token variable">$re_pass</span><span class="token operator">=</span> <span class="token function">mysql_real_escape_string</span><span class="token punctuation">(</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'re_password'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+发现只有username没被转义，得这里可以被利用，这题的主要思路就是获得管理员账号，这样就可以查看其他用户的信息。管理员账号一般是admin。<br>在登入页面我们注册一个账号：admin’#并登入进去<br>为什么？看源码：<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token variable">$sql</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"UPDATE users SET PASSWORD='<span class="token interpolation"><span class="token variable">$pass</span></span>' where username='<span class="token interpolation"><span class="token variable">$username</span></span>' and password='<span class="token interpolation"><span class="token variable">$curr_pass</span></span>' "</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+我们注入完登入后就变成了”UPDATE users SET PASSWORD&#x3D;’$pass’ where username&#x3D;’admin’# and password&#x3D;’$curr_pass’ “;<br>后面被注释了，相当于对admin账号的密码进行修改，再次用admin账号和密码登入时我们发现可以登入了。</li>
+</ul>
 
                 
             </div>
@@ -520,7 +541,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://airunfive.github.io/2023/03/12/unsortbin-attach/">http://airunfive.github.io/2023/03/12/unsortbin-attach/</a>
+                    <a href="http://airunfive.github.io/2023/04/02/%E4%BA%8C%E6%AC%A1%E6%B3%A8%E5%85%A5less-24/">http://airunfive.github.io/2023/04/02/%E4%BA%8C%E6%AC%A1%E6%B3%A8%E5%85%A5less-24/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -558,8 +579,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
-                                    <span class="chip bg-color">pwn原理讲解</span>
+                                <a href="/tags/web%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                                    <span class="chip bg-color">web原理讲解</span>
                                 </a>
                             
                         </div>
@@ -729,17 +750,18 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2023/03/17/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E5%81%8F%E7%A7%BB%E7%9A%84%E4%BE%BF%E6%8D%B7%E7%AE%97%E6%B3%95/">
+                <a href="/2023/04/02/%E4%BA%8C%E6%AC%A1%E6%B3%A8%E5%85%A5less-24/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="格式化字符串漏洞偏移的便捷算法">
+                        <img src="/medias/featureimages/20.jpg" class="responsive-img" alt="二次注入less-24">
                         
-                        <span class="card-title">格式化字符串漏洞偏移的便捷算法</span>
+                        <span class="card-title">二次注入less-24</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -749,9 +771,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2023-03-17
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-04-02
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -760,11 +782,12 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
-                        <span class="chip bg-color">pwn原理讲解</span>
+                    <a href="/tags/web%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                        <span class="chip bg-color">web原理讲解</span>
                     </a>
                     
                 </div>
@@ -778,13 +801,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2023/01/31/%E5%A0%86%E6%BC%8F%E6%B4%9Eoffbynull/">
+                <a href="/2023/04/02/%E6%B3%A8%E5%85%A5%E7%9A%84%E4%B8%80%E4%BA%9B%E6%96%B0%E6%96%B9%E6%B3%95less-23/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="堆漏洞offbynull">
+                        <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="基于注释符被过滤的注入方法">
                         
-                        <span class="card-title">堆漏洞offbynull</span>
+                        <span class="card-title">基于注释符被过滤的注入方法</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -795,7 +818,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-31
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-04-02
                             </span>
                         <span class="publish-author">
                             
@@ -808,8 +831,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
-                        <span class="chip bg-color">pwn原理讲解</span>
+                    <a href="/tags/web%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                        <span class="chip bg-color">web原理讲解</span>
                     </a>
                     
                 </div>
