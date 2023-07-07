@@ -461,14 +461,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.3k
+                    2.2k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    5 分
+                    9 分
                 </div>
                 
 
@@ -500,6 +500,114 @@
 <ul>
 <li>Token是在客户端频繁向服务端请求数据，服务端频繁的去数据库查询用户名和密码并进行对比，判断用户名和密码正确与否，并作出相应提示，在这样的背景下，Token便应运而生。Token是服务端生成的一串字符串，以作客户端进行请求的一个令牌，当第一次登录后，服务器生成一个Token便将此Token返回给客户端，以后客户端只需带上这个Token前来请求数据即可，无需再次带上用户名和密码。Token的目的是为了减轻服务器的压力，减少频繁的查询数据库，使服务器更加健壮。<br>随便输入并先抓包，送给intruder，Attack type设置Pitchfork并把password和token设为爆破变量<br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/14.png"><br>跳转到seting，找到Grep-Extract模块点击add进入下面界面，这里先点击fetch response后，这里有点难找可以在上面先输入value&#x3D;’然后双击那个token<strong>（记得复制！！！）</strong>，点击OK<br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/15.png"><br>找到Redirections模块选Always<br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/16.png"><br>回去设置payload第一个payload和上面Low一样，而后设置第二个如下，刚刚的token复制在框里：<br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/17.png"><br>然后开始攻击，但是你可能会出现这个报错：<br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/18.png"><br>这是因为我们没有设置线程的模块了，burp suite版本太新，给出解决<a target="_blank" rel="noopener" href="https://blog.csdn.net/Minorko/article/details/126018180">办法</a><br>最后开始攻击：<br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/19.png"><br>可以看到在render里我们成功爆破进入</li>
 </ul>
+<h2 id="0x03-Command-Injection"><a href="#0x03-Command-Injection" class="headerlink" title="0x03 Command Injection"></a>0x03 Command Injection</h2><hr>
+<p>Command Injection，即命令注入攻击，是指由于嵌入式应用程序或者web应用程序对用户提交的数据过滤不严格，导致黑客可以通过构造特殊命令字符串的方式，将数据提交至应用程序中，并利用该方式执行外部程序或系统命令实施攻击，非法获取数据或者网络资源等。在命令注入的漏洞中，最为常见的是PHP的命令注入。PHP命令注入攻击存在的主要原因是web应用程序员在应用PHP语言中一些具有命令执行功能的函数时，对用户提交的数据内容没有进行严格的过滤就带入函数中执行而造成的。例如，当黑客提交的数据内容为向网站目录写入PHP文件时，就可以通过该命令注入攻击漏洞写入一个PHP后门文件，进而实施进一步的渗透攻击。</p>
+<p><strong>原理</strong>：Web应用在调用这些函数执行系统命令的时候，在没有做好过滤用户输入的情况下，如果用户将自己的输入作为系统命令的参数拼接到命令行中，就会造成命令注入的漏洞。<br><strong>命令注入的形成需要如下三个条件：</strong></p>
+<p>　* 1、使用了内部调用shell的函数：system()，exec()等。</p>
+<p>　* 2、将外界传入的参数没有足够的过滤，直接传递给内部调用shell的函数。</p>
+<p>　* 3、参数中shell的元字符没有被转义。</p>
+<h5 id="Low-2"><a href="#Low-2" class="headerlink" title="Low"></a>Low</h5><p>源代码</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+
+<span class="token keyword">if</span><span class="token punctuation">(</span> <span class="token keyword">isset</span><span class="token punctuation">(</span> <span class="token variable">$_POST</span><span class="token punctuation">[</span> <span class="token string single-quoted-string">'Submit'</span> <span class="token punctuation">]</span>  <span class="token punctuation">)</span> <span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// Get input</span>
+    <span class="token variable">$target</span> <span class="token operator">=</span> <span class="token variable">$_REQUEST</span><span class="token punctuation">[</span> <span class="token string single-quoted-string">'ip'</span> <span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// Determine OS and execute the ping command.</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span> <span class="token function">stristr</span><span class="token punctuation">(</span> <span class="token function">php_uname</span><span class="token punctuation">(</span> <span class="token string single-quoted-string">'s'</span> <span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'Windows NT'</span> <span class="token punctuation">)</span> <span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token comment">// Windows</span>
+        <span class="token variable">$cmd</span> <span class="token operator">=</span> <span class="token function">shell_exec</span><span class="token punctuation">(</span> <span class="token string single-quoted-string">'ping  '</span> <span class="token operator">.</span> <span class="token variable">$target</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+        <span class="token comment">// *nix</span>
+        <span class="token variable">$cmd</span> <span class="token operator">=</span> <span class="token function">shell_exec</span><span class="token punctuation">(</span> <span class="token string single-quoted-string">'ping  -c 4 '</span> <span class="token operator">.</span> <span class="token variable">$target</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token comment">// Feedback for the end user</span>
+    <span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;pre><span class="token interpolation"><span class="token punctuation">&#123;</span><span class="token variable">$cmd</span><span class="token punctuation">&#125;</span></span>&lt;/pre>"</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token delimiter important">?></span></span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>后台代码并未对用户输入的参数ip的值进行过滤就直接与ping命令进行拼接并执行 ，因此我们可以使用常见的命令拼接字符对命令进行拼接，如使用“&amp;”，“|”，“&amp;&amp;”，“||”等，linux系统下还可以使用“;”，“&#96;&#96;”。</p>
+<ul>
+<li>对于a &amp; b，既执行a的命令也执行b的命令；</li>
+<li>对于a &amp;&amp; b，在a执行成功的情况下执行b，a执行失败就不会执行b，和逻辑与一样；</li>
+<li>对于a | b，“|”为管道符，它将a执行的结果作为b的输入，因此无论a执行结果如何，都会执行b；</li>
+<li>对于a || b，在a执行失败的情况下执行b，a执行成功则不会执行b，和逻辑或一样；</li>
+<li>对于a;b，在Linux系统下会将a和b都执行；</li>
+<li>对于a <code>b</code>，b的执行结果会在a的报错信息中显示。<br>以下为攻击代码：<br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/20.png"><br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/21.png"><br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/22.png"></li>
+</ul>
+<h5 id="Medium-2"><a href="#Medium-2" class="headerlink" title="Medium"></a>Medium</h5><p>源代码</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"> <span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+
+<span class="token keyword">if</span><span class="token punctuation">(</span> <span class="token keyword">isset</span><span class="token punctuation">(</span> <span class="token variable">$_POST</span><span class="token punctuation">[</span> <span class="token string single-quoted-string">'Submit'</span> <span class="token punctuation">]</span>  <span class="token punctuation">)</span> <span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// Get input</span>
+    <span class="token variable">$target</span> <span class="token operator">=</span> <span class="token variable">$_REQUEST</span><span class="token punctuation">[</span> <span class="token string single-quoted-string">'ip'</span> <span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// Set blacklist</span>
+    <span class="token variable">$substitutions</span> <span class="token operator">=</span> <span class="token keyword">array</span><span class="token punctuation">(</span>
+        <span class="token string single-quoted-string">'&amp;&amp;'</span> <span class="token operator">=></span> <span class="token string single-quoted-string">''</span><span class="token punctuation">,</span>
+        <span class="token string single-quoted-string">';'</span>  <span class="token operator">=></span> <span class="token string single-quoted-string">''</span><span class="token punctuation">,</span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// Remove any of the charactars in the array (blacklist).</span>
+    <span class="token variable">$target</span> <span class="token operator">=</span> <span class="token function">str_replace</span><span class="token punctuation">(</span> <span class="token function">array_keys</span><span class="token punctuation">(</span> <span class="token variable">$substitutions</span> <span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token variable">$substitutions</span><span class="token punctuation">,</span> <span class="token variable">$target</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// Determine OS and execute the ping command.</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span> <span class="token function">stristr</span><span class="token punctuation">(</span> <span class="token function">php_uname</span><span class="token punctuation">(</span> <span class="token string single-quoted-string">'s'</span> <span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'Windows NT'</span> <span class="token punctuation">)</span> <span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token comment">// Windows</span>
+        <span class="token variable">$cmd</span> <span class="token operator">=</span> <span class="token function">shell_exec</span><span class="token punctuation">(</span> <span class="token string single-quoted-string">'ping  '</span> <span class="token operator">.</span> <span class="token variable">$target</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+        <span class="token comment">// *nix</span>
+        <span class="token variable">$cmd</span> <span class="token operator">=</span> <span class="token function">shell_exec</span><span class="token punctuation">(</span> <span class="token string single-quoted-string">'ping  -c 4 '</span> <span class="token operator">.</span> <span class="token variable">$target</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token comment">// Feedback for the end user</span>
+    <span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;pre><span class="token interpolation"><span class="token punctuation">&#123;</span><span class="token variable">$cmd</span><span class="token punctuation">&#125;</span></span>&lt;/pre>"</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token delimiter important">?></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>加入了字符转义，将&amp;&amp;和；过滤了不过没什么差别，和sqli-lab的转义过滤差不多，绕过方法也一样<br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/23.png"></p>
+<h5 id="High-2"><a href="#High-2" class="headerlink" title="High"></a>High</h5><p>源代码</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"> <span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+
+<span class="token keyword">if</span><span class="token punctuation">(</span> <span class="token keyword">isset</span><span class="token punctuation">(</span> <span class="token variable">$_POST</span><span class="token punctuation">[</span> <span class="token string single-quoted-string">'Submit'</span> <span class="token punctuation">]</span>  <span class="token punctuation">)</span> <span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// Get input</span>
+    <span class="token variable">$target</span> <span class="token operator">=</span> <span class="token function">trim</span><span class="token punctuation">(</span><span class="token variable">$_REQUEST</span><span class="token punctuation">[</span> <span class="token string single-quoted-string">'ip'</span> <span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// Set blacklist</span>
+    <span class="token variable">$substitutions</span> <span class="token operator">=</span> <span class="token keyword">array</span><span class="token punctuation">(</span>
+        <span class="token string single-quoted-string">'&amp;'</span>  <span class="token operator">=></span> <span class="token string single-quoted-string">''</span><span class="token punctuation">,</span>
+        <span class="token string single-quoted-string">';'</span>  <span class="token operator">=></span> <span class="token string single-quoted-string">''</span><span class="token punctuation">,</span>
+        <span class="token string single-quoted-string">'| '</span> <span class="token operator">=></span> <span class="token string single-quoted-string">''</span><span class="token punctuation">,</span>
+        <span class="token string single-quoted-string">'-'</span>  <span class="token operator">=></span> <span class="token string single-quoted-string">''</span><span class="token punctuation">,</span>
+        <span class="token string single-quoted-string">'$'</span>  <span class="token operator">=></span> <span class="token string single-quoted-string">''</span><span class="token punctuation">,</span>
+        <span class="token string single-quoted-string">'('</span>  <span class="token operator">=></span> <span class="token string single-quoted-string">''</span><span class="token punctuation">,</span>
+        <span class="token string single-quoted-string">')'</span>  <span class="token operator">=></span> <span class="token string single-quoted-string">''</span><span class="token punctuation">,</span>
+        <span class="token string single-quoted-string">'`'</span>  <span class="token operator">=></span> <span class="token string single-quoted-string">''</span><span class="token punctuation">,</span>
+        <span class="token string single-quoted-string">'||'</span> <span class="token operator">=></span> <span class="token string single-quoted-string">''</span><span class="token punctuation">,</span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// Remove any of the charactars in the array (blacklist).</span>
+    <span class="token variable">$target</span> <span class="token operator">=</span> <span class="token function">str_replace</span><span class="token punctuation">(</span> <span class="token function">array_keys</span><span class="token punctuation">(</span> <span class="token variable">$substitutions</span> <span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token variable">$substitutions</span><span class="token punctuation">,</span> <span class="token variable">$target</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// Determine OS and execute the ping command.</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span> <span class="token function">stristr</span><span class="token punctuation">(</span> <span class="token function">php_uname</span><span class="token punctuation">(</span> <span class="token string single-quoted-string">'s'</span> <span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'Windows NT'</span> <span class="token punctuation">)</span> <span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token comment">// Windows</span>
+        <span class="token variable">$cmd</span> <span class="token operator">=</span> <span class="token function">shell_exec</span><span class="token punctuation">(</span> <span class="token string single-quoted-string">'ping  '</span> <span class="token operator">.</span> <span class="token variable">$target</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+        <span class="token comment">// *nix</span>
+        <span class="token variable">$cmd</span> <span class="token operator">=</span> <span class="token function">shell_exec</span><span class="token punctuation">(</span> <span class="token string single-quoted-string">'ping  -c 4 '</span> <span class="token operator">.</span> <span class="token variable">$target</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token comment">// Feedback for the end user</span>
+    <span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;pre><span class="token interpolation"><span class="token punctuation">&#123;</span><span class="token variable">$cmd</span><span class="token punctuation">&#125;</span></span>&lt;/pre>"</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token delimiter important">?></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>过滤了更多了，只是“||”和“| |”是有差别的，之间有多个空格可以利用<br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/24.png"><br><img src="/images/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/25.png"><br>这样就不会被过滤</p>
 
                 
             </div>
@@ -1020,7 +1128,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">29.7k</span>&nbsp;字
+                class="white-color">30.6k</span>&nbsp;字
             
             
             
