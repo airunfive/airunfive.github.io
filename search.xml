@@ -4,6 +4,124 @@
   
     
     <entry>
+      <title>WAF绕过做题记录1</title>
+      <link href="/2023/07/12/WAF%E7%BB%95%E8%BF%87%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%951/"/>
+      <url>/2023/07/12/WAF%E7%BB%95%E8%BF%87%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%951/</url>
+      
+        <content type="html"><![CDATA[<h1 id="WAF绕过专题"><a href="#WAF绕过专题" class="headerlink" title="WAF绕过专题"></a>WAF绕过专题</h1><hr><ul><li>ps：作为一题比较基础的waf绕过需要记录一下，在sqli-labs里没有好好研究</li></ul><p>WAF，全称：Web Application Firewall ，译为Web应用防护墙。WAF是通过执行一系列针对HTTP&#x2F;HTTPS的安全策略来专门为Web应用提供保护的一款产品，主要用于防御针对网络应用层的攻击，像SQL注入、跨站脚本攻击、参数篡改、应用平台漏洞攻击、拒绝服务攻击等。</p><p><strong>WAF部署在web应用程序前面，在用户请求到达web服务器前对用户请求进行扫描和过滤</strong>，分析并校验每个用户请求的网络包，确保每个用户请求有效且安全，对无效或有攻击行为的请求进行阻断或隔离。通过检查HTTP流量，可以防止源自web应用程序的安全漏洞（如SQL注入，跨站脚本攻击，文件包含和安全配置错误）的攻击。</p><hr><h3 id="0x01-RoarCTF-2019-Easy-Calc-1"><a href="#0x01-RoarCTF-2019-Easy-Calc-1" class="headerlink" title="0x01[RoarCTF 2019]Easy Calc 1"></a>0x01[RoarCTF 2019]Easy Calc 1</h3><hr><p>这题的主要原理是利用PHP的字符串解析特性绕过waf，附上<a href="https://blog.csdn.net/qq_45521281/article/details/105871192">解释</a>。</p><p>像这里的waf拦截了为字符值的num变量，绕过思路就是将在num加个空格让waf识别不出这个变量是num，它会认为‘ num’是另一个变量名并不在它的拦截名单里，从而实现绕过。然而php解释器会将空白符给过滤掉，以及进行一些字符变换，所以‘ num’还是会变成‘num’，不会影响代码运行<br>然后就是分析源码：（具体做法下方链接）</p><pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span><span class="token function">error_reporting</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token keyword">isset</span><span class="token punctuation">(</span><span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'num'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>  <span class="token comment">//获取num变量的值</span>    <span class="token function">show_source</span><span class="token punctuation">(</span><span class="token constant">__FILE__</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token punctuation">&#125;</span><span class="token keyword">else</span><span class="token punctuation">&#123;</span>        <span class="token variable">$str</span> <span class="token operator">=</span> <span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'num'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>        <span class="token variable">$blacklist</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string single-quoted-string">' '</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'\t'</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'\r'</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'\n'</span><span class="token punctuation">,</span><span class="token string single-quoted-string">'\''</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'"'</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'`'</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'\['</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'\]'</span><span class="token punctuation">,</span><span class="token string single-quoted-string">'\$'</span><span class="token punctuation">,</span><span class="token string single-quoted-string">'\\'</span><span class="token punctuation">,</span><span class="token string single-quoted-string">'\^'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>        <span class="token keyword">foreach</span> <span class="token punctuation">(</span><span class="token variable">$blacklist</span> <span class="token keyword">as</span> <span class="token variable">$blackitem</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>                  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">preg_match</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'/'</span> <span class="token operator">.</span> <span class="token variable">$blackitem</span> <span class="token operator">.</span> <span class="token string single-quoted-string">'/m'</span><span class="token punctuation">,</span> <span class="token variable">$str</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span><span class="token comment">//判断num变量符不符合要求</span>                        <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"what are you want to do?"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                <span class="token punctuation">&#125;</span>        <span class="token punctuation">&#125;</span>        <span class="token keyword">eval</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'echo '</span><span class="token operator">.</span><span class="token variable">$str</span><span class="token operator">.</span><span class="token string single-quoted-string">';'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>     <span class="token comment">// 判断绕过则执行非法代码，并打印在页面上</span><span class="token punctuation">&#125;</span><span class="token delimiter important">?></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><p>补充几个函数：</p><pre class="line-numbers language-none"><code class="language-none">foreach：foreach(array_expression as $value) statement 遍历给定的 array_expression 数组。每次循环中，当前单元的值被赋给 $value 并且数组内部的指针向前移一步（因此下一次循环中将会得到下一个单元）。        foreach(array_expression as $key &#x3D;&gt; $value) statement 第二种格式做同样的事，只是除了当前单元的值以外，键值也会在每次循环中被赋给变量 $key。<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><pre class="line-numbers language-none"><code class="language-none">eval()函数会将传入的字符串当做 JavaScript 代码进行执行。但是字符串必须以‘;’结尾<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre><p>然后就是硬记函数payload：</p><pre class="line-numbers language-none"><code class="language-none">? num&#x3D;print_r(scandir(chr(47)));? num&#x3D;print_r(file_get_contents(chr(47).chr(102).chr(49).chr(97).chr(103).chr(103))); print_r使结果以更容易理解的方式输出scandir：linux的命令函数，查看目录的file_get_contents：php函数用来打开指定文件的<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre><p><a href="https://blog.csdn.net/snowlyzz/article/details/123459590">参考链接</a></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> waf绕过 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>文件上传做题记录1</title>
+      <link href="/2023/07/12/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/"/>
+      <url>/2023/07/12/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/</url>
+      
+        <content type="html"><![CDATA[<h1 id="文件上传漏洞专题"><a href="#文件上传漏洞专题" class="headerlink" title="文件上传漏洞专题"></a>文件上传漏洞专题</h1><hr><h2 id="0x01-极客大挑战-2019-Upload-1"><a href="#0x01-极客大挑战-2019-Upload-1" class="headerlink" title="0x01 [极客大挑战 2019]Upload 1"></a>0x01 [极客大挑战 2019]Upload 1</h2><p>这里只记录一个新的图片木马的写法：<br><img src="/images/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%951/1.png"><br><a href="https://blog.csdn.net/weixin_45253573/article/details/110867160">参考链接</a></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> file upload </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>命令注入做题记录1</title>
+      <link href="/2023/07/11/%E5%91%BD%E4%BB%A4%E6%B3%A8%E5%85%A5%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/"/>
+      <url>/2023/07/11/%E5%91%BD%E4%BB%A4%E6%B3%A8%E5%85%A5%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/</url>
+      
+        <content type="html"><![CDATA[<h1 id="命令注入专题"><a href="#命令注入专题" class="headerlink" title="命令注入专题"></a>命令注入专题</h1><hr><h2 id="0x01-ACTF2020-新生赛-Exec-1（命令注入）"><a href="#0x01-ACTF2020-新生赛-Exec-1（命令注入）" class="headerlink" title="0x01 [ACTF2020 新生赛]Exec 1（命令注入）"></a>0x01 [ACTF2020 新生赛]Exec 1（命令注入）</h2><hr><pre class="line-numbers language-none"><code class="language-none">对于a &amp; b，既执行a的命令也执行b的命令，将任务置于后台执行；对于a &amp;&amp; b，在a执行成功的情况下执行b，a执行失败就不会执行b，和逻辑与一样；对于a | b，“|”为管道符，它将a执行的结果作为b的输入，因此无论a执行结果如何，都会执行b；对于a || b，在a执行失败的情况下执行b，a执行成功则不会执行b，和逻辑或一样；对于a;b，在Linux系统下会将a和b都执行，前面的执行完执行后面的；<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre><p>这里是commend命令注入，在xss中有提到，这里实战还是记录一下过程：<br>1、先ping本地地址127.0.0.1，发现能成功<br>2、然后直接查目录：127.0.0.1&amp;ls，出现了index.php，访问一下把原页面刷新了一下没有东西<br>3、尝试linux系统，127.0.0.1&amp;ls &#x2F;，出现了许多文件看到了flag文件，在pwn里就是直接cat flag就好了但是……<br>4、在kali中相当于还没访问root总文件夹，需要127.0.0.1&amp;cat &#x2F;flag就成了<br>补充：<img src="/images/buuctf%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%951/2.png"><br><a href="https://blog.csdn.net/hintll/article/details/117907659">参考链接</a></p><h2 id="0x02-GXYCTF2019-Ping-Ping-Ping-1（命令注入）"><a href="#0x02-GXYCTF2019-Ping-Ping-Ping-1（命令注入）" class="headerlink" title="0x02 [GXYCTF2019]Ping Ping Ping 1（命令注入）"></a>0x02 [GXYCTF2019]Ping Ping Ping 1（命令注入）</h2><p>发现一个规律，这些题目都挺喜欢把flag放在php文件里并注释掉，这样就可以不让flag输出在网页上，而我们通常的思路都是要读源码就能找到这玩意，并且题目给的任何提示都是有用的比如这边的?ip&#x3D;就是叫我们用这个当做变量上传参数，以及后来的绕过啊什么的都有提示，并且这里又是linux的操作系统</p><p><strong>绕过空格的方法：</strong></p><pre class="line-numbers language-none"><code class="language-none">$&#123;IFS&#125;$9&#123;IFS&#125;$IFS$&#123;IFS&#125;$IFS$1 &#x2F;&#x2F;$1改成$加其他数字貌似都行IFS&lt; &lt;&gt; &#123;cat,flag.php&#125;  &#x2F;&#x2F;用逗号实现了空格功能，需要用&#123;&#125;括起来%20   (space)%09   (tab)X&#x3D;$&#39;cat\x09.&#x2F;flag.php&#39;;$X       （\x09表示tab，也可以用\x20）<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><pre class="line-numbers language-none"><code class="language-none">?ip&#x3D;127.0.0.1;cat$IFS$9&#96;ls&#96;$IFS在Linux下表示为空格$9是当前系统shell进程第九个参数持有者，始终为空字符串，$后可以接任意数字这里$IFS$9或$IFS垂直，后面加个$与&#123;&#125;类似，起截断作用<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre><p>还涉及到一些知识比如这里的<strong>base64绕过</strong>命令：<code>?ip=127.0.0.1;echo$IFS$1&quot;Y2F0IGZsYWcucGhw&quot;|$IFS$1base64$IFS$1-d$IFS$1|$IFS$1bash</code>给出<a href="https://www.cnblogs.com/JasonCeng/p/15741335.html">文章</a>解释<br>还有这题大多数的解法变量绕过：<code>?ip=127.0.0.1;a=g;cat$IFS$1fla$a.php</code><br>并且还有不出现flag的方法绕过：?ip&#x3D;127.0.0.1;cat$IFS$9<code>ls</code> <strong>使用 $IFS$9绕过空格，配合「反引号」的高优先级特性查看 flag.php 文件(将ls的结果当成cat的参数，那样就不用出现flag这个参数了)</strong> 这个ls是有带反引号的因为Markdown语法被识别成了代码<br><a href="https://blog.csdn.net/vanarrow/article/details/108295481">解题参考1</a><br><a href="https://www.cnblogs.com/LY613313/p/16186012.html">解题参考2</a><br>感谢老师傅的解答</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> commend injection </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>sqli注入做题记录1</title>
+      <link href="/2023/07/11/sqli%E6%B3%A8%E5%85%A5%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/"/>
+      <url>/2023/07/11/sqli%E6%B3%A8%E5%85%A5%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/</url>
+      
+        <content type="html"><![CDATA[<h1 id="sqli注入专题"><a href="#sqli注入专题" class="headerlink" title="sqli注入专题"></a>sqli注入专题</h1><hr><h3 id="0x04-强网杯-2019-随便注-1（堆叠注入）"><a href="#0x04-强网杯-2019-随便注-1（堆叠注入）" class="headerlink" title="0x04 [强网杯 2019]随便注 1（堆叠注入）"></a>0x04 [强网杯 2019]随便注 1（堆叠注入）</h3><hr><p>ps：不是我就在想啊靶场是什么玩意啊<img src="/images/buuctf%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%951/3.jpg">，实战题都是什么牛马啊<img src="/images/buuctf%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%951/4.png">，我不理解并且大为震撼怎么会有这么多的注入姿势啊？？？<br>直接给出参考<a href="https://zhuanlan.zhihu.com/p/545713669">链接</a>这个最全了<br>四个方法：<br>1、预编译拼接法<br>2、预编译进制法<br>3、更改表名法<br>4、handle特殊法<br>解释都在链接里了</p><h3 id="0x05-SUCTF-2019-EasySQL-1（堆叠注入）"><a href="#0x05-SUCTF-2019-EasySQL-1（堆叠注入）" class="headerlink" title="0x05 [SUCTF 2019]EasySQL 1（堆叠注入）"></a>0x05 [SUCTF 2019]EasySQL 1（堆叠注入）</h3><hr><p>每个小白看完wp都会觉得离谱的猜测代码做法，代码拼接后的逻辑我理解，这里主要记录下这种注入语句：<code>select *,1||flag from Flag</code>,还有第二种堆叠注入的方法要设置参数，也记录一下</p><pre class="line-numbers language-none"><code class="language-none">sql_mode 设置了 PIPES_AS_CONCAT 时，|| 就是字符串连接符，相当于CONCAT() 函数当 sql_mode 没有设置 PIPES_AS_CONCAT 时 （默认没有设置），|| 就是逻辑或，相当于OR函数<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre><p><code>1;set sql_mode=PIPES_AS_CONCAT;select 1</code>拼接完相当于select 1;set sql_mode&#x3D;PIPES_AS_CONCAT;select 1||flag from Flag<br>具体做法看这篇<a href="https://blog.csdn.net/bring_coco/article/details/108737434">博客</a></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> sqli injection </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>文件包含做题记录1</title>
+      <link href="/2023/07/11/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/"/>
+      <url>/2023/07/11/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/</url>
+      
+        <content type="html"><![CDATA[<h1 id="文件包含专题"><a href="#文件包含专题" class="headerlink" title="文件包含专题"></a>文件包含专题</h1><hr><h3 id="0x01-ACTF2020-新生赛-Include-1（文件包含）"><a href="#0x01-ACTF2020-新生赛-Include-1（文件包含）" class="headerlink" title="0x01 [ACTF2020 新生赛]Include 1（文件包含）"></a>0x01 [ACTF2020 新生赛]Include 1（文件包含）</h3><hr><p>这题涉及到文件包含的小知识点</p><ul><li><p>php:&#x2F;&#x2F;filter与包含函数结合时，php:&#x2F;&#x2F;filter流会被当作php文件执行。<br>所以我们一般对其进行编码，让其不执行。从而导致任意文件读取。</p></li><li><p>php:&#x2F;&#x2F;filter 伪协议文件包含读取源代码，加上read&#x3D;convert.base64-encode，<br>用base64编码输出，不然会直接当做php代码执行，看不到源代码内容。<br><img src="/images/buuctf%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%951/1.png"></p><pre class="line-numbers language-none"><code class="language-none">1、是格式2、是可选参数，有read和write，字面意思就是读和写3、是过滤器。主要有四种：字符串过滤器，转换过滤器，压缩过滤器，加密过滤器。filter里可以用一或多个过滤器（中间用|隔开），这也为解题提供了多种方法，灵活运用过滤器是解题的关键。这里的过滤器是把文件flag.php里的代码转换（convert）为base64编码（encode）4、是必选参数，后面写你要处理的文件名<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><p>这样可以让源码以base64的编码输出出来，然后我们去解码就行了，<strong>最关键是思路：这里没有任何东西，只有一个flag.php文件，内容没有东西那就是源码了</strong><br><a href="https://blog.csdn.net/weixin_45642610/article/details/112427044">做题链接</a></p></li></ul><h3 id="0x02-极客大挑战-2019-Secret-File-1"><a href="#0x02-极客大挑战-2019-Secret-File-1" class="headerlink" title="0x02 [极客大挑战 2019]Secret File 1"></a>0x02 [极客大挑战 2019]Secret File 1</h3><hr><p>做个总结，如果网页没有什么信息就肯定在源代码里有提示，刚开始做题什么都是新鲜的。</p><h4 id="重定向"><a href="#重定向" class="headerlink" title="重定向"></a>重定向</h4><hr><ul><li><strong>定义：</strong>在 HTTP 协议中，重定向操作由服务器向请求发送特殊的重定向响应而触发。重定向响应包含以 3 开头的状态码，以及 Location 标头，其保存着重定向的 URL。浏览器在接收到重定向时，它们会立刻加载 Location 标头中提供的新 URL。除了额外的往返操作中会有一小部分性能损失之外，重定向操作对于用户来说是不可见的。</li></ul><p>我访问的明明是action.php但是加载出来的却是end.php,<strong>这种情况就要抓包，发送到repeater去看看有没有中间页面或文件，</strong>这里是有隐藏文件secr3t.php ，继续访问就会发现要用文件包含来做这题，但我刚开始就有试那个代码，我不理解为什么要在那串代码前面加上secr3t.php&#x2F;才可以，大概是secr3t.php里有include函数吧<br><a href="https://blog.csdn.net/qq_45766004/article/details/114947589">做题链接</a></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> file included </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>buuctf刷题记录1</title>
+      <link href="/2023/07/10/buuctf%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%951/"/>
+      <url>/2023/07/10/buuctf%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%951/</url>
+      
+        <content type="html"><![CDATA[<h1 id="buuctf刷题记录1："><a href="#buuctf刷题记录1：" class="headerlink" title="buuctf刷题记录1："></a>buuctf刷题记录1：</h1><hr><ul><li>ps：本来以为刷完靶场能会做一些题目，但是还是太天真了，题目和靶场压根不是一回事，道阻且长QAQ，还是继续做题吧……不过看起来pwn和web还是差很多的，如果pwn少写几步博客就完全看不懂，于是我决定从这篇博客开始我写的会稍微简单一点，但会在每题的后面附上做题完整链接，博客嘛主要是笔记作用,重在刷题和记思路。</li></ul><h2 id="0x01-ACTF2020-新生赛-Include-1（文件包含）"><a href="#0x01-ACTF2020-新生赛-Include-1（文件包含）" class="headerlink" title="0x01 [ACTF2020 新生赛]Include 1（文件包含）"></a>0x01 [ACTF2020 新生赛]Include 1（文件包含）</h2><hr><p>这题涉及到文件包含的小知识点</p><ul><li><p>php:&#x2F;&#x2F;filter与包含函数结合时，php:&#x2F;&#x2F;filter流会被当作php文件执行。<br>所以我们一般对其进行编码，让其不执行。从而导致任意文件读取。</p></li><li><p>php:&#x2F;&#x2F;filter 伪协议文件包含读取源代码，加上read&#x3D;convert.base64-encode，<br>用base64编码输出，不然会直接当做php代码执行，看不到源代码内容。<br><img src="/images/buuctf%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%951/1.png"></p><pre class="line-numbers language-none"><code class="language-none">1、是格式2、是可选参数，有read和write，字面意思就是读和写3、是过滤器。主要有四种：字符串过滤器，转换过滤器，压缩过滤器，加密过滤器。filter里可以用一或多个过滤器（中间用|隔开），这也为解题提供了多种方法，灵活运用过滤器是解题的关键。这里的过滤器是把文件flag.php里的代码转换（convert）为base64编码（encode）4、是必选参数，后面写你要处理的文件名<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><p>这样可以让源码以base64的编码输出出来，然后我们去解码就行了，<strong>最关键是思路：这里没有任何东西，只有一个flag.php文件，内容没有东西那就是源码了</strong><br><a href="https://blog.csdn.net/weixin_45642610/article/details/112427044">做题链接</a></p></li></ul><h2 id="0x02-ACTF2020-新生赛-Exec-1（命令注入）"><a href="#0x02-ACTF2020-新生赛-Exec-1（命令注入）" class="headerlink" title="0x02 [ACTF2020 新生赛]Exec 1（命令注入）"></a>0x02 [ACTF2020 新生赛]Exec 1（命令注入）</h2><hr><pre class="line-numbers language-none"><code class="language-none">对于a &amp; b，既执行a的命令也执行b的命令，将任务置于后台执行；对于a &amp;&amp; b，在a执行成功的情况下执行b，a执行失败就不会执行b，和逻辑与一样；对于a | b，“|”为管道符，它将a执行的结果作为b的输入，因此无论a执行结果如何，都会执行b；对于a || b，在a执行失败的情况下执行b，a执行成功则不会执行b，和逻辑或一样；对于a;b，在Linux系统下会将a和b都执行，前面的执行完执行后面的；<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre><p>这里是commend命令注入，在xss中有提到，这里实战还是记录一下过程：<br>1、先ping本地地址127.0.0.1，发现能成功<br>2、然后直接查目录：127.0.0.1&amp;ls，出现了index.php，访问一下把原页面刷新了一下没有东西<br>3、尝试linux系统，127.0.0.1&amp;ls &#x2F;，出现了许多文件看到了flag文件，在pwn里就是直接cat flag就好了但是……<br>4、在kali中相当于还没访问root总文件夹，需要127.0.0.1&amp;cat &#x2F;flag就成了<br>补充：<img src="/images/buuctf%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%951/2.png"><br><a href="https://blog.csdn.net/hintll/article/details/117907659">链接</a></p><h2 id="0x03-GXYCTF2019-Ping-Ping-Ping-1（命令注入）"><a href="#0x03-GXYCTF2019-Ping-Ping-Ping-1（命令注入）" class="headerlink" title="0x03 [GXYCTF2019]Ping Ping Ping 1（命令注入）"></a>0x03 [GXYCTF2019]Ping Ping Ping 1（命令注入）</h2><p>发现一个规律，这些题目都挺喜欢把flag放在php文件里并注释掉，这样就可以不让flag输出在网页上，而我们通常的思路都是要读源码就能找到这玩意，并且题目给的任何提示都是有用的比如这边的?ip&#x3D;就是叫我们用这个当做变量上传参数，以及后来的绕过啊什么的都有提示，并且这里又是linux的操作系统</p><p><strong>绕过空格的方法：</strong></p><pre class="line-numbers language-none"><code class="language-none">$&#123;IFS&#125;$9&#123;IFS&#125;$IFS$&#123;IFS&#125;$IFS$1 &#x2F;&#x2F;$1改成$加其他数字貌似都行IFS&lt; &lt;&gt; &#123;cat,flag.php&#125;  &#x2F;&#x2F;用逗号实现了空格功能，需要用&#123;&#125;括起来%20   (space)%09   (tab)X&#x3D;$&#39;cat\x09.&#x2F;flag.php&#39;;$X       （\x09表示tab，也可以用\x20）<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><pre class="line-numbers language-none"><code class="language-none">?ip&#x3D;127.0.0.1;cat$IFS$9&#96;ls&#96;$IFS在Linux下表示为空格$9是当前系统shell进程第九个参数持有者，始终为空字符串，$后可以接任意数字这里$IFS$9或$IFS垂直，后面加个$与&#123;&#125;类似，起截断作用<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre><p>还涉及到一些知识比如这里的<strong>base64绕过</strong>命令：<code>?ip=127.0.0.1;echo$IFS$1&quot;Y2F0IGZsYWcucGhw&quot;|$IFS$1base64$IFS$1-d$IFS$1|$IFS$1bash</code>给出<a href="https://www.cnblogs.com/JasonCeng/p/15741335.html">文章</a>解释<br>还有这题大多数的解法变量绕过：<code>?ip=127.0.0.1;a=g;cat$IFS$1fla$a.php</code><br>并且还有不出现flag的方法绕过：?ip&#x3D;127.0.0.1;cat$IFS$9<code>ls</code> <strong>使用 $IFS$9绕过空格，配合「反引号」的高优先级特性查看 flag.php 文件(将ls的结果当成cat的参数，那样就不用出现flag这个参数了)</strong> 这个ls是有带反引号的因为Markdown语法被识别成了代码<br><a href="https://blog.csdn.net/vanarrow/article/details/108295481">解题参考1</a><br><a href="https://www.cnblogs.com/LY613313/p/16186012.html">解题参考2</a><br>感谢老师傅的解答</p><h2 id="0x04-强网杯-2019-随便注-1（堆叠注入）"><a href="#0x04-强网杯-2019-随便注-1（堆叠注入）" class="headerlink" title="0x04 [强网杯 2019]随便注 1（堆叠注入）"></a>0x04 [强网杯 2019]随便注 1（堆叠注入）</h2><hr><p>ps：不是我就在想啊靶场是什么玩意啊<img src="/images/buuctf%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%951/3.jpg">，实战题都是什么牛马啊<img src="/images/buuctf%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%951/4.png">，我不理解并且大为震撼怎么会有这么多的注入姿势啊？？？<br>直接给出参考<a href="https://zhuanlan.zhihu.com/p/545713669">链接</a>这个最全了<br>四个方法：<br>1、预编译拼接法<br>2、预编译进制法<br>3、更改表名法<br>4、handle特殊法<br>解释都在链接里了</p><h2 id="0x05-SUCTF-2019-EasySQL-1（堆叠注入）"><a href="#0x05-SUCTF-2019-EasySQL-1（堆叠注入）" class="headerlink" title="0x05 [SUCTF 2019]EasySQL 1（堆叠注入）"></a>0x05 [SUCTF 2019]EasySQL 1（堆叠注入）</h2><hr><p>每个小白看完wp都会觉得离谱的猜测代码做法，代码拼接后的逻辑我理解，这里主要记录下这种注入语句：<code>select *,1||flag from Flag</code>,还有第二种堆叠注入的方法要设置参数，也记录一下</p><pre class="line-numbers language-none"><code class="language-none">sql_mode 设置了 PIPES_AS_CONCAT 时，|| 就是字符串连接符，相当于CONCAT() 函数当 sql_mode 没有设置 PIPES_AS_CONCAT 时 （默认没有设置），|| 就是逻辑或，相当于OR函数<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre><p><code>1;set sql_mode=PIPES_AS_CONCAT;select 1</code>拼接完相当于select 1;set sql_mode&#x3D;PIPES_AS_CONCAT;select 1||flag from Flag<br>具体做法看这篇<a href="https://blog.csdn.net/bring_coco/article/details/108737434">博客</a></p><h2 id="0x06-BJDCTF2020-Easy-MD5-1"><a href="#0x06-BJDCTF2020-Easy-MD5-1" class="headerlink" title="0x06 [BJDCTF2020]Easy MD5 1"></a>0x06 [BJDCTF2020]Easy MD5 1</h2><hr><p>ps：对于这题主要记录php中的MD5函数如何绕过判断，以及这个比较骚的<code>select * from ‘admin’ where password =md5($pass,ture)</code>绕过</p><hr><p><code>select * from ‘admin’ where password =md5($pass,ture)</code>构造password&#x3D;’ ‘or’数字’就可以得到<code>select * from ‘admin’ where password =‘ ’or永真</code>实现绕过，<strong>记录MD5字符串ffifdyop</strong>，加密后会变成’or’6XXXXXXXXX 正好<br>对于弱比较：md5(a)&#x3D;&#x3D;md5(b)或强比较md5(a)&#x3D;&#x3D;&#x3D;md5(b)绕过判断，<strong>可以根据md5函数对数组不可加密来绕过</strong>，构造$a:a[]&#x3D;1和$b:b[]&#x3D;2都会返回null，即null&#x3D;null就可以了，对于弱比较还可以通过<strong>科学计数法来绕过，0eXXXX&#x3D;0eXX</strong>，即0的几次方都等于0，<strong>强比较好像不行</strong>，给出两个加密后会等于这个格式的字符串QNKCDZO和s878926199a<br><a href="https://blog.csdn.net/xhy18634297976/article/details/122747034">参考链接1</a><br><a href="https://www.cnblogs.com/junlebao/p/13820591.html">参考链接2</a></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> web做题记录 </tag>
+            
+            <tag> 文件包含 </tag>
+            
+            <tag> 命令注入 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>DVWA部分解析</title>
       <link href="/2023/07/06/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/"/>
       <url>/2023/07/06/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/</url>
