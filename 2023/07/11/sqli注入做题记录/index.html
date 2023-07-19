@@ -33,16 +33,6 @@
 
 
 
-   <style>
-    body{
-       background-image: url(https://cdn.jsdelivr.net/gh/Tokisaki-Galaxy/res/site/medias/background.jpg);
-       background-repeat:no-repeat;
-       background-size:cover;
-       background-attachment:fixed;
-    }
-</style>
-
-
 
 <body>
     <header class="navbar-fixed">
@@ -464,21 +454,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-07-11
+                    2023-07-17
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    273
+                    1k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    3 分
                 </div>
                 
 
@@ -497,13 +487,76 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h1 id="sqli注入专题"><a href="#sqli注入专题" class="headerlink" title="sqli注入专题"></a>sqli注入专题</h1><hr>
-<h3 id="0x04-强网杯-2019-随便注-1（堆叠注入）"><a href="#0x04-强网杯-2019-随便注-1（堆叠注入）" class="headerlink" title="0x04 [强网杯 2019]随便注 1（堆叠注入）"></a>0x04 [强网杯 2019]随便注 1（堆叠注入）</h3><hr>
+<h3 id="0x01-强网杯-2019-随便注-1（堆叠注入）"><a href="#0x01-强网杯-2019-随便注-1（堆叠注入）" class="headerlink" title="0x01 [强网杯 2019]随便注 1（堆叠注入）"></a>0x01 [强网杯 2019]随便注 1（堆叠注入）</h3><hr>
 <p>ps：不是我就在想啊靶场是什么玩意啊<img src="/images/buuctf%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%951/3.jpg">，实战题都是什么牛马啊<img src="/images/buuctf%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%951/4.png">，我不理解并且大为震撼怎么会有这么多的注入姿势啊？？？<br>直接给出参考<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/545713669">链接</a>这个最全了<br>四个方法：<br>1、预编译拼接法<br>2、预编译进制法<br>3、更改表名法<br>4、handle特殊法<br>解释都在链接里了</p>
-<h3 id="0x05-SUCTF-2019-EasySQL-1（堆叠注入）"><a href="#0x05-SUCTF-2019-EasySQL-1（堆叠注入）" class="headerlink" title="0x05 [SUCTF 2019]EasySQL 1（堆叠注入）"></a>0x05 [SUCTF 2019]EasySQL 1（堆叠注入）</h3><hr>
+<h3 id="0x02-SUCTF-2019-EasySQL-1（堆叠注入）"><a href="#0x02-SUCTF-2019-EasySQL-1（堆叠注入）" class="headerlink" title="0x02 [SUCTF 2019]EasySQL 1（堆叠注入）"></a>0x02 [SUCTF 2019]EasySQL 1（堆叠注入）</h3><hr>
 <p>每个小白看完wp都会觉得离谱的猜测代码做法，代码拼接后的逻辑我理解，这里主要记录下这种注入语句：<code>select *,1||flag from Flag</code>,还有第二种堆叠注入的方法要设置参数，也记录一下</p>
 <pre class="line-numbers language-none"><code class="language-none">sql_mode 设置了 PIPES_AS_CONCAT 时，|| 就是字符串连接符，相当于CONCAT() 函数
 当 sql_mode 没有设置 PIPES_AS_CONCAT 时 （默认没有设置），|| 就是逻辑或，相当于OR函数<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p><code>1;set sql_mode=PIPES_AS_CONCAT;select 1</code>拼接完相当于select 1;set sql_mode&#x3D;PIPES_AS_CONCAT;select 1||flag from Flag<br>具体做法看这篇<a target="_blank" rel="noopener" href="https://blog.csdn.net/bring_coco/article/details/108737434">博客</a></p>
+<h3 id="0x03-GXYCTF2019-BabySQli-1"><a href="#0x03-GXYCTF2019-BabySQli-1" class="headerlink" title="0x03 [GXYCTF2019]BabySQli 1"></a>0x03 [GXYCTF2019]BabySQli 1</h3><hr>
+<ul>
+<li>ps：这题蛮坑的，不看源码好难做啊，很多都过滤了页面没什么反应，连（）都过滤<del>丧心病狂</del></li>
+</ul>
+<h4 id="base32与base64编码的特点"><a href="#base32与base64编码的特点" class="headerlink" title="base32与base64编码的特点"></a>base32与base64编码的特点</h4><hr>
+<pre class="line-numbers language-none"><code class="language-none">base64中包含大写字母（A-Z），小写字母（a-z），数字0—9以及+&#x2F;，通常有两个&#x3D;；
+base32中只包含大写字母（A-Z）和数字234567，通常有或没有三个&#x3D;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h4 id="联合注入的特性"><a href="#联合注入的特性" class="headerlink" title="联合注入的特性"></a>联合注入的特性</h4><hr>
+<p><strong>在联合查询并不存在的数据时，联合查询就会构造一个虚拟的数据。</strong>但是也是个临时数据，刷新后不会保存。<br>我们构造payload：<code>name=admin&#39; union select 1,&#39;admin&#39;,NULL#&amp;pw[]=123</code>这里会查询name&#x3D;admin和pw&#x3D;null的数据，但是数据库里很明显没有这样的数据，这时我们就可以临时创造<br>这样一个name&#x3D;admin和pw&#x3D;null的数据保存在数据库里，pw传一个数组md5加密会返回一个null就正好对应上了（当然不看源码我也不懂哪里有md5的提示）<br>关健代码：</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token keyword">if</span><span class="token punctuation">(</span><span class="token variable">$arr</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token string double-quoted-string">"admin"</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+	<span class="token keyword">if</span><span class="token punctuation">(</span><span class="token function">md5</span><span class="token punctuation">(</span><span class="token variable">$password</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token variable">$arr</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+		<span class="token keyword">echo</span> <span class="token variable">$flag</span><span class="token punctuation">;</span>
+	<span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>老朋友函数：</p>
+<pre class="line-numbers language-none"><code class="language-none">mysqli_query(connection,query,resultmode);
+connection	必需。规定要使用的 MySQL 连接。
+query	        必需，规定查询字符串。
+resultmode	可选。一个常量。可以是下列值中的任意一个：
+                MYSQLI_USE_RESULT（如果需要检索大量数据，请使用这个）
+                MYSQLI_STORE_RESULT（默认）
+执行查找语句
+——————————————————————————————
+mysqli_fetch_row() 函数从结果集中取得一行，并作为枚举数组返回。<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_62879498/article/details/124141815">做题链接1</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/satasun/article/details/107180524">做题链接2</a></p>
+<h3 id="0x04-GYCTF2020-Blacklist-1"><a href="#0x04-GYCTF2020-Blacklist-1" class="headerlink" title="0x04 [GYCTF2020]Blacklist 1"></a>0x04 [GYCTF2020]Blacklist 1</h3><hr>
+<ul>
+<li>ps：随便注的升级版<br>这题过滤了很多东西：<code>preg_match(&quot;/set|prepare|alter|rename|select|update|delete|drop|insert|where|\./i&quot;,$inject);</code>把碰到这些关键词的背后也全部注释，这是个强过滤，注入基本不能用了，这种时候就要考虑到堆叠注入：<pre class="line-numbers language-none"><code class="language-none">show databases; 获取数据库名
+show tables from databases; 获取表名
+show columns from table_name; 获取列名<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+<h4 id="handler语法"><a href="#handler语法" class="headerlink" title="handler语法"></a>handler语法</h4><hr>
+<p><strong>句柄：句柄（Handle）是一个是用来标识对象或者项目的标识符，可以用来描述窗体、文件等。<br>翻译成白话就是，句柄 相当于一个指针，是一个广义的指针，不是特定指向某一个形式（整数、数组、对象等）。</strong><br>基本用法：</p>
+<pre class="line-numbers language-none"><code class="language-none">1、打开句柄
+handler handler_table open;
+2、查看数据
+handler handler_table read first;
+handler handler_table read next;
+3、关闭句柄
+handler handler_table close;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>通过索引查看表:</p>
+<pre class="line-numbers language-none"><code class="language-none">1、创建索引
+create index handler_index on handler_table(id);
+2、打开句柄
+handler handler_table open;
+# 打开句柄并命名为 p
+handler handler_table open as p;
+2(1)指定索引，例如：
+# 指定索引开始查看数据
+handler p read handler_index &#x3D; (2);
+3、查看数据
+# 获取第一行数据
+handler p read handler_index first;
+# 获取下一行数据
+handler p read handler_index next;
+# 获取上一行数据
+handler p read handler_index prev;
+# 获取最后一行数据
+handler p read handler_index last;
+4、关闭句柄
+handler p close;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_51927659/article/details/117233018">做题链接</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43427482/article/details/109898934">handler语法</a></p>
 
                 
             </div>
@@ -1059,7 +1112,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">39.7k</span>&nbsp;字
+                class="white-color">44k</span>&nbsp;字
             
             
             

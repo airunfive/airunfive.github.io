@@ -33,16 +33,6 @@
 
 
 
-   <style>
-    body{
-       background-image: url(https://cdn.jsdelivr.net/gh/Tokisaki-Galaxy/res/site/medias/background.jpg);
-       background-repeat:no-repeat;
-       background-size:cover;
-       background-attachment:fixed;
-    }
-</style>
-
-
 
 <body>
     <header class="navbar-fixed">
@@ -453,6 +443,10 @@
                                 <span class="chip bg-color">命令注入</span>
                             </a>
                         
+                            <a href="/tags/%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/">
+                                <span class="chip bg-color">模板注入</span>
+                            </a>
+                        
                     </div>
                     
                 </div>
@@ -479,14 +473,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.7k
+                    2.5k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    6 分
+                    9 分
                 </div>
                 
 
@@ -561,6 +555,20 @@ $9是当前系统shell进程第九个参数持有者，始终为空字符串，$
 <p>ps：对于这题主要记录php中的MD5函数如何绕过判断，以及这个比较骚的<code>select * from ‘admin’ where password =md5($pass,ture)</code>绕过</p>
 <hr>
 <p><code>select * from ‘admin’ where password =md5($pass,ture)</code>构造password&#x3D;’ ‘or’数字’就可以得到<code>select * from ‘admin’ where password =‘ ’or永真</code>实现绕过，<strong>记录MD5字符串ffifdyop</strong>，加密后会变成’or’6XXXXXXXXX 正好<br>对于弱比较：md5(a)&#x3D;&#x3D;md5(b)或强比较md5(a)&#x3D;&#x3D;&#x3D;md5(b)绕过判断，<strong>可以根据md5函数对数组不可加密来绕过</strong>，构造$a:a[]&#x3D;1和$b:b[]&#x3D;2都会返回null，即null&#x3D;null就可以了，对于弱比较还可以通过<strong>科学计数法来绕过，0eXXXX&#x3D;0eXX</strong>，即0的几次方都等于0，<strong>强比较好像不行</strong>，给出两个加密后会等于这个格式的字符串QNKCDZO和s878926199a<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/xhy18634297976/article/details/122747034">参考链接1</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/junlebao/p/13820591.html">参考链接2</a></p>
+<h2 id="0x07-护网杯-2018-easy-tornado-1（模板注入）"><a href="#0x07-护网杯-2018-easy-tornado-1（模板注入）" class="headerlink" title="0x07 [护网杯 2018]easy_tornado 1（模板注入）"></a>0x07 [护网杯 2018]easy_tornado 1（模板注入）</h2><hr>
+<ul>
+<li>ps：对于这题需要的前置知识比较多涉及到web的tornado框架的理解，老实说这题做的意义在搜资料了，没了解根本做不出来，网上的wp也写的不清不楚关健的地方一笔带过，感觉payload的构造真的要有这方面经验才懂，然后模模糊糊了解了下模板注入TTSI，就没然后了，哎重在学吧。</li>
+</ul>
+<p>漏洞成因就是服务端接收了用户的恶意输入以后，未经任何处理就将其作为 Web 应用模板内容的一部分，模板引擎在进行目标编译渲染的过程中，执行了用户插入的可以破坏模板的语句，因而可能导致了敏感信息泄露、代码执行、GetShell 等问题。其影响范围主要取决于模版引擎的复杂性。凡是使用模板的地方都可能会出现 SSTI 的问题，SSTI 不属于任何一种语言。</p>
+<p>同常规的 SQL 注入检测，XSS 检测一样，模板注入漏洞的检测也是向传递的参数中承载特定 Payload 并根据返回的内容来进行判断的。简单来说，就是更改请求参数使之承载含有模板引擎语法的 Payload，通过页面渲染返回的内容检测承载的 Payload 是否有得到编译解析，有解析则可以判定含有 Payload 对应模板引擎注入，否则不存在 SSTI。</p>
+<p>在web页面的源代码中看到了诸如以下的字符，就可以推断网站使用了某些模板引擎来呈现数据：</p>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span>&#123;$what&#125;<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">></span></span>Welcome, &#123;&#123;username&#125;&#125;<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span>&#123;%$a%&#125;<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-none"><code class="language-none">通过注入了探测字符串 $&#123;&#123;123+456&#125;&#125;，以查看应用程序是否进行了相应的计算,如果返回了579那么则存在TTSI，这符合它们对于 &#123;&#123; &#125;&#125; 的处理方式<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/bmjoker/p/13508538.html">TTSI参考文章</a></p>
+<hr>
+<p>尝试了error?msg&#x3D;1，发现的确存在模块注入，然后其他什么<code>+-*/</code>好像都会报错，这里出来个payload：<code>?msg&#123;handler.settings&#125;</code><strong>tornado在搭建一个网站时，肯定会有多个handler，而这些handler都是RequestHandler的子类，RequestHandler.settings又指向self.application.settings。所以我们可以说handler.settings指向了RequestHandler.settings了</strong>，其实和没讲一样，它只是和你说了有这玩意而已，还是不理解。这里涉及到一个filehash，filehash要和文件匹配才能访问文件，是一种保护机制就像是文件的密码。本题告诉你flag名，关健就是求他的filehash值，它也告诉你了filehash的计算公式，剩下的就是找。<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/junlebao/p/13819357.html">参考链接1</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/upfine/p/16580848.html">参考链接2</a></p>
 
                 
             </div>
@@ -635,6 +643,10 @@ $9是当前系统shell进程第九个参数持有者，始终为空字符串，$
                             
                                 <a href="/tags/%E5%91%BD%E4%BB%A4%E6%B3%A8%E5%85%A5/">
                                     <span class="chip bg-color">命令注入</span>
+                                </a>
+                            
+                                <a href="/tags/%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/">
+                                    <span class="chip bg-color">模板注入</span>
                                 </a>
                             
                         </div>
@@ -1124,7 +1136,7 @@ $9是当前系统shell进程第九个参数持有者，始终为空字符串，$
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">39.7k</span>&nbsp;字
+                class="white-color">44k</span>&nbsp;字
             
             
             

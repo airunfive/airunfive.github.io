@@ -33,16 +33,6 @@
 
 
 
-   <style>
-    body{
-       background-image: url(https://cdn.jsdelivr.net/gh/Tokisaki-Galaxy/res/site/medias/background.jpg);
-       background-repeat:no-repeat;
-       background-size:cover;
-       background-attachment:fixed;
-    }
-</style>
-
-
 
 <body>
     <header class="navbar-fixed">
@@ -369,6 +359,146 @@
     <!-- 所有文章卡片 -->
     <article id="articles" class="container articles">
         <div class="row article-row">
+            
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2023/03/21/Tcache%E6%9C%BA%E5%88%B6%E8%AE%B2%E8%A7%A3%E5%92%8C%E5%88%A9%E7%94%A8/">
+                        <div class="card-image">
+                            
+                            
+                            <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="Tcache机制讲解和利用">
+                            
+                            <span class="card-title">Tcache机制讲解和利用</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                Tcache机制讲解和利用
+必须要进入更高级的glibc版本学了，题目打不下去了
+
+本文转载于这篇文章作者：Fish_o0O
+
+Tcache机制是在libc-2.26中引入的一个新的堆管理机制，是在Ubuntu 17.04后引进的一种技术，
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-03-21
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-user fa-fw"></i>
+                                矢坕
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                            <span class="chip bg-color">pwn原理讲解</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2023/03/19/IO-FILE%E4%BB%8B%E7%BB%8D%E4%BB%A5%E5%8F%8Astdout%E6%89%93%E6%B3%95/">
+                        <div class="card-image">
+                            
+                            
+                            <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="IO_FILE介绍以及stdout打法">
+                            
+                            <span class="card-title">IO_FILE介绍以及stdout打法</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                IO_FLIE漏洞利用
+FILE 在 Linux 系统的标准 IO 库中是用于描述文件的结构，称为文件流。 FILE 结构在程序执行 fopen 等函数时会进行创建，并分配在堆中。我们常定义一个指向 FILE 结构的指针来接收这个返回值。I
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-03-19
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-user fa-fw"></i>
+                                矢坕
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                            <span class="chip bg-color">pwn原理讲解</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2023/03/17/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E5%81%8F%E7%A7%BB%E7%9A%84%E4%BE%BF%E6%8D%B7%E7%AE%97%E6%B3%95/">
+                        <div class="card-image">
+                            
+                            
+                            <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="格式化字符串漏洞偏移的便捷算法">
+                            
+                            <span class="card-title">格式化字符串漏洞偏移的便捷算法</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                pwntools自带的偏移函数算法
+
+这里以buuctf上的第五空间pwn5作为演示给出一个新的计算方法，可以说是十分便捷，但也不是万能的，应该可以应付大部分题目！
+
+
+第五空间：pwn5这里的漏洞十分明显，就是格式化字符串漏洞，它首先会打
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-03-17
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-user fa-fw"></i>
+                                矢坕
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                            <span class="chip bg-color">pwn原理讲解</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
@@ -769,135 +899,6 @@ offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出�
                 </div>
             </div>
             
-            <div class="article col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2023/01/06/%E9%AB%98%E7%BA%A7rop-retlibc3%E5%BF%83%E5%BE%97/">
-                        <div class="card-image">
-                            
-                            
-                            <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="高级rop-retlibc3心得">
-                            
-                            <span class="card-title">高级rop-retlibc3心得</span>
-                        </div>
-                    </a>
-
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                攻防世界 pwn-100 wp这里要记录三种新的知识：一种是retlibc3和LibSearcher库的应用以及exp的新语法checksec一下：64位文件，只开了NX保护只可能是栈溢出了。这里的代码不长一步一步看下去，是一个嵌套性函数。
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-06
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-user fa-fw"></i>
-                                矢坕
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/pwn-write-up-pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
-                            <span class="chip bg-color">pwn-write-up pwn原理讲解</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
-            <div class="article col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2023/01/05/%E6%89%93%E5%8D%A1%EF%BC%9A%E7%9B%B2%E6%89%93%E9%A2%98-warm-up/">
-                        <div class="card-image">
-                            
-                            
-                            <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="打卡：盲打题:warm_up">
-                            
-                            <span class="card-title">打卡：盲打题:warm_up</span>
-                        </div>
-                    </a>
-
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                盲打题warm_up碰到这题的时候以为是题目忘记给附件了，竟然没有题目……后来搜了一下我才知道：我在做一种很新的题目……在碰到这个没附件的题目的时候，就可以做好打盲打的准备了，很显然第一次碰到，一脸懵逼，故打卡记录看了一下确实是什么反应都没
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-05
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-user fa-fw"></i>
-                                矢坕
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/pwn-write-up/">
-                            <span class="chip bg-color">pwn-write-up</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
-            <div class="article col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2023/01/05/stack2/">
-                        <div class="card-image">
-                            
-                            
-                            <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="stack2">
-                            
-                            <span class="card-title">stack2</span>
-                        </div>
-                    </a>
-
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                stack2 wp写这篇博客想要稍微弥补一下我动态调试的不足，这题stack2是pwn题的进阶题也算有些难度了吧（大概吧，我没做出来，大佬勿笑……）于是想要和这篇博客再重新做一遍理清一下思路。checksec一下：开了canary保护、NX
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-05
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-user fa-fw"></i>
-                                矢坕
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/pwn-write-up/">
-                            <span class="chip bg-color">pwn-write-up</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
         </div>
     </article>
 
@@ -1000,7 +1001,7 @@ offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出�
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">39.7k</span>&nbsp;字
+                class="white-color">44k</span>&nbsp;字
             
             
             
