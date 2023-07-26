@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="buuctf刷题记录1, 矢坕个人博客">
+    <meta name="keywords" content="buuctf刷题记录, 矢坕个人博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>buuctf刷题记录1 | 矢坕个人博客</title>
+    <title>buuctf刷题记录 | 矢坕个人博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/1.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">buuctf刷题记录1</h1>
+                    <h1 class="description center-align post-title">buuctf刷题记录</h1>
                 </div>
             </div>
         </div>
@@ -447,6 +447,10 @@
                                 <span class="chip bg-color">模板注入</span>
                             </a>
                         
+                            <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%B9%E9%85%8D/">
+                                <span class="chip bg-color">正则匹配</span>
+                            </a>
+                        
                     </div>
                     
                 </div>
@@ -466,21 +470,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-07-13
+                    2023-07-25
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2.5k
+                    3.4k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    9 分
+                    13 分
                 </div>
                 
 
@@ -554,7 +558,7 @@ $9是当前系统shell进程第九个参数持有者，始终为空字符串，$
 <h2 id="0x06-BJDCTF2020-Easy-MD5-1"><a href="#0x06-BJDCTF2020-Easy-MD5-1" class="headerlink" title="0x06 [BJDCTF2020]Easy MD5 1"></a>0x06 [BJDCTF2020]Easy MD5 1</h2><hr>
 <p>ps：对于这题主要记录php中的MD5函数如何绕过判断，以及这个比较骚的<code>select * from ‘admin’ where password =md5($pass,ture)</code>绕过</p>
 <hr>
-<p><code>select * from ‘admin’ where password =md5($pass,ture)</code>构造password&#x3D;’ ‘or’数字’就可以得到<code>select * from ‘admin’ where password =‘ ’or永真</code>实现绕过，<strong>记录MD5字符串ffifdyop</strong>，加密后会变成’or’6XXXXXXXXX 正好<br>对于弱比较：md5(a)&#x3D;&#x3D;md5(b)或强比较md5(a)&#x3D;&#x3D;&#x3D;md5(b)绕过判断，<strong>可以根据md5函数对数组不可加密来绕过</strong>，构造$a:a[]&#x3D;1和$b:b[]&#x3D;2都会返回null，即null&#x3D;null就可以了，对于弱比较还可以通过<strong>科学计数法来绕过，0eXXXX&#x3D;0eXX</strong>，即0的几次方都等于0，<strong>强比较好像不行</strong>，给出两个加密后会等于这个格式的字符串QNKCDZO和s878926199a<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/xhy18634297976/article/details/122747034">参考链接1</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/junlebao/p/13820591.html">参考链接2</a></p>
+<p><code>select * from ‘admin’ where password =md5($pass,ture)</code>构造password&#x3D;’ ‘or’数字’就可以得到<code>select * from ‘admin’ where password =‘ ’or永真</code>实现绕过，<strong>记录MD5字符串：ffifdyop</strong>，加密后会变成’or’6XXXXXXXXX 正好<br>对于弱比较：md5(a)&#x3D;&#x3D;md5(b)或强比较md5(a)&#x3D;&#x3D;&#x3D;md5(b)绕过判断，<strong>可以根据md5函数对数组不可加密来绕过</strong>，构造$a:a[]&#x3D;1和$b:b[]&#x3D;2都会返回null，即null&#x3D;null就可以了，对于弱比较还可以通过<strong>科学计数法来绕过，0eXXXX&#x3D;0eXX</strong>，即0的几次方都等于0，<strong>强比较好像不行</strong>，给出两个加密后会等于这个格式的字符串<strong>QNKCDZO</strong>和<strong>s878926199a</strong><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/xhy18634297976/article/details/122747034">参考链接1</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/junlebao/p/13820591.html">参考链接2</a></p>
 <h2 id="0x07-护网杯-2018-easy-tornado-1（模板注入）"><a href="#0x07-护网杯-2018-easy-tornado-1（模板注入）" class="headerlink" title="0x07 [护网杯 2018]easy_tornado 1（模板注入）"></a>0x07 [护网杯 2018]easy_tornado 1（模板注入）</h2><hr>
 <ul>
 <li>ps：对于这题需要的前置知识比较多涉及到web的tornado框架的理解，老实说这题做的意义在搜资料了，没了解根本做不出来，网上的wp也写的不清不楚关健的地方一笔带过，感觉payload的构造真的要有这方面经验才懂，然后模模糊糊了解了下模板注入TTSI，就没然后了，哎重在学吧。</li>
@@ -569,6 +573,86 @@ $9是当前系统shell进程第九个参数持有者，始终为空字符串，$
 <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/bmjoker/p/13508538.html">TTSI参考文章</a></p>
 <hr>
 <p>尝试了error?msg&#x3D;1，发现的确存在模块注入，然后其他什么<code>+-*/</code>好像都会报错，这里出来个payload：<code>?msg&#123;handler.settings&#125;</code><strong>tornado在搭建一个网站时，肯定会有多个handler，而这些handler都是RequestHandler的子类，RequestHandler.settings又指向self.application.settings。所以我们可以说handler.settings指向了RequestHandler.settings了</strong>，其实和没讲一样，它只是和你说了有这玩意而已，还是不理解。这里涉及到一个filehash，filehash要和文件匹配才能访问文件，是一种保护机制就像是文件的密码。本题告诉你flag名，关健就是求他的filehash值，它也告诉你了filehash的计算公式，剩下的就是找。<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/junlebao/p/13819357.html">参考链接1</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/upfine/p/16580848.html">参考链接2</a></p>
+<h2 id="0x08-BJDCTF2020-ZJCTF，不过如此-1（正则匹配）"><a href="#0x08-BJDCTF2020-ZJCTF，不过如此-1（正则匹配）" class="headerlink" title="0x08 [BJDCTF2020]ZJCTF，不过如此 1（正则匹配）"></a>0x08 [BJDCTF2020]ZJCTF，不过如此 1（正则匹配）</h2><hr>
+<p>preg_replace()的&#x2F;e模式存在命令执行漏洞，第二个参数将被当作代码执行。<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/RABCDXB/article/details/115363699">做题参考</a><br><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/2557">大哥补充</a></p>
+<h2 id="0x09-GXYCTF2019-禁止套娃-1（rce漏洞）"><a href="#0x09-GXYCTF2019-禁止套娃-1（rce漏洞）" class="headerlink" title="0x09 [GXYCTF2019]禁止套娃 1（rce漏洞）"></a>0x09 [GXYCTF2019]禁止套娃 1（rce漏洞）</h2><hr>
+<p><code>if(&#39;;&#39; === preg_replace(&#39;/[a-z,_]+\((?R)?\)/&#39;, NULL, $_GET[&#39;exp&#39;]))</code>这个式子他会递归调用当前的正则表达式。也就是说会出现\w+((?R)?)，\w+(\w+((?R)?))的情况，假设传入<code>a(b());</code>最后会被替换成<code>；</code>只要构造的函数满足这个形式就可以了，<strong>像var_dump(scandir(‘.’))；，会被替换成.;不满足要求</strong>，这种带?R的是典型的无参数函数效验</p>
+<pre class="line-numbers language-none"><code class="language-none">payload:
+print_r(array_rand(array_flip(scandir(current(localeconv())))));
+array_rand()函数可以随机读取一个数组键，array_flip()又可以将数组中的键和值进行对换。<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-none"><code class="language-none">getchwd() 函数返回当前工作目录。
+scandir() 函数返回指定目录中的文件和目录的数组。
+dirname() 函数返回路径中的目录部分。
+chdir() 函数改变当前的目录。
+readfile() 输出一个文件。
+current() 返回数组中的当前单元, 默认取第一个值。
+pos() current() 的别名。
+next() 函数将内部指针指向数组中的下一个元素，并输出。
+end() 将内部指针指向数组中的最后一个元素，并输出。
+array_rand() 函数返回数组中的随机键名，或者如果您规定函数返回不只一个键名，则返回包含随机键名的数组。
+array_flip() array_flip() 函数用于反转&#x2F;交换数组中所有的键名以及它们关联的键值。
+array_slice() 函数在数组中根据条件取出一段值，并返回。
+array_reverse() 函数返回翻转顺序的数组。
+chr() 函数从指定的 ASCII 值返回字符。
+hex2bin() — 转换十六进制字符串为二进制字符串。
+getenv() 获取一个环境变量的值(在7.1之后可以不给予参数)。
+localeconv() 函数返回一包含本地数字及货币格式信息的数组。<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Manuffer/article/details/120738755">无参数RCE总结</a></p>
+<h2 id="0x0A-WUSTCTF2020-朴实无华-1"><a href="#0x0A-WUSTCTF2020-朴实无华-1" class="headerlink" title="0x0A [WUSTCTF2020]朴实无华 1"></a>0x0A [WUSTCTF2020]朴实无华 1</h2><hr>
+<p>在没有有效信息时：</p>
+<ul>
+<li>1、查看源码</li>
+<li>2、抓包看头部信息</li>
+<li>3、考虑git泄露</li>
+<li>4、扫描</li>
+<li>5、考虑模板注入</li>
+</ul>
+<hr>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+<span class="token function">header</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'Content-type:text/html;charset=utf-8'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">error_reporting</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">highlight_file</span><span class="token punctuation">(</span>__file__<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+
+<span class="token comment">//level 1</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">isset</span><span class="token punctuation">(</span><span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'num'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    <span class="token variable">$num</span> <span class="token operator">=</span> <span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'num'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token function">intval</span><span class="token punctuation">(</span><span class="token variable">$num</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">2020</span> <span class="token operator">&amp;&amp;</span> <span class="token function">intval</span><span class="token punctuation">(</span><span class="token variable">$num</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">2021</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+        <span class="token keyword">echo</span> <span class="token string double-quoted-string">"我不经意间看了看我的劳力士, 不是想看时间, 只是想不经意间, 让你知道我过得比你好.&lt;/br>"</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span><span class="token keyword">else</span><span class="token punctuation">&#123;</span>
+        <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"金钱解决不了穷人的本质问题"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token keyword">else</span><span class="token punctuation">&#123;</span>
+    <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"去非洲吧"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token comment">//level 2</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">isset</span><span class="token punctuation">(</span><span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'md5'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+   <span class="token variable">$md5</span><span class="token operator">=</span><span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'md5'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+   <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token variable">$md5</span><span class="token operator">==</span><span class="token function">md5</span><span class="token punctuation">(</span><span class="token variable">$md5</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+       <span class="token keyword">echo</span> <span class="token string double-quoted-string">"想到这个CTFer拿到flag后, 感激涕零, 跑去东澜岸, 找一家餐厅, 把厨师轰出去, 自己炒两个拿手小菜, 倒一杯散装白酒, 致富有道, 别学小暴.&lt;/br>"</span><span class="token punctuation">;</span>
+   <span class="token keyword">else</span>
+       <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"我赶紧喊来我的酒肉朋友, 他打了个电话, 把他一家安排到了非洲"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token keyword">else</span><span class="token punctuation">&#123;</span>
+    <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"去非洲吧"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token comment">//get flag</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">isset</span><span class="token punctuation">(</span><span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'get_flag'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    <span class="token variable">$get_flag</span> <span class="token operator">=</span> <span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'get_flag'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">strstr</span><span class="token punctuation">(</span><span class="token variable">$get_flag</span><span class="token punctuation">,</span><span class="token string double-quoted-string">" "</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+        <span class="token variable">$get_flag</span> <span class="token operator">=</span> <span class="token function">str_ireplace</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"cat"</span><span class="token punctuation">,</span> <span class="token string double-quoted-string">"wctf2020"</span><span class="token punctuation">,</span> <span class="token variable">$get_flag</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">echo</span> <span class="token string double-quoted-string">"想到这里, 我充实而欣慰, 有钱人的快乐往往就是这么的朴实无华, 且枯燥.&lt;/br>"</span><span class="token punctuation">;</span>
+        <span class="token function">system</span><span class="token punctuation">(</span><span class="token variable">$get_flag</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span><span class="token keyword">else</span><span class="token punctuation">&#123;</span>
+        <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"快到非洲了"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token keyword">else</span><span class="token punctuation">&#123;</span>
+    <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"去非洲吧"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token delimiter important">?></span></span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>第一次绕过:<strong>intval函数参数填入科学计数法的字符串，会以e前面的数字作为返回值而对于科学计数法+数字则会返回字符串类型（只适用php7.0以下的版本）</strong>,假如num&#x3D;1e10，$num &#x3D; $_GET[‘num’];传入这边时是字符串，所以intval($num) &#x3D;&#x3D; 1;intval($num + 1);这边时虽然传入的还是字符串但和一相加时会转化为int类型1410065409;</p>
+<p>第二次绕过md5&#x3D;0e215962017加密后还是以0e开头</p>
+<p>第三次绕过cat可以用tac替换，空格用$IFS$9替换<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/shinygod/article/details/123617666">参考链接1</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_62879498/article/details/124632041">参考链接2</a></p>
 
                 
             </div>
@@ -647,6 +731,10 @@ $9是当前系统shell进程第九个参数持有者，始终为空字符串，$
                             
                                 <a href="/tags/%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/">
                                     <span class="chip bg-color">模板注入</span>
+                                </a>
+                            
+                                <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%B9%E9%85%8D/">
+                                    <span class="chip bg-color">正则匹配</span>
                                 </a>
                             
                         </div>
@@ -1136,7 +1224,7 @@ $9是当前系统shell进程第九个参数持有者，始终为空字符串，$
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">44k</span>&nbsp;字
+                class="white-color">45.8k</span>&nbsp;字
             
             
             
