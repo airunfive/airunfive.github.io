@@ -454,7 +454,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-01-16
+                    2024-01-26
                 </div>
                 
 
@@ -499,7 +499,7 @@
 <li>prev_inuse用来表示前面紧邻的那个chunk是否正在使用，0表示前面的chunk已经被释放，1表示正在被用户使用</li>
 <li>prev_size 和size字段分别代表前一个chunk的大小以及当前chunk的大小，大小都是8字节</li>
 </ul>
-<p>这里注意prevsize记录前面一个chunk的大小。这里注意，prevsize只有在前面的chunk被free掉的时候才生效，也就是说，只有在prev_inuse为0的时候，系统才<br>把prev_size字段当作prevsize。<strong>如果chunk正在被使用，那么他会把下一个chunk的prevsize字段当作userdata。充分利用空间。</strong>例如也就是说，如果我们申<br>请一个0x80长度大小的区域，系统实际给我们0x90大小（0x10头部），<strong>如果我们申请0x88大小的区域，系统同样也会给我们0x90大小的区域（算头部），剩下的8字节，<br>使用nextchunk的prevsize区域。</strong>因为，只有当一个chunk被释放的时候，nextchunk的prevsize才真正代表前一个chunk的大小</p>
+<p>这里注意prevsize记录前面一个chunk的大小。这里注意，prevsize只有在前面的chunk被free掉的时候才生效，也就是说，只有在prev_inuse为0的时候，系统才把prev_size字段当作prevsize。<strong>如果chunk正在被使用，那么他会把下一个chunk的prevsize字段当作userdata。充分利用空间。</strong>例如也就是说，如果我们申请一个0x80长度大小的区域，系统实际给我们0x90大小（0x10头部），<strong>如果我们申请0x88大小的区域，系统同样也会给我们0x90大小的区域（算头部），剩下的8字节，使用nextchunk的prevsize区域。</strong>因为，只有当一个chunk被释放的时候，nextchunk的prevsize才真正代表前一个chunk的大小</p>
 <h2 id="0x03-特殊的堆块：topchunk"><a href="#0x03-特殊的堆块：topchunk" class="headerlink" title="0x03 特殊的堆块：topchunk"></a>0x03 特殊的堆块：topchunk</h2><p>最开始时，程序的堆还未被使用，整个的堆区域属于一个很大的堆块叫做topchunk。当已经被使用的空间不够时，程序就会从topchunk中分割一块出来个程序使用。</p>
 <h2 id="0x04-堆块的管理"><a href="#0x04-堆块的管理" class="headerlink" title="0x04 堆块的管理"></a>0x04 堆块的管理</h2><h3 id="0x04-1-bin的类型"><a href="#0x04-1-bin的类型" class="headerlink" title="0x04(1) bin的类型"></a>0x04(1) bin的类型</h3><p>bins的类型图：<br><img src="/images/linux%E5%8A%A8%E6%80%81%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/6.png"><br>为了保证程序的快速运行，而且方便系统内存管理，所以ptmalloc将释放后的堆块根据其大小分成不同的bin。</p>
 <ul>
@@ -1132,7 +1132,7 @@
         <div class="col s12 m8 l8 copy-right">
             Copyright&nbsp;&copy;
             
-                <span id="year">2019-2023</span>
+                <span id="year">2019-2024</span>
             
             <span id="year">2019</span>
             <a href="/about" target="_blank">矢坕</a>
@@ -1141,7 +1141,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">52.9k</span>&nbsp;字
+                class="white-color">75.8k</span>&nbsp;字
             
             
             

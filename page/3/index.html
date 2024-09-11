@@ -362,30 +362,28 @@
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2023/01/30/%E5%A0%86%E6%BC%8F%E6%B4%9Eoffbyone/">
+                    <a href="/2023/07/28/%E5%BA%8F%E5%88%97%E5%8C%96%E4%B9%8Bpop%E9%93%BE%E6%9E%84%E9%80%A0/">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="堆漏洞offbyone">
+                            <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="反序列化之pop链构造">
                             
-                            <span class="card-title">堆漏洞offbyone</span>
+                            <span class="card-title">反序列化之pop链构造</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                堆漏洞offbyone
+                                php反序列化之pop链
+pop链介绍
 
-offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出一个字节的时候使用。
-
-
-0x01 offbyone原理分析假如题目存在offbyone漏洞，堆中有ABCD四个已经被分配的大小为0x70的chunk
+POP 面向属性编程(Property-Oriented Programing) 常用于上层语言构造特定调用链的方法，与二进制利用中的面向返回编程（Return-Oriented Programin
                             
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-30
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-07-28
                             </span>
                             <span class="publish-author">
                                 
@@ -399,8 +397,8 @@ offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出�
                     
                     <div class="card-action article-tags">
                         
-                        <a href="/tags/pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
-                            <span class="chip bg-color">pwn原理讲解</span>
+                        <a href="/tags/web%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                            <span class="chip bg-color">web原理讲解</span>
                         </a>
                         
                     </div>
@@ -410,26 +408,26 @@ offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出�
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2023/01/27/buuctf-babyheap-0ctf-2017/">
+                    <a href="/2023/07/26/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E4%B9%8B%E5%AD%97%E7%AC%A6%E9%80%83%E9%80%B8/">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="buuctf_babyheap_0ctf_2017">
+                            <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="反序列化之字符逃逸">
                             
-                            <span class="card-title">buuctf_babyheap_0ctf_2017</span>
+                            <span class="card-title">反序列化之字符逃逸</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                0x01 buuctf_babyheap_0ctf_2017
-牢骚：第一次做堆题，改exp改了特别长时间，结合别的师傅的wp才做出来的，心累……写篇博客当做里程碑。如果对基础知识不太懂的看看这篇博客，这里不作过多赘述：知识补充综合网上师傅和
+                                反序列化之字符逃逸
+原理:因为序列化的字符串是严格的，对应的格式不能错，比如s:4:”name”,那s:4就必须有一个长度是4的字符串，没有就往后要。并且unserialize会把多余的字符串当垃圾处理，在花括号内的就是正确的，花括号后面的
                             
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-27
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-07-26
                             </span>
                             <span class="publish-author">
                                 
@@ -443,8 +441,8 @@ offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出�
                     
                     <div class="card-action article-tags">
                         
-                        <a href="/tags/pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3-pwn-write-up/">
-                            <span class="chip bg-color">pwn原理讲解 pwn-write-up</span>
+                        <a href="/tags/web%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                            <span class="chip bg-color">web原理讲解</span>
                         </a>
                         
                     </div>
@@ -454,26 +452,32 @@ offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出�
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2023/01/16/linux%E5%8A%A8%E6%80%81%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">
+                    <a href="/2023/07/19/%E5%B8%B8%E7%94%A8%E4%BC%AA%E5%8D%8F%E8%AE%AE%E7%94%A8%E6%B3%95/">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="linux动态内存管理">
+                            <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="常用伪协议用法">
                             
-                            <span class="card-title">linux动态内存管理</span>
+                            <span class="card-title">常用伪协议用法</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                linux动态内存管理（堆基础）终于到了堆，这里是学pwn的分水岭，是新人杀手，每一届都会有很多人在这被劝退改方向，因为堆确实很玄学。
-导入我们之前学过，栈上存储的是一个函数的局部变量，bss存储全局变量。如果用户向程序输入一个几千字的留言
+                                伪协议用法随手记
+包含函数
+PHP里面共有4个与文件包含相关的函数,分别是:
+include  
+require
+include_once
+require_once
+支持的协议和封装协议file:&#x2F;&#x2F; — 访问本地文件系
                             
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-16
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-07-19
                             </span>
                             <span class="publish-author">
                                 
@@ -487,8 +491,8 @@ offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出�
                     
                     <div class="card-action article-tags">
                         
-                        <a href="/tags/pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
-                            <span class="chip bg-color">pwn原理讲解</span>
+                        <a href="/tags/web%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                            <span class="chip bg-color">web原理讲解</span>
                         </a>
                         
                     </div>
@@ -498,25 +502,28 @@ offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出�
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2023/01/12/got%E8%A1%A8%E5%8A%AB%E6%8C%81%E5%AE%9E%E6%88%98%E8%AE%B2%E8%A7%A3/">
+                    <a href="/2023/07/15/%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="got表劫持实战讲解">
+                            <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="序列化与反序列化">
                             
-                            <span class="card-title">got表劫持实战讲解</span>
+                            <span class="card-title">序列化与反序列化</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                攻防世界Recho对于这题有两个知识点要讲1、got表劫持2、pwntools的shutdown用法场景先checksec一下：开了NX保护机制看起来还行，但作为进阶pwn应该不会太简单。拖进IDA查看：代码不会花里胡哨，没有调用杂七杂八的
+                                序列化与反序列化
+原理：参考文章
+
+序列化 (serialize)是将对象的状态信息转换为可以存储或传输的形式的过程。在序列化期间，对象将其当前状态写入到临时或持久性存储区。以后，可以通过从存储区中读取或反序列化对象的状态，重新创建该对象。
                             
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-12
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-07-15
                             </span>
                             <span class="publish-author">
                                 
@@ -530,8 +537,8 @@ offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出�
                     
                     <div class="card-action article-tags">
                         
-                        <a href="/tags/pwn-write-up-pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
-                            <span class="chip bg-color">pwn-write-up pwn原理讲解</span>
+                        <a href="/tags/web%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                            <span class="chip bg-color">web原理讲解</span>
                         </a>
                         
                     </div>
@@ -541,25 +548,27 @@ offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出�
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2023/01/10/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E2%80%94%E2%80%94%E5%AE%9E%E6%97%B6%E6%95%B0%E6%8D%AE%E7%9B%91%E6%B5%8B/">
+                    <a href="/2023/07/13/Unicode%E6%AC%BA%E9%AA%97%E5%92%8Cflask%E7%BB%93%E6%9E%84%E7%9A%84session%E4%BC%AA%E9%80%A0/">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="实时数据监测——fmtstr_payload的应用">
+                            <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="Unicode欺骗和flask结构的session伪造">
                             
-                            <span class="card-title">实时数据监测——fmtstr_payload的应用</span>
+                            <span class="card-title">Unicode欺骗和flask结构的session伪造</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                攻防世界——实时数据监测这题思路很简单，难度大大降低了，本来是一道盲打题，但给了文件就很清晰了，主要是记录一下一个pwntools的新用法checksec：看到没开任何保护，经验就告诉我，这是一道盲打改编题。拖进IDA：逻辑很简单知道吧ke
+                                [HCTF 2018]admin 1
+
+ps：第一眼看到这题，我的思路是通过二次注入去修改admin的密码从而获取flag的，因为确实和sqli-lab的那题太像了，但是好像做不到，网上也没有这样的做法，但是思路是和要讲的Unicode欺骗
                             
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-10
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-07-13
                             </span>
                             <span class="publish-author">
                                 
@@ -573,8 +582,8 @@ offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出�
                     
                     <div class="card-action article-tags">
                         
-                        <a href="/tags/pwn-write-up/">
-                            <span class="chip bg-color">pwn-write-up</span>
+                        <a href="/tags/web%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                            <span class="chip bg-color">web原理讲解</span>
                         </a>
                         
                     </div>
@@ -584,25 +593,29 @@ offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出�
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2023/01/08/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn1%E7%BB%86%E8%8A%82%E5%88%86%E6%9E%90/">
+                    <a href="/2023/07/12/WAF%E7%BB%95%E8%BF%87%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%951/">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="攻防世界pwn1-利用回车泄露canary">
+                            <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="WAF绕过做题记录1">
                             
-                            <span class="card-title">攻防世界pwn1-利用回车泄露canary</span>
+                            <span class="card-title">WAF绕过做题记录1</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                babystack-wp对于这题和pwn-100的思路很像，也是一道retlibc3的题目，这题也学到了很多，故写一篇博客记录一下。老样子checksec一下：开了Canary、NX和RELRO无法改写got表拖进IDA查看：有两个函数被调
+                                WAF绕过专题
+
+ps：作为一题比较基础的waf绕过需要记录一下，在sqli-labs里没有好好研究
+
+WAF，全称：Web Application Firewall ，译为Web应用防护墙。WAF是通过执行一系列针对HTTP&#x2F;H
                             
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-08
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-07-12
                             </span>
                             <span class="publish-author">
                                 
@@ -616,8 +629,8 @@ offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出�
                     
                     <div class="card-action article-tags">
                         
-                        <a href="/tags/pwn-write-up/">
-                            <span class="chip bg-color">pwn-write-up</span>
+                        <a href="/tags/waf%E7%BB%95%E8%BF%87/">
+                            <span class="chip bg-color">waf绕过</span>
                         </a>
                         
                     </div>
@@ -627,25 +640,28 @@ offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出�
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2023/01/08/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E2%80%94%E2%80%94monkey/">
+                    <a href="/2023/07/12/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="攻防世界——monkey">
+                            <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="文件上传做题记录1">
                             
-                            <span class="card-title">攻防世界——monkey</span>
+                            <span class="card-title">文件上传做题记录1</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                这是一种很新的monkey……本来不打算写这题的博客的，也不知道要这么写  但还是想记录一下，毕竟是新题型，不知道常不常见……checksec一下：发现没什么异常，估计是栈溢出。但是拖进IDA查看时，人麻了，IDA解析了半天给出了长长的函数
+                                文件上传漏洞专题
+0x01 [极客大挑战 2019]Upload 1这里只记录一个新的图片木马的写法：参考链接
+0x02 [SUCTF 2019]CheckIn 1
+记录一下.user.ini文件的用处，php.ini是php的一个全局配置
                             
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-08
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-07-12
                             </span>
                             <span class="publish-author">
                                 
@@ -659,8 +675,8 @@ offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出�
                     
                     <div class="card-action article-tags">
                         
-                        <a href="/tags/pwn-write-up/">
-                            <span class="chip bg-color">pwn-write-up</span>
+                        <a href="/tags/file-upload/">
+                            <span class="chip bg-color">file upload</span>
                         </a>
                         
                     </div>
@@ -670,25 +686,28 @@ offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出�
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2023/01/06/%E9%AB%98%E7%BA%A7rop-retlibc3%E5%BF%83%E5%BE%97/">
+                    <a href="/2023/07/11/%E5%91%BD%E4%BB%A4%E6%B3%A8%E5%85%A5%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="高级rop-retlibc3心得">
+                            <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="命令注入做题记录1">
                             
-                            <span class="card-title">高级rop-retlibc3心得</span>
+                            <span class="card-title">命令注入做题记录1</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                攻防世界 pwn-100 wp这里要记录三种新的知识：一种是retlibc3和LibSearcher库的应用以及exp的新语法checksec一下：64位文件，只开了NX保护只可能是栈溢出了。这里的代码不长一步一步看下去，是一个嵌套性函数。
+                                命令注入专题
+0x01 [ACTF2020 新生赛]Exec 1（命令注入）
+对于a &amp; b，既执行a的命令也执行b的命令，将任务置于后台执行；
+对于a &amp;&amp; b，在a执行成功的情况下执行b，a执行失败就不会执行b，
                             
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-06
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-07-11
                             </span>
                             <span class="publish-author">
                                 
@@ -702,8 +721,8 @@ offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出�
                     
                     <div class="card-action article-tags">
                         
-                        <a href="/tags/pwn-write-up-pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
-                            <span class="chip bg-color">pwn-write-up pwn原理讲解</span>
+                        <a href="/tags/commend-injection/">
+                            <span class="chip bg-color">commend injection</span>
                         </a>
                         
                     </div>
@@ -713,25 +732,27 @@ offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出�
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2023/01/05/%E6%89%93%E5%8D%A1%EF%BC%9A%E7%9B%B2%E6%89%93%E9%A2%98-warm-up/">
+                    <a href="/2023/07/11/sqli%E6%B3%A8%E5%85%A5%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="打卡：盲打题:warm_up">
+                            <img src="/medias/featureimages/18.jpg" class="responsive-img" alt="sqli注入做题记录1">
                             
-                            <span class="card-title">打卡：盲打题:warm_up</span>
+                            <span class="card-title">sqli注入做题记录1</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                盲打题warm_up碰到这题的时候以为是题目忘记给附件了，竟然没有题目……后来搜了一下我才知道：我在做一种很新的题目……在碰到这个没附件的题目的时候，就可以做好打盲打的准备了，很显然第一次碰到，一脸懵逼，故打卡记录看了一下确实是什么反应都没
+                                sqli注入专题
+0x01 [强网杯 2019]随便注 1（堆叠注入）
+ps：不是我就在想啊靶场是什么玩意啊，实战题都是什么牛马啊，我不理解并且大为震撼怎么会有这么多的注入姿势啊？？？直接给出参考链接这个最全了四个方法：1、预编译拼接法2、
                             
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-05
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-07-11
                             </span>
                             <span class="publish-author">
                                 
@@ -745,8 +766,8 @@ offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出�
                     
                     <div class="card-action article-tags">
                         
-                        <a href="/tags/pwn-write-up/">
-                            <span class="chip bg-color">pwn-write-up</span>
+                        <a href="/tags/sqli-injection/">
+                            <span class="chip bg-color">sqli injection</span>
                         </a>
                         
                     </div>
@@ -756,25 +777,29 @@ offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出�
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2023/01/05/stack2/">
+                    <a href="/2023/07/11/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="stack2">
+                            <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="文件包含做题记录1">
                             
-                            <span class="card-title">stack2</span>
+                            <span class="card-title">文件包含做题记录1</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                stack2 wp写这篇博客想要稍微弥补一下我动态调试的不足，这题stack2是pwn题的进阶题也算有些难度了吧（大概吧，我没做出来，大佬勿笑……）于是想要和这篇博客再重新做一遍理清一下思路。checksec一下：开了canary保护、NX
+                                文件包含专题
+0x01 [ACTF2020 新生赛]Include 1（文件包含）
+这题涉及到文件包含的小知识点
+
+php:&#x2F;&#x2F;filter与包含函数结合时，php:&#x2F;&#x2F;filter流会被当作php文
                             
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-05
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-07-11
                             </span>
                             <span class="publish-author">
                                 
@@ -788,8 +813,8 @@ offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出�
                     
                     <div class="card-action article-tags">
                         
-                        <a href="/tags/pwn-write-up/">
-                            <span class="chip bg-color">pwn-write-up</span>
+                        <a href="/tags/file-included/">
+                            <span class="chip bg-color">file included</span>
                         </a>
                         
                     </div>
@@ -799,26 +824,27 @@ offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出�
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2023/01/04/Mary-Morton/">
+                    <a href="/2023/07/10/buuctf%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%951/">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="Mary_Morton-格式化字符串泄露canary">
+                            <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="buuctf刷题记录">
                             
-                            <span class="card-title">Mary_Morton-格式化字符串泄露canary</span>
+                            <span class="card-title">buuctf刷题记录</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                Mary_Morton wp这篇博客主要讲一个方法：利用格式化字符串漏洞泄露canary内容
-格式化字符串漏洞泄露canary先checksec一下：开了NX保护和Canary保护，本来一般开了Canary应该不是栈溢出的问题，但这题比较特
+                                buuctf刷题记录1：
+
+ps：本来以为刷完靶场能会做一些题目，但是还是太天真了，题目和靶场压根不是一回事，道阻且长QAQ，还是继续做题吧……不过看起来pwn和web还是差很多的，如果pwn少写几步博客就完全看不懂，于是我决定从这篇博客开
                             
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-04
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-07-10
                             </span>
                             <span class="publish-author">
                                 
@@ -832,8 +858,24 @@ offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出�
                     
                     <div class="card-action article-tags">
                         
-                        <a href="/tags/pwn-write-up/">
-                            <span class="chip bg-color">pwn-write-up</span>
+                        <a href="/tags/web%E5%81%9A%E9%A2%98%E8%AE%B0%E5%BD%95/">
+                            <span class="chip bg-color">web做题记录</span>
+                        </a>
+                        
+                        <a href="/tags/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/">
+                            <span class="chip bg-color">文件包含</span>
+                        </a>
+                        
+                        <a href="/tags/%E5%91%BD%E4%BB%A4%E6%B3%A8%E5%85%A5/">
+                            <span class="chip bg-color">命令注入</span>
+                        </a>
+                        
+                        <a href="/tags/%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/">
+                            <span class="chip bg-color">模板注入</span>
+                        </a>
+                        
+                        <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%B9%E9%85%8D/">
+                            <span class="chip bg-color">正则匹配</span>
                         </a>
                         
                     </div>
@@ -843,25 +885,26 @@ offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出�
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2022/12/31/int-overflow/">
+                    <a href="/2023/07/06/DVWA%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="int_overflow(整数溢出)">
+                            <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="DVWA部分解析">
                             
-                            <span class="card-title">int_overflow(整数溢出)</span>
+                            <span class="card-title">DVWA部分解析</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                int_overflow  wp这题涉及到了整数溢出漏洞，值得写一篇博客。先checksec一下：只开了NX保护机制拖入IDA查看：主函数里没有什么可以利用的打开login（）函数：有read函数但是无法溢出……打开check_passwd
+                                DVWA靶场解析
+ps：有好长一段时间没有学web了，一个月都在准备各种考试 QAQ，这几天花了点时间把kali虚拟机搭了一下，顺带着说dvwa靶场我是在kali里刷的，搭这个玩意着实麻烦……，但好处是不用再下工具了，kali就是为web渗
                             
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-12-31
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-07-06
                             </span>
                             <span class="publish-author">
                                 
@@ -875,8 +918,8 @@ offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出�
                     
                     <div class="card-action article-tags">
                         
-                        <a href="/tags/pwn-write-up/">
-                            <span class="chip bg-color">pwn-write-up</span>
+                        <a href="/tags/web%E9%9D%B6%E5%9C%BA%E6%94%BB%E7%95%A5/">
+                            <span class="chip bg-color">web靶场攻略</span>
                         </a>
                         
                     </div>
@@ -901,7 +944,7 @@ offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出�
             
         </div>
         <div class="page-info col m4 l4 hide-on-small-only">
-            <div class="center-align b-text-gray">3 / 5</div>
+            <div class="center-align b-text-gray">3 / 6</div>
         </div>
         <div class="col s6 m4 l4">
             
@@ -977,7 +1020,7 @@ offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出�
         <div class="col s12 m8 l8 copy-right">
             Copyright&nbsp;&copy;
             
-                <span id="year">2019-2023</span>
+                <span id="year">2019-2024</span>
             
             <span id="year">2019</span>
             <a href="/about" target="_blank">矢坕</a>
@@ -986,7 +1029,7 @@ offbyeone：一个简单又比较实用的漏洞，是在堆溢出只能溢出�
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">52.9k</span>&nbsp;字
+                class="white-color">75.8k</span>&nbsp;字
             
             
             

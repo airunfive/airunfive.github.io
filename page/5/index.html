@@ -362,25 +362,25 @@
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2022/09/20/%E5%8D%83%E4%B8%87%E8%A6%81%E6%B3%A8%E6%84%8F%E4%B8%AD%E8%8B%B1%E6%96%87%EF%BC%81%E5%95%8A%EF%BC%81%E5%95%8A%EF%BC%81/">
+                    <a href="/2023/01/08/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn1%E7%BB%86%E8%8A%82%E5%88%86%E6%9E%90/">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/16.jpg" class="responsive-img" alt="千万要注意中英文！啊！啊！">
+                            <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="攻防世界pwn1-利用回车泄露canary">
                             
-                            <span class="card-title">千万要注意中英文！啊！啊！</span>
+                            <span class="card-title">攻防世界pwn1-利用回车泄露canary</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                  由于是第一次搭博客，遇到了很多问题。特别是在hexo g出错时，作为小白本白的我不出意外的被卡住了，看着天书一般的代码，我头皮发麻……被将近卡住了半小时，哈哈，希望别笑我最终发现在最后的一个分号“;”我用成了中文字符导致出错，我给大家看
+                                babystack-wp对于这题和pwn-100的思路很像，也是一道retlibc3的题目，这题也学到了很多，故写一篇博客记录一下。老样子checksec一下：开了Canary、NX和RELRO无法改写got表拖进IDA查看：有两个函数被调
                             
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-09-20
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-08
                             </span>
                             <span class="publish-author">
                                 
@@ -392,30 +392,38 @@
                     </div>
 
                     
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/pwn-write-up/">
+                            <span class="chip bg-color">pwn-write-up</span>
+                        </a>
+                        
+                    </div>
+                    
                 </div>
             </div>
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2022/09/20/hello-world/">
+                    <a href="/2023/01/08/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E2%80%94%E2%80%94monkey/">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="Hello World">
+                            <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="攻防世界——monkey">
                             
-                            <span class="card-title">Hello World</span>
+                            <span class="card-title">攻防世界——monkey</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hex
+                                这是一种很新的monkey……本来不打算写这题的博客的，也不知道要这么写  但还是想记录一下，毕竟是新题型，不知道常不常见……checksec一下：发现没什么异常，估计是栈溢出。但是拖进IDA查看时，人麻了，IDA解析了半天给出了长长的函数
                             
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-09-20
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-08
                             </span>
                             <span class="publish-author">
                                 
@@ -426,6 +434,445 @@
                         </div>
                     </div>
 
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/pwn-write-up/">
+                            <span class="chip bg-color">pwn-write-up</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2023/01/06/%E9%AB%98%E7%BA%A7rop-retlibc3%E5%BF%83%E5%BE%97/">
+                        <div class="card-image">
+                            
+                            
+                            <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="高级rop-retlibc3心得">
+                            
+                            <span class="card-title">高级rop-retlibc3心得</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                攻防世界 pwn-100 wp这里要记录三种新的知识：一种是retlibc3和LibSearcher库的应用以及exp的新语法checksec一下：64位文件，只开了NX保护只可能是栈溢出了。这里的代码不长一步一步看下去，是一个嵌套性函数。
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-06
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-user fa-fw"></i>
+                                矢坕
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/pwn-write-up-pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3/">
+                            <span class="chip bg-color">pwn-write-up pwn原理讲解</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2023/01/05/%E6%89%93%E5%8D%A1%EF%BC%9A%E7%9B%B2%E6%89%93%E9%A2%98-warm-up/">
+                        <div class="card-image">
+                            
+                            
+                            <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="打卡：盲打题:warm_up">
+                            
+                            <span class="card-title">打卡：盲打题:warm_up</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                盲打题warm_up碰到这题的时候以为是题目忘记给附件了，竟然没有题目……后来搜了一下我才知道：我在做一种很新的题目……在碰到这个没附件的题目的时候，就可以做好打盲打的准备了，很显然第一次碰到，一脸懵逼，故打卡记录看了一下确实是什么反应都没
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-05
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-user fa-fw"></i>
+                                矢坕
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/pwn-write-up/">
+                            <span class="chip bg-color">pwn-write-up</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2023/01/05/stack2/">
+                        <div class="card-image">
+                            
+                            
+                            <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="stack2">
+                            
+                            <span class="card-title">stack2</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                stack2 wp写这篇博客想要稍微弥补一下我动态调试的不足，这题stack2是pwn题的进阶题也算有些难度了吧（大概吧，我没做出来，大佬勿笑……）于是想要和这篇博客再重新做一遍理清一下思路。checksec一下：开了canary保护、NX
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-05
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-user fa-fw"></i>
+                                矢坕
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/pwn-write-up/">
+                            <span class="chip bg-color">pwn-write-up</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2023/01/04/Mary-Morton/">
+                        <div class="card-image">
+                            
+                            
+                            <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="Mary_Morton-格式化字符串泄露canary">
+                            
+                            <span class="card-title">Mary_Morton-格式化字符串泄露canary</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                Mary_Morton wp这篇博客主要讲一个方法：利用格式化字符串漏洞泄露canary内容
+格式化字符串漏洞泄露canary先checksec一下：开了NX保护和Canary保护，本来一般开了Canary应该不是栈溢出的问题，但这题比较特
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-01-04
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-user fa-fw"></i>
+                                矢坕
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/pwn-write-up/">
+                            <span class="chip bg-color">pwn-write-up</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2022/12/31/int-overflow/">
+                        <div class="card-image">
+                            
+                            
+                            <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="int_overflow(整数溢出)">
+                            
+                            <span class="card-title">int_overflow(整数溢出)</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                int_overflow  wp这题涉及到了整数溢出漏洞，值得写一篇博客。先checksec一下：只开了NX保护机制拖入IDA查看：主函数里没有什么可以利用的打开login（）函数：有read函数但是无法溢出……打开check_passwd
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-12-31
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-user fa-fw"></i>
+                                矢坕
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/pwn-write-up/">
+                            <span class="chip bg-color">pwn-write-up</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2022/12/28/guess-num/">
+                        <div class="card-image">
+                            
+                            
+                            <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="guess_num(伪随机数绕过)">
+                            
+                            <span class="card-title">guess_num(伪随机数绕过)</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                guess_num wp为什么写这题呢？感觉这题很有代表性（学到的东西挺多），以后很多的问题可以提前解决，所以写一篇博客记录一下。先checksec一下：吓死本菜鸡了！竟然三个保护机制全开了！我们拖入IDA查看：代码还有点小长……当场决定放
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-12-28
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-user fa-fw"></i>
+                                矢坕
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/pwn-write-up/">
+                            <span class="chip bg-color">pwn-write-up</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2022/12/28/%E6%A0%88%E8%BD%AC%E7%A7%BB%E5%8E%9F%E7%90%86%E4%B8%8E%E9%80%9A%E7%94%A8rop%E7%9A%84%E4%BD%BF%E7%94%A8/">
+                        <div class="card-image">
+                            
+                            
+                            <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="栈转移原理与通用garget的使用">
+                            
+                            <span class="card-title">栈转移原理与通用garget的使用</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                栈转移原理与通用rop的使用此题下载链接：点击下载这里我们通过一题pwn题边解边说：可以看到，这题讲解示范没有开任何保护。拖入ida查看：这里打印的是system、execv函数在libc的地址查看vul函数发现有溢出点但是字节有限只能溢出
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-12-28
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-user fa-fw"></i>
+                                矢坕
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/pwn%E5%8E%9F%E7%90%86%E8%AE%B2%E8%A7%A3-pwn-write-up/">
+                            <span class="chip bg-color">pwn原理讲解 pwn_write_up</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2022/12/27/CGfsb-wp/">
+                        <div class="card-image">
+                            
+                            
+                            <img src="/medias/featureimages/18.jpg" class="responsive-img" alt="CGfsb_wp——格式化字符串漏洞">
+                            
+                            <span class="card-title">CGfsb_wp——格式化字符串漏洞</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                CGfsb先将其在终端checksec一下：32位程序，开了NX(堆栈不可执行)以及CANNARY(栈保护)，但这题开cannary真没感觉有什么用，又不是用栈溢出，奇怪……拖入IDA查看代码有两个输入点，这里重点看这个printf(s);
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-12-27
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-user fa-fw"></i>
+                                矢坕
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/pwn-write-up/">
+                            <span class="chip bg-color">pwn-write-up</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2022/12/26/repeater-wp/">
+                        <div class="card-image">
+                            
+                            
+                            <img src="/medias/featureimages/16.jpg" class="responsive-img" alt="repeater_wp">
+                            
+                            <span class="card-title">repeater_wp</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                repeater遇到的第一题开PIE保护机制的pwn题，写一篇记录一下PIE保护机制就是使程序的基地址随机化让我们无法进行shellcode的注入、rop链的搭建等，因此需要解题的第一件事就是找出程序的基地址，目标明确！首先先将其check
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-12-26
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-user fa-fw"></i>
+                                矢坕
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/pwn-write-up/">
+                            <span class="chip bg-color">pwn-write-up</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2022/12/25/hello-pwn/">
+                        <div class="card-image">
+                            
+                            
+                            <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="hello_pwn">
+                            
+                            <span class="card-title">hello_pwn</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                hello_pwn先将其在终端中checksec下：只开了NX保护，推断是个栈溢出问题。拖进IDA查看：发现有个read函数可溢出16个字节。对其中函数分析发现sub_400686()函数可直接调用system函数抓取flag：目标明确！要
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-12-25
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-user fa-fw"></i>
+                                矢坕
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/pwn-write-up/">
+                            <span class="chip bg-color">pwn-write-up</span>
+                        </a>
+                        
+                    </div>
                     
                 </div>
             </div>
@@ -447,11 +894,12 @@
             
         </div>
         <div class="page-info col m4 l4 hide-on-small-only">
-            <div class="center-align b-text-gray">5 / 5</div>
+            <div class="center-align b-text-gray">5 / 6</div>
         </div>
         <div class="col s6 m4 l4">
             
-            <a class="right btn-floating btn-large disabled">
+            <a href="/page/6/"
+               class="right btn-floating btn-large waves-effect waves-light bg-color">
                 <i class="fas fa-angle-right"></i>
             </a>
             
@@ -522,7 +970,7 @@
         <div class="col s12 m8 l8 copy-right">
             Copyright&nbsp;&copy;
             
-                <span id="year">2019-2023</span>
+                <span id="year">2019-2024</span>
             
             <span id="year">2019</span>
             <a href="/about" target="_blank">矢坕</a>
@@ -531,7 +979,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">52.9k</span>&nbsp;字
+                class="white-color">75.8k</span>&nbsp;字
             
             
             
